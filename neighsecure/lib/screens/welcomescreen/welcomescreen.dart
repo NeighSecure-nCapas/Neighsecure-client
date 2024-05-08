@@ -7,7 +7,7 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child: Scaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
@@ -82,6 +82,6 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }
