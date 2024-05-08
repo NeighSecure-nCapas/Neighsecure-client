@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../splashscreen/splashscreen.dart';
+import '../../splashscreen/splashscreen.dart';
 import '../userregister/userregister.dart';
 
 class OnBoardingScreen extends StatefulWidget {

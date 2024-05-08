@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:neighsecure/screens/welcomescreen/welcomescreen.dart';
+import 'package:neighsecure/screens/introduction/welcomescreen/welcomescreen.dart';
 
 void main() {
   runApp(const App());
