@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/screens/home/accountmanagement/accountmanagement.dart';
 
 class UserRegister extends ConsumerStatefulWidget {
   const UserRegister({super.key});
@@ -118,7 +119,18 @@ class _UserRegisterState extends ConsumerState<UserRegister> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => const AccountManagement(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
