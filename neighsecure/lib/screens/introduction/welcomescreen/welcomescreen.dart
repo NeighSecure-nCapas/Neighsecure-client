@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../onboardingscreen/onboardingscreen.dart';
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child: Scaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
@@ -36,9 +38,24 @@ class WelcomeScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => const OnBoardingScreen(),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.black),
+                    backgroundColor: MaterialStateProperty.all(
+                      const Color(0xFF001E2C),
+                    ),
                     padding: MaterialStateProperty.all(
                       const EdgeInsets.symmetric(
                         vertical: 18,
@@ -55,7 +72,7 @@ class WelcomeScreen extends StatelessWidget {
                     'Comenzar',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 20,
+                      fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
@@ -65,6 +82,6 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }

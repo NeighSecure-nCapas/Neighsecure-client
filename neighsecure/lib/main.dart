@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:neighsecure/screens/welcomescreen/welcomescreen.dart';
+import 'package:neighsecure/screens/introduction/welcomescreen/welcomescreen.dart';
 
 void main() {
   runApp(const App());
@@ -19,7 +19,7 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 46, 93, 168),
         ).copyWith(
-          primary: const Color(0xFF2E5DA8), //Primary color
+          primary: const Color(0xFF001E2C), //Button color
           secondary: const Color(0xFFD7E2FF), //Secondary color
           onPrimary: const Color(0xFFFEFBFF), //OnPrimary color
           onError: const Color(0xFFBA1A1A), //onError color
