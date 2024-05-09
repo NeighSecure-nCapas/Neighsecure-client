@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../splashscreen/splashscreen.dart';
+import '../housemanagement/housemanagement.dart';
+import '../qrscreen/qrscreen.dart';
 
 class AccountManagement extends ConsumerStatefulWidget {
   const AccountManagement({super.key});
@@ -41,7 +42,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
             ),
             const SizedBox(height: 30),
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,18 +113,31 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
             const SizedBox(height: 30),
             GestureDetector(
               onTap: () {
-
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const HouseManagement(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
               },
               child: Card(
                 elevation: 0.0,
                 color: Theme.of(context).scaffoldBackgroundColor,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black, width: 1),
+                  side: const BorderSide(color: Colors.black, width: 1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                  EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -136,15 +150,15 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.cottage_outlined,
                                     color: Colors.black,
                                     size: 24,
                                   ),
-                                  const SizedBox(width: 21),
+                                  SizedBox(width: 21),
                                   Text(
                                     'Gestionar hogar',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 20,
                                       color: Colors.black,
@@ -152,7 +166,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -161,7 +175,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        const SizedBox(height: 12),
+                                        SizedBox(height: 12),
                                         Text(
                                           'En este modulo podrás administrar los miembros de tu hogar.',
                                           style: TextStyle(
@@ -176,7 +190,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                               ),
                             ],
                           )),
-                      const SizedBox(width: 60),
+                      SizedBox(width: 60),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -202,12 +216,12 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                 elevation: 0.0,
                 color: Theme.of(context).scaffoldBackgroundColor,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black, width: 1),
+                  side: const BorderSide(color: Colors.black, width: 1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -220,15 +234,15 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.cottage_outlined,
                                 color: Colors.black,
                                 size: 24,
                               ),
-                              const SizedBox(width: 21),
+                              SizedBox(width: 21),
                               Text(
                                 'Gestionar hogar',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 20,
                                   color: Colors.black,
@@ -236,7 +250,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -245,7 +259,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    const SizedBox(height: 12),
+                                    SizedBox(height: 12),
                                     Text(
                                       'En este modulo podrás administrar los miembros de tu hogar.',
                                       style: TextStyle(
@@ -260,7 +274,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                           ),
                         ],
                       )),
-                      const SizedBox(width: 60),
+                      SizedBox(width: 60),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -285,7 +299,22 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const QrScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
                 const Color(0xFF001E2C),
