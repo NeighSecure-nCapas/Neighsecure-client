@@ -36,9 +36,11 @@ class _QrScreenState extends ConsumerState<QrScreen> {
       if (_remainingTime == 0) {
         timer.cancel();
       } else {
-        setState(() {
-          _remainingTime--;
-        });
+        if (mounted) {
+          setState(() {
+            _remainingTime--;
+          });
+        }
       }
     });
   }
@@ -148,7 +150,7 @@ class _QrScreenState extends ConsumerState<QrScreen> {
               ],
             ),
             const SizedBox(height: 18),
-            if(_remainingTime == 0)
+            if (_remainingTime == 0)
               const Text(
                 'Vencido',
                 style: TextStyle(
@@ -165,10 +167,10 @@ class _QrScreenState extends ConsumerState<QrScreen> {
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed:_remainingTime > 0 ? null : _changeQr,
+            onPressed: _remainingTime > 0 ? null : _changeQr,
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                  _remainingTime > 0 ? Colors.grey : const Color(0xFF001E2C),
+                _remainingTime > 0 ? Colors.grey : const Color(0xFF001E2C),
               ),
               padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(
