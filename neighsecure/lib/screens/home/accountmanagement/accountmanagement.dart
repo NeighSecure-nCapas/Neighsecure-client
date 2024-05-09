@@ -241,7 +241,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                               ),
                               SizedBox(width: 21),
                               Text(
-                                'Gestionar hogar',
+                                'Gestionar visitas',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 20,
@@ -261,8 +261,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                                   children: [
                                     SizedBox(height: 12),
                                     Text(
-                                      'En este modulo podrás administrar los miembros de tu hogar.',
-                                      style: TextStyle(
+                                      'En este modulo podrás administrar tus visitas. ',style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
                                       ),
