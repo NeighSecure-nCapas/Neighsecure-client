@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../invitationscreen/invitationscreen.dart';
+import 'invitationscreen/invitationscreen.dart';
 
 class HouseManagement extends ConsumerStatefulWidget {
   const HouseManagement({super.key});
@@ -232,7 +232,7 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
           )),
           floatingActionButton: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
-            child: Container(
+            child: SizedBox(
               height: 64,
               width: 64,
               child: FloatingActionButton(
@@ -264,7 +264,8 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
                     ),
                   );
                 },
-                child: Padding(
+                backgroundColor: const Color(0xFF001E2C),
+                child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Icon(
                     Icons.add,
@@ -272,7 +273,6 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
                     color: Colors.white,
                   ),
                 ),
-                backgroundColor: const Color(0xFF001E2C),
               ),
             ),
           )),

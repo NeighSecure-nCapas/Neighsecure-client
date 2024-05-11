@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../housemanagement/housemanagement.dart';
 import '../qrscreen/qrscreen.dart';
+import '../ticketsmanagement/ticketsmanagement.dart';
 
 class AccountManagement extends ConsumerStatefulWidget {
   const AccountManagement({super.key});
@@ -210,7 +211,20 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
             const SizedBox(height: 30),
             GestureDetector(
               onTap: () {
-
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const TicketsManagement(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
               },
               child: Card(
                 elevation: 0.0,
@@ -235,7 +249,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Icon(
-                                Icons.cottage_outlined,
+                                Icons.people_alt_outlined,
                                 color: Colors.black,
                                 size: 24,
                               ),

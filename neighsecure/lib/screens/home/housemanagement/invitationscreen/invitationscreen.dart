@@ -5,8 +5,8 @@ class InvitationScreen extends StatefulWidget {
   final int totalUsers;
   final int currentUserCount;
 
-  InvitationScreen(
-      {required this.addUser,
+  const InvitationScreen(
+      {super.key, required this.addUser,
       required this.totalUsers,
       required this.currentUserCount});
 
@@ -25,7 +25,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
     if (widget.currentUserCount >= widget.totalUsers) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('User limit reached.')),
+        const SnackBar(content: Text('User limit reached.')),
       );
       return;
     }
@@ -41,7 +41,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
               topRight: Radius.circular(20),
             ),
           ),
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
