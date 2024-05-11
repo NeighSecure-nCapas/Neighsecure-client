@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/screens/home/ticketsmanagement/visitors_state_screen/visitors_state_screen.dart';
 import 'package:neighsecure/screens/home/ticketsmanagement/visitorsscreen/visitorsscreen.dart';
-import '../../../providers/testingpendingvisitorsprovider.dart';
+import '../../../providers/testing_user_information_notifier.dart';
 import '../../../providers/testnameprovider.dart';
 import '../accountmanagement/accountmanagement.dart';
 
@@ -12,76 +13,7 @@ class TicketsManagement extends ConsumerStatefulWidget {
 }
 
 class _TicketsManagementState extends ConsumerState<TicketsManagement> {
-  String _name = '';
-
   final _formKey = GlobalKey<FormState>();
-
-  List<Map<String, String>> userInformation = [
-    {
-      'name': 'Victor Rene',
-      'role': 'visitante',
-      'email': 'caliente@gmail.com',
-      'tipoOfTicket': 'true',
-      'redeem': 'false',
-      'inviteBy': 'Pamela Gomez'
-    },
-    {
-      'name': 'Alejandro Campos',
-      'role': 'visitante',
-      'email': 'caliente@gmail.com',
-      'tipoOfTicket': 'false',
-      'Entry hours': [
-        '2024-04-25 10:00',
-        '2024-04-25 11:00',
-        '2024-04-25 12:00',
-        '2024-04-25 13:00',
-        '2024-04-25 14:00',
-        '2024-04-25 15:00',
-      ].join(','),
-      'redeem': 'false',
-      'inviteBy': 'Carlos Gomez',
-    },
-    {
-      'name': 'Billy Caliente',
-      'role': 'visitante',
-      'email': 'caliente@gmail.com',
-      'tipoOfTicket': 'true',
-      'redeem': 'true',
-      'inviteBy': 'Fernando Olivo'
-    },
-    {
-      'name': 'Melvin Diaz',
-      'role': 'visitante',
-      'email': 'caliente@gmail.com',
-      'tipoOfTicket': 'false',
-      'Entry hours': [
-        '2024-04-25 10:00',
-        '2024-04-25 11:00',
-        '2024-04-25 12:00',
-        '2024-04-25 13:00',
-        '2024-04-25 14:00',
-        '2024-04-25 15:00',
-      ].join(','),
-      'redeem': 'true',
-      'inviteBy': 'Diego Viana'
-    },
-    {
-      'name': 'Alejandro Diaz',
-      'role': 'visitante',
-      'email': 'caliente@gmail.com',
-      'tipoOfTicket': 'false',
-      'Entry hours': [
-        '2024-04-25 10:00',
-        '2024-04-25 11:00',
-        '2024-04-25 12:00',
-        '2024-04-25 13:00',
-        '2024-04-25 14:00',
-        '2024-04-25 15:00',
-      ].join(','),
-      'redeem': 'true',
-      'inviteBy': 'Diego Viana'
-    },
-  ];
 
   var pendingVisitors = false;
 
@@ -89,6 +21,9 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
 
   @override
   Widget build(BuildContext context) {
+    final userInformation = ref.watch(userInformationProvider);
+
+    print(userInformation);
 
     final name = ref.watch(nameProvider.notifier).state;
 
@@ -159,7 +94,6 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  if(!completedVisitors)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,10 +111,23 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                           ),
                           TextButton(
                             onPressed: () {
-                              setState(() {
-                                pendingVisitors = !pendingVisitors;
-                                print(pendingVisitors);
-                              });
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      VisitorsStateScreen(
+                                    isRedeem: false,
+                                  ),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
                             },
                             child: const Text('Ver mas',
                                 style: TextStyle(
@@ -196,17 +143,22 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                         builder: (context, watch, child) {
                           final name = ref.watch(nameProvider.notifier).state;
                           return VisitorsScreen(
-                              userInformation: name.isEmpty
-                                  ? userInformation
-                                  : userInformation
-                                      .where((item) => item['name'] == name)
-                                      .toList(),
-                              isRedeem: false);
+                            userInformation: name.isEmpty
+                                ? userInformation
+                                : userInformation
+                                    .where((item) => item['name'] == name)
+                                    .toList(),
+                            isRedeem: false,
+                            onUserRemove: (removedUser) {
+                              ref
+                                  .read(userInformationProvider.notifier)
+                                  .removeUser(removedUser);
+                            },
+                          );
                         },
                       ),
                     ],
                   ),
-                  if(!pendingVisitors)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -224,10 +176,23 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                           ),
                           TextButton(
                             onPressed: () {
-                              setState(() {
-                                completedVisitors = !completedVisitors;
-                                print(completedVisitors);
-                              });
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                      secondaryAnimation) =>
+                                      VisitorsStateScreen(
+                                        isRedeem: true,
+                                      ),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
                             },
                             child: const Text('Ver mas',
                                 style: TextStyle(
@@ -240,15 +205,22 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                       ),
                       const SizedBox(height: 36),
                       Consumer(
+
                         builder: (context, watch, child) {
                           final name = ref.watch(nameProvider.notifier).state;
                           return VisitorsScreen(
-                              userInformation: name.isEmpty
-                                  ? userInformation
-                                  : userInformation
-                                      .where((item) => item['name'] == name)
-                                      .toList(),
-                              isRedeem: true);
+                            userInformation: name.isEmpty
+                                ? userInformation
+                                : userInformation
+                                .where((item) => item['name'] == name)
+                                .toList(),
+                            isRedeem: true,
+                            onUserRemove: (removedUser) {
+                              ref
+                                  .read(userInformationProvider.notifier)
+                                  .removeUser(removedUser);
+                            },
+                          );
                         },
                       ),
                     ],

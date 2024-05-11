@@ -1,22 +1,35 @@
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/providers/testing_user_information_notifier.dart';
 import 'package:neighsecure/providers/testnameprovider.dart';
 
 class VisitorsScreen extends ConsumerStatefulWidget {
-  VisitorsScreen(
-      {super.key, required this.userInformation, required this.isRedeem});
+  VisitorsScreen({
+    super.key,
+    required this.userInformation,
+    required this.isRedeem,
+    this.displayeElements,
+    this.onUserRemove,
+  });
+
+  late int? displayeElements;
 
   final List<Map<String, String>> userInformation;
 
-  bool isRedeem = true;
+  final Function(Map<String, String>)? onUserRemove;
+
+  bool isRedeem;
 
   @override
   _VisitorsScreenState createState() => _VisitorsScreenState();
 }
 
 class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
+  var defaultDisplayElements = 3;
+
   List<Map<String, String>> filtereduserInformation = [];
 
   List<Map<String, String>> filterUserInformation(String name) {
@@ -62,9 +75,19 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
           );
         }
 
+        var defaultdisplayed = min(defaultDisplayElements, filteredName.length);
+
+        if (widget.displayeElements != null) {
+          if (widget.displayeElements! >= defaultDisplayElements) {
+            defaultdisplayed = widget.displayeElements!;
+          } else {
+            defaultdisplayed = min(defaultDisplayElements, filteredName.length);
+          }
+        }
+
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: filteredName.length,
+          itemCount: defaultdisplayed,
           itemBuilder: (context, index) {
             return Card(
               elevation: 0.0,
@@ -175,9 +198,25 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          filtereduserInformation
-                                              .removeAt(index);
+                                          if (widget.displayeElements != null) {
+                                            ref.read(userInformationProvider
+                                                    .notifier).removeUser(
+                                                    filteredName[index]);
+                                            widget.onUserRemove!(
+                                                filteredName[index]);
+                                            widget.displayeElements =
+                                                widget.displayeElements! - 1;
+                                          } else {
+                                            ref
+                                                .read(userInformationProvider
+                                                    .notifier)
+                                                .removeUser(
+                                                    filteredName[index]);
+                                            widget.onUserRemove!(
+                                                filteredName[index]);
+                                          }
                                         });
+
                                         Navigator.of(context).pop();
                                       },
                                     ),
