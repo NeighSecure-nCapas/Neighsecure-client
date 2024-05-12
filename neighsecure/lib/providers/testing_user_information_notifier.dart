@@ -63,22 +63,33 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'name': 'Billy Caliente',
             'role': 'visitante',
             'email': 'caliente@gmail.com',
-            'tipoOfTicket': 'true',
+            'tipoOfTicket': 'false',
+            'entryhours': [
+              '2024-04-25 10:00 am',
+              '2024-04-25 11:00 am',
+              '2024-04-25 12:00 pm',
+              '2024-04-25 13:00 pm',
+              '2024-04-25 14:00 pm',
+              '2024-04-25 15:00 pm',
+              '2024-04-25 16:00 pm',
+              '2024-04-25 17:00 pm',
+              '2024-04-25 18:00 pm',
+            ].join(','),
             'redeem': 'true',
-            'inviteBy': 'Fernando Olivo'
+            'inviteBy': 'Diego Viana'
           },
           {
             'name': 'Melvin Diaz',
             'role': 'visitante',
             'email': 'caliente@gmail.com',
             'tipoOfTicket': 'false',
-            'Entry hours': [
-              '2024-04-25 10:00',
-              '2024-04-25 11:00',
-              '2024-04-25 12:00',
-              '2024-04-25 13:00',
-              '2024-04-25 14:00',
-              '2024-04-25 15:00',
+            'entryhours': [
+              '2024-04-25 10:00 am',
+              '2024-04-25 11:00 am',
+              '2024-04-25 12:00 pm',
+              '2024-04-25 13:00 pm',
+              '2024-04-25 14:00 pm',
+              '2024-04-25 15:00 pm',
             ].join(','),
             'redeem': 'true',
             'inviteBy': 'Diego Viana'
@@ -88,13 +99,13 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'role': 'visitante',
             'email': 'caliente@gmail.com',
             'tipoOfTicket': 'false',
-            'Entry hours': [
-              '2024-04-25 10:00',
-              '2024-04-25 11:00',
-              '2024-04-25 12:00',
-              '2024-04-25 13:00',
-              '2024-04-25 14:00',
-              '2024-04-25 15:00',
+            'entryhours': [
+              '2024-04-25 10:00 am',
+              '2024-04-25 11:00 am',
+              '2024-04-25 12:00 pm',
+              '2024-04-25 13:00 pm',
+              '2024-04-25 14:00 pm',
+              '2024-04-25 15:00 pm',
             ].join(','),
             'redeem': 'true',
             'inviteBy': 'Diego Viana'

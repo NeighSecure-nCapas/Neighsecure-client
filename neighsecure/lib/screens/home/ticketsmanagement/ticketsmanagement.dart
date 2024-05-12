@@ -205,7 +205,6 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                       ),
                       const SizedBox(height: 36),
                       Consumer(
-
                         builder: (context, watch, child) {
                           final name = ref.watch(nameProvider.notifier).state;
                           return VisitorsScreen(
