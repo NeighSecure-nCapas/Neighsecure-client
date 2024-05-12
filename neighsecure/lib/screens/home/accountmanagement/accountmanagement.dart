@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../housemanagement/housemanagement.dart';
+import '../house_management/housemanagement.dart';
 import '../qrscreen/qrscreen.dart';
 import '../ticketsmanagement/ticketsmanagement.dart';
 
