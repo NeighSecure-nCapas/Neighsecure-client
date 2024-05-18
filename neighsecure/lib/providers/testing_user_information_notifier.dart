@@ -115,6 +115,24 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
   void removeUser(Map<String, String> user) {
     state = state.where((element) => element != user).toList();
   }
+
+  //Update the user redeem
+  void updateUserRedeem(Map<String, String> user) {
+    state = state.map((element) {
+      if (element == user) {
+        return {
+          ...element,
+          'redeem': 'true',
+        };
+      }
+      return element;
+    }).toList();
+  }
+
+  //Add a new user
+  void addUser(Map<String, String> user) {
+    state = [...state, user];
+  }
 }
 
 final userInformationProvider =

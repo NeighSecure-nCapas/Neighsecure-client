@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../providers/testing_user_information_notifier.dart';
 
 class VisitorsDetailsScreen extends ConsumerStatefulWidget {
-  VisitorsDetailsScreen({
+  const VisitorsDetailsScreen({
     super.key,
     required this.userInformation,
   });
@@ -203,16 +202,16 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               _submit(widget.userInformation);
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 const Color(0xFFBA1A1A),
               ),
-              padding: MaterialStateProperty.all(
+              padding: WidgetStateProperty.all(
                 const EdgeInsets.symmetric(
                   vertical: 18,
                   horizontal: 28,
                 ),
               ),
-              shape: MaterialStateProperty.all(
+              shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

@@ -169,16 +169,16 @@ class _QrScreenState extends ConsumerState<QrScreen> {
           child: ElevatedButton(
             onPressed: _remainingTime > 0 ? null : _changeQr,
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 _remainingTime > 0 ? Colors.grey : const Color(0xFF001E2C),
               ),
-              padding: MaterialStateProperty.all(
+              padding: WidgetStateProperty.all(
                 const EdgeInsets.symmetric(
                   vertical: 18,
                   horizontal: 28,
                 ),
               ),
-              shape: MaterialStateProperty.all(
+              shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -72,7 +71,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 36)
+              SizedBox(height: 36)
             ],
           );
         }

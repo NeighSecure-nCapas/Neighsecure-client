@@ -94,6 +94,7 @@ class _UserRegisterState extends ConsumerState<UserRegister>{
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   TextFormField(
+                    maxLength: 10,
                     decoration: InputDecoration(
                       labelText: 'DUI',
                       fillColor: Colors.grey[200], // background color
@@ -102,10 +103,17 @@ class _UserRegisterState extends ConsumerState<UserRegister>{
                         borderRadius: BorderRadius.circular(15),
                         borderSide: BorderSide.none, // border color
                       ),
+                      labelStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey,
+                      ),
+                      alignLabelWithHint: true,
                     ),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
+                      color: Colors.grey,
                     ),
                     obscureText: false,
                     autocorrect: false,
@@ -145,16 +153,16 @@ class _UserRegisterState extends ConsumerState<UserRegister>{
               _submit();
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 const Color(0xFF001E2C),
               ),
-              padding: MaterialStateProperty.all(
+              padding: WidgetStateProperty.all(
                 const EdgeInsets.symmetric(
                   vertical: 18,
                   horizontal: 28,
                 ),
               ),
-              shape: MaterialStateProperty.all(
+              shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
