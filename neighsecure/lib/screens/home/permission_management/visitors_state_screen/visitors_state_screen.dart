@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/providers/testing_user_information_notifier.dart';
 import 'package:neighsecure/providers/testnameprovider.dart';
 
-import '../visitorsscreen/visitorsscreen.dart';
+import '../visitorsscreen/visitors_screen.dart';
 
 class VisitorsStateScreen extends ConsumerStatefulWidget {
   VisitorsStateScreen(

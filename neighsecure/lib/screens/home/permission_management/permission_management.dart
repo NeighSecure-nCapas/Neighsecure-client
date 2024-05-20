@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/screens/home/ticketsmanagement/visitors_state_screen/visitors_state_screen.dart';
-import 'package:neighsecure/screens/home/ticketsmanagement/visitorsscreen/visitorsscreen.dart';
+import 'package:neighsecure/screens/home/permission_management/visitors_state_screen/visitors_state_screen.dart';
+import 'package:neighsecure/screens/home/permission_management/visitorsscreen/visitors_screen.dart';
 import '../../../providers/testing_user_information_notifier.dart';
 import '../../../providers/testnameprovider.dart';
-import '../accountmanagement/accountmanagement.dart';
+import '../accountmanagement/account_management.dart';
 
-class TicketsManagement extends ConsumerStatefulWidget {
-  const TicketsManagement({super.key});
+class PermissionManagement extends ConsumerStatefulWidget {
+  const PermissionManagement({super.key});
   @override
-  ConsumerState<TicketsManagement> createState() => _TicketsManagementState();
+  ConsumerState<PermissionManagement> createState() =>
+      _PermissionManagementState();
 }
 
-class _TicketsManagementState extends ConsumerState<TicketsManagement> {
+class _PermissionManagementState extends ConsumerState<PermissionManagement> {
   final _formKey = GlobalKey<FormState>();
 
   var pendingVisitors = false;
@@ -180,10 +181,10 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                                 context,
                                 PageRouteBuilder(
                                   pageBuilder: (context, animation,
-                                      secondaryAnimation) =>
+                                          secondaryAnimation) =>
                                       VisitorsStateScreen(
-                                        isRedeem: true,
-                                      ),
+                                    isRedeem: true,
+                                  ),
                                   transitionsBuilder: (context, animation,
                                       secondaryAnimation, child) {
                                     return FadeTransition(
@@ -211,8 +212,8 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                             userInformation: name.isEmpty
                                 ? userInformation
                                 : userInformation
-                                .where((item) => item['name'] == name)
-                                .toList(),
+                                    .where((item) => item['name'] == name)
+                                    .toList(),
                             isRedeem: true,
                             onUserRemove: (removedUser) {
                               ref

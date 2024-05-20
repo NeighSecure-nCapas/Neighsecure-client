@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../splashscreen/splashscreen.dart';
-import '../userregister/userregister.dart';
+import '../../splashscreen/splash_screen.dart';
+import '../user_register/user_register.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'invitationscreen/invitationscreen.dart';
+import 'invitationscreen/invitation_screen.dart';
 
 class HouseManagement extends ConsumerStatefulWidget {
   const HouseManagement({super.key});

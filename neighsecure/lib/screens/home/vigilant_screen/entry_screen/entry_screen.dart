@@ -115,12 +115,12 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                             ),
                             child: const  Padding(
                               padding:
-                              const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                              EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  const Expanded(
+                                  Expanded(
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,10 +134,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                               color: Colors.black,
                                               size: 42,
                                             ),
-                                            const SizedBox(width: 16),
+                                            SizedBox(width: 16),
                                             Text(
                                               'Visitante',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 18,
                                                 color: Colors.black,
@@ -145,21 +145,21 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 8),
+                                        SizedBox(height: 8),
                                         Text(
                                           'Escanea el código QR del visitante para permitir acceso.',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16,
                                             color: Colors.grey,
                                           ),
                                         ),
-                                        const SizedBox(height: 8),
+                                        SizedBox(height: 8),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 40),
-                                  const Column(
+                                  SizedBox(width: 40),
+                                  Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
@@ -229,10 +229,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                               color: Colors.black,
                                               size: 42,
                                             ),
-                                            const SizedBox(width: 16),
+                                            SizedBox(width: 16),
                                             Text(
                                               'Visita anónima',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 18,
                                                 color: Colors.black,
@@ -240,16 +240,16 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 8),
+                                        SizedBox(height: 8),
                                         Text(
                                           'Registra una visita anónima',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16,
                                             color: Colors.grey,
                                           ),
                                         ),
-                                        const SizedBox(height: 8),
+                                        SizedBox(height: 8),
                                       ],
                                     ),
                                   ),

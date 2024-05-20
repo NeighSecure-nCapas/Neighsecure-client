@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/screens/home/accountmanagement/accountmanagement.dart';
+import 'package:neighsecure/screens/home/accountmanagement/account_management.dart';
 
 class UserRegister extends ConsumerStatefulWidget {
   const UserRegister({super.key});

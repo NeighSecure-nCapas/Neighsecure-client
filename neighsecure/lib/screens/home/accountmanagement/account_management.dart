@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/main.dart';
+import 'package:neighsecure/screens/home/permission_management/permission_management.dart';
 
-import '../house_management/housemanagement.dart';
-import '../vigilant_screen/qr_reader/qr_reader.dart';
-import '../qrscreen/qrscreen.dart';
-import '../ticketsmanagement/ticketsmanagement.dart';
+import '../house_management/house_management.dart';
+import '../qrscreen/qr_screen.dart';
 import '../vigilant_screen/vigilant_screen.dart';
 
 class AccountManagement extends ConsumerStatefulWidget {
@@ -554,7 +552,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
-                        const TicketsManagement(),
+                        const PermissionManagement(),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
                       return FadeTransition(
