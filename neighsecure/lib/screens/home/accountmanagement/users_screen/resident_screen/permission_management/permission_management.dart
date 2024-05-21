@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/screens/home/permission_management/visitors_state_screen/visitors_state_screen.dart';
-import 'package:neighsecure/screens/home/permission_management/visitorsscreen/visitors_screen.dart';
-import '../../../providers/testing_user_information_notifier.dart';
-import '../../../providers/testnameprovider.dart';
-import '../accountmanagement/account_management.dart';
+import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitors_state_screen/visitors_state_screen.dart';
+import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_screen.dart';
+import '../../../../../../providers/testing_user_information_notifier.dart';
+import '../../../../../../providers/testnameprovider.dart';
+import '../../../account_management.dart';
 
 class PermissionManagement extends ConsumerStatefulWidget {
   const PermissionManagement({super.key});

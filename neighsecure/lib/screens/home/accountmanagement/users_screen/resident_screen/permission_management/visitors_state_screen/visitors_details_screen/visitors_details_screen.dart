@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../providers/testing_user_information_notifier.dart';
+import '../../../../../../../../providers/testing_user_information_notifier.dart';
 
 class VisitorsDetailsScreen extends ConsumerStatefulWidget {
   const VisitorsDetailsScreen({

@@ -145,6 +145,11 @@ class _AnonymousScreenState extends ConsumerState<AnonymousScreen> {
                         onSaved: (value) {
                           _description = value!;
                         },
+                        onChanged: (value) {
+                          setState(() {
+                            _description = value;
+                          });
+                        },
                       )
                     ),
                   )

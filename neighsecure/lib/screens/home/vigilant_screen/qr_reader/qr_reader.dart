@@ -89,7 +89,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                   icon: const Icon(
                     Icons.arrow_back_ios,
                     size: 24,
-                    color:Colors.grey,
+                    color:Colors.black,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -97,9 +97,16 @@ class _QRViewExampleState extends State<QRViewExample> {
                 ),
                 const Text('Scan QR Code',
                     style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500)),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),),
+                const SizedBox(width: 12),
+                const Icon(
+                  Icons.qr_code,
+                  color: Colors.black,
+                  size: 24,
+                ),
               ],
             )),
         Expanded(flex: 15, child: _buildQrView(context)),
