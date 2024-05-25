@@ -9,8 +9,7 @@ class UserRegister extends ConsumerStatefulWidget {
   ConsumerState<UserRegister> createState() => _UserRegisterState();
 }
 
-class _UserRegisterState extends ConsumerState<UserRegister>{
-
+class _UserRegisterState extends ConsumerState<UserRegister> {
   final _isLoading = false;
 
   var _dui = '';
@@ -41,6 +40,10 @@ class _UserRegisterState extends ConsumerState<UserRegister>{
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    bool isTablet = screenWidth > 600;
+
     return SafeArea(
         child: Scaffold(
       body: Center(
@@ -137,6 +140,11 @@ class _UserRegisterState extends ConsumerState<UserRegister>{
                     onSaved: (value) {
                       _dui = value!;
                     },
+                    onChanged: (value) {
+                      setState(() {
+                        _dui = value;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -145,16 +153,18 @@ class _UserRegisterState extends ConsumerState<UserRegister>{
         ),
       )),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+        padding: isTablet
+            ? const EdgeInsets.symmetric(horizontal:325, vertical: 24)
+            : const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
         child: SizedBox(
-          width: double.infinity,
+          width: isTablet ? 600 : double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              _submit();
+              _dui.isNotEmpty ? _submit() : null;
             },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(
-                const Color(0xFF001E2C),
+                _dui.isNotEmpty ? const Color(0xFF001E2C) : Colors.grey,
               ),
               padding: WidgetStateProperty.all(
                 const EdgeInsets.symmetric(

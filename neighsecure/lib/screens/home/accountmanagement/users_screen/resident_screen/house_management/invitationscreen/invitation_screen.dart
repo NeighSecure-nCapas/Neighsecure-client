@@ -34,7 +34,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
               topRight: Radius.circular(20),
             ),
           ),
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(40.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -120,7 +120,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
                 topRight: Radius.circular(20),
               ),
             ),
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(40.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
@@ -196,7 +196,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
                 topRight: Radius.circular(20),
               ),
             ),
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(40.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,

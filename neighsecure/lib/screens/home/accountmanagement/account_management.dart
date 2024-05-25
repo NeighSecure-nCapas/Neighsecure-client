@@ -6,7 +6,7 @@ import 'package:neighsecure/screens/home/accountmanagement/users_screen/visitor_
 
 import 'users_screen/resident_screen/house_management/house_management.dart';
 import 'users_screen/qrscreen/qr_screen.dart';
-import '../vigilant_screen/vigilant_screen.dart';
+import 'users_screen/vigilant_screen/vigilant_screen.dart';
 
 class AccountManagement extends ConsumerStatefulWidget {
   const AccountManagement({super.key});

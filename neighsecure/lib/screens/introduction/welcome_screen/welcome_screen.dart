@@ -12,11 +12,13 @@ class WelcomeScreen extends ConsumerStatefulWidget {
 
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
-  _submit(){
+
+  _submit() {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const OnBoardingScreen(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const OnBoardingScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
@@ -29,7 +31,12 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    bool isTablet = screenWidth > 600;
+
+    return SafeArea(
+        child: Scaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
@@ -58,7 +65,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               ),
               const SizedBox(height: 88.5),
               SizedBox(
-                width: double.infinity,
+                width: isTablet ? 600 : double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
                     _submit();
