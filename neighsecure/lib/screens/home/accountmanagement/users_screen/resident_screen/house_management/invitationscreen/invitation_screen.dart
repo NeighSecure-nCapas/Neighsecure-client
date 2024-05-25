@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class InvitationScreen extends StatefulWidget {
-  final Function addUser;
+import '../../../../../../../providers/testing_user_information_notifier.dart';
+
+class InvitationScreen extends ConsumerStatefulWidget {
+  const InvitationScreen(
+      {super.key, required this.totalUsers, required this.currentUserCount});
+
   final int totalUsers;
   final int currentUserCount;
-
-  const InvitationScreen(
-      {super.key, required this.addUser,
-      required this.totalUsers,
-      required this.currentUserCount});
 
   @override
   _InvitationScreenState createState() => _InvitationScreenState();
 }
 
-class _InvitationScreenState extends State<InvitationScreen> {
+class _InvitationScreenState extends ConsumerState<InvitationScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String _email = '';
@@ -24,13 +24,6 @@ class _InvitationScreenState extends State<InvitationScreen> {
     FocusScope.of(context).unfocus();
 
     if (widget.currentUserCount >= widget.totalUsers) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User limit reached.')),
-      );
-      return;
-    }
-
-    if (isValid) {
       showModalBottomSheet(
         context: context,
         builder: (context) => Container(
@@ -47,12 +40,12 @@ class _InvitationScreenState extends State<InvitationScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
-                Icons.check_circle,
-                color: Colors.green,
+                Icons.error_outline,
+                color: Colors.red,
                 size: 48,
               ),
               const SizedBox(height: 20),
-              const Text('Listo!',
+              const Text('Error!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 20,
@@ -60,7 +53,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                       color: Colors.black)),
               const SizedBox(height: 20),
               const Text(
-                  'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
+                  'Se ha excedido el número de residentes permitidos en tu hogar. Si deseas modificar el número de residentes permitidos, por favor contacta a soporte.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 14,
@@ -71,8 +64,6 @@ class _InvitationScreenState extends State<InvitationScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    _formKey.currentState!.save();
-                    widget.addUser(_email);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
@@ -106,6 +97,173 @@ class _InvitationScreenState extends State<InvitationScreen> {
           ),
         ),
       );
+      return;
+    }
+
+    if (isValid) {
+      _formKey.currentState!.save();
+
+      Map<String, String>? user;
+
+      try {
+        user = ref
+            .read(userInformationProvider)
+            .firstWhere((user) => user['email'] == _email);
+      } catch (e) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 48,
+                ),
+                const SizedBox(height: 20),
+                const Text('Error!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black)),
+                const SizedBox(height: 20),
+                const Text(
+                    'No ha sido posible enviadar la invitación al correo electrónico que has proporcionado.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey)),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        const Color(0xFF001E2C),
+                      ),
+                      padding: WidgetStateProperty.all(
+                        const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 28,
+                        ),
+                      ),
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Listo',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+
+      if (user != null) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 48,
+                ),
+                const SizedBox(height: 20),
+                const Text('Listo!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black)),
+                const SizedBox(height: 20),
+                const Text(
+                    'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey)),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      //update to new rol
+                      ref
+                          .read(userInformationProvider.notifier)
+                          .updateUserRole(user!);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        const Color(0xFF001E2C),
+                      ),
+                      padding: WidgetStateProperty.all(
+                        const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 28,
+                        ),
+                      ),
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Listo',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      }
     }
   }
 

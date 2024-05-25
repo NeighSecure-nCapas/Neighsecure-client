@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitors_state_screen/visitors_state_screen.dart';
+import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_state_screen/visitors_state_screen.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_screen.dart';
 import '../../../../../../providers/testing_user_information_notifier.dart';
 import '../../../../../../providers/testnameprovider.dart';
@@ -20,13 +21,18 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
 
   var completedVisitors = false;
 
+
   @override
   Widget build(BuildContext context) {
-    final userInformation = ref.watch(userInformationProvider);
+    final userInformation = ref
+        .watch(userInformationProvider)
+        .where((user) => user['role'] == 'visitante')
+        .toList();
 
     print(userInformation);
 
     final name = ref.watch(nameProvider.notifier).state;
+
 
     return SafeArea(
       child: Scaffold(
@@ -43,6 +49,8 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                     children: [
                       GestureDetector(
                         onTap: () {
+//set name to empty
+                          ref.read(nameProvider.notifier).updateName('');
                           Navigator.pop(context);
                         },
                         child: const Icon(
@@ -64,7 +72,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                   Consumer(
                     builder: (context, watch, child) {
                       return TextFormField(
-                        initialValue: name,
+                        initialValue: '',
                         decoration: InputDecoration(
                           labelText: 'Nombre',
                           fillColor: Colors.grey[200], // background color
@@ -82,12 +90,6 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                         autocorrect: false,
                         textCapitalization: TextCapitalization.none,
                         keyboardType: TextInputType.name,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Por favor ingresa un nombre';
-                          }
-                          return null;
-                        },
                         onChanged: (value) {
                           ref.read(nameProvider.notifier).updateName(value);
                         },
@@ -112,6 +114,8 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                           ),
                           TextButton(
                             onPressed: () {
+                              //set name to empty
+                              ref.read(nameProvider.notifier).updateName('');
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
@@ -177,6 +181,8 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                           ),
                           TextButton(
                             onPressed: () {
+                              //set name to empty
+                              ref.read(nameProvider.notifier).updateName('');
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(

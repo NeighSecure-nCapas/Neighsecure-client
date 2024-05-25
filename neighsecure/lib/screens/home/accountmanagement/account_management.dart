@@ -19,7 +19,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
     'name': 'John Doe',
     'email': 'johndave@gmail.com',
     'phone': '12345678',
-    'role': 'visitante',
+    'role': 'encargado',
     'permisos': 'true',
     'arrayofpasses': [
       {

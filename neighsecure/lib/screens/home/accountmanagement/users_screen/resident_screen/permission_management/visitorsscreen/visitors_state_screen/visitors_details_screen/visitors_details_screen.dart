@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../../../providers/testing_user_information_notifier.dart';
+import '../../../../../../../../../providers/testing_user_information_notifier.dart';
 
 class VisitorsDetailsScreen extends ConsumerStatefulWidget {
   const VisitorsDetailsScreen({
@@ -16,6 +16,60 @@ class VisitorsDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
+
+  void _acceptVisit(Map<String, String> userInformation) {
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: const Text(
+            'Aceptar la solicitud de invitacion de usuario',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          content: const Text(
+              '¿Estás seguro de que deseas aceptar la invitacion de este usuario?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Aceptar',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF001E2C),
+                ),
+              ),
+              onPressed: () {
+                //Remove user from the provider
+                ref.read(userInformationProvider.notifier).updateUserRedeem(userInformation);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _submit(Map<String, String> userInformation) {
     FocusScope.of(context).unfocus();
 
@@ -199,11 +253,15 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              _submit(widget.userInformation);
+              widget.userInformation['redeem'] == 'true' ?
+               _submit(widget.userInformation) :
+              _acceptVisit(widget.userInformation);
             },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(
-                const Color(0xFFBA1A1A),
+                widget.userInformation['redeem'] == 'true'
+                    ? const Color(0xFFBA1A1A)
+                    : const Color(0xFF001E2C),
               ),
               padding: WidgetStateProperty.all(
                 const EdgeInsets.symmetric(
@@ -217,9 +275,11 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                 ),
               ),
             ),
-            child: const Text(
-              'Eliminar',
-              style: TextStyle(
+            child: Text(
+              widget.userInformation['redeem'] == 'true'
+                  ? 'Eliminar'
+                  : 'Aceptar visita',
+              style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 18,
                 color: Colors.white,
