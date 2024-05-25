@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/screens/home/ticketsmanagement/visitors_state_screen/visitors_state_screen.dart';
-import 'package:neighsecure/screens/home/ticketsmanagement/visitorsscreen/visitorsscreen.dart';
-import '../../../providers/testing_user_information_notifier.dart';
-import '../../../providers/testnameprovider.dart';
-import '../accountmanagement/accountmanagement.dart';
+import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_state_screen/visitors_state_screen.dart';
+import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_screen.dart';
+import '../../../../../../providers/testing_user_information_notifier.dart';
+import '../../../../../../providers/testnameprovider.dart';
+import '../../../account_management.dart';
 
-class TicketsManagement extends ConsumerStatefulWidget {
-  const TicketsManagement({super.key});
+class PermissionManagement extends ConsumerStatefulWidget {
+  const PermissionManagement({super.key});
   @override
-  ConsumerState<TicketsManagement> createState() => _TicketsManagementState();
+  ConsumerState<PermissionManagement> createState() =>
+      _PermissionManagementState();
 }
 
-class _TicketsManagementState extends ConsumerState<TicketsManagement> {
+class _PermissionManagementState extends ConsumerState<PermissionManagement> {
   final _formKey = GlobalKey<FormState>();
 
   var pendingVisitors = false;
 
   var completedVisitors = false;
 
+
   @override
   Widget build(BuildContext context) {
-    final userInformation = ref.watch(userInformationProvider);
+    final userInformation = ref
+        .watch(userInformationProvider)
+        .where((user) => user['role'] == 'visitante')
+        .toList();
 
     print(userInformation);
 
     final name = ref.watch(nameProvider.notifier).state;
+
 
     return SafeArea(
       child: Scaffold(
@@ -42,6 +49,8 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                     children: [
                       GestureDetector(
                         onTap: () {
+//set name to empty
+                          ref.read(nameProvider.notifier).updateName('');
                           Navigator.pop(context);
                         },
                         child: const Icon(
@@ -63,7 +72,7 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                   Consumer(
                     builder: (context, watch, child) {
                       return TextFormField(
-                        initialValue: name,
+                        initialValue: '',
                         decoration: InputDecoration(
                           labelText: 'Nombre',
                           fillColor: Colors.grey[200], // background color
@@ -81,12 +90,6 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                         autocorrect: false,
                         textCapitalization: TextCapitalization.none,
                         keyboardType: TextInputType.name,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Por favor ingresa un nombre';
-                          }
-                          return null;
-                        },
                         onChanged: (value) {
                           ref.read(nameProvider.notifier).updateName(value);
                         },
@@ -111,6 +114,8 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                           ),
                           TextButton(
                             onPressed: () {
+                              //set name to empty
+                              ref.read(nameProvider.notifier).updateName('');
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
@@ -176,14 +181,16 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                           ),
                           TextButton(
                             onPressed: () {
+                              //set name to empty
+                              ref.read(nameProvider.notifier).updateName('');
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
                                   pageBuilder: (context, animation,
-                                      secondaryAnimation) =>
+                                          secondaryAnimation) =>
                                       VisitorsStateScreen(
-                                        isRedeem: true,
-                                      ),
+                                    isRedeem: true,
+                                  ),
                                   transitionsBuilder: (context, animation,
                                       secondaryAnimation, child) {
                                     return FadeTransition(
@@ -211,8 +218,8 @@ class _TicketsManagementState extends ConsumerState<TicketsManagement> {
                             userInformation: name.isEmpty
                                 ? userInformation
                                 : userInformation
-                                .where((item) => item['name'] == name)
-                                .toList(),
+                                    .where((item) => item['name'] == name)
+                                    .toList(),
                             isRedeem: true,
                             onUserRemove: (removedUser) {
                               ref

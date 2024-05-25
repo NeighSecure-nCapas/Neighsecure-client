@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:neighsecure/screens/introduction/welcomescreen/welcomescreen.dart';
+import 'package:neighsecure/screens/introduction/welcome_screen/welcome_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: App()));

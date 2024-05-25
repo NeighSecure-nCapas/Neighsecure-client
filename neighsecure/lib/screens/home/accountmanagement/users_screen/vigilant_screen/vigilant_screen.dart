@@ -16,6 +16,12 @@ class _VigilantScreenState extends ConsumerState<VigilantScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    bool isTablet = screenWidth > 600;
+
+
     return SafeArea(
       child: Scaffold(
           body: Padding(
@@ -34,17 +40,6 @@ class _VigilantScreenState extends ConsumerState<VigilantScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           //Return Icon
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_ios,
-                              size: 24,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          const SizedBox(width: 12),
                           const Icon(
                             Icons.badge_outlined,
                             color: Colors.black,
@@ -82,11 +77,11 @@ class _VigilantScreenState extends ConsumerState<VigilantScreen> {
                           )
                         ],
                       ),
-                      const SizedBox(height:250),
+                      const SizedBox(height:175),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
                         child: SizedBox(
-                          width: double.infinity,
+                          width: isTablet ? 600 : double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
@@ -139,7 +134,7 @@ class _VigilantScreenState extends ConsumerState<VigilantScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
                         child: SizedBox(
-                          width: double.infinity,
+                          width: isTablet ? 600 : double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(

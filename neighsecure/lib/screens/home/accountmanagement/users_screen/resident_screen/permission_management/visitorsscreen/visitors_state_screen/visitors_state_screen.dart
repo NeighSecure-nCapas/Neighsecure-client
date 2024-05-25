@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/providers/testing_user_information_notifier.dart';
 import 'package:neighsecure/providers/testnameprovider.dart';
 
-import '../visitorsscreen/visitorsscreen.dart';
+import '../visitors_screen.dart';
 
 class VisitorsStateScreen extends ConsumerStatefulWidget {
   VisitorsStateScreen(
@@ -41,6 +42,8 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
                   children: [
                     GestureDetector(
                       onTap: () {
+                        //set name to empty
+                        ref.read(nameProvider.notifier).updateName('');
                         Navigator.pop(context);
                       },
                       child: const Icon(
@@ -62,7 +65,6 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
                 Consumer(
                   builder: (context, watch, child) {
                     return TextFormField(
-                      initialValue: name,
                       decoration: InputDecoration(
                         labelText: 'Nombre',
                         fillColor: Colors.grey[200], // background color
@@ -103,7 +105,7 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
                           .where((item) => item['name'] == name)
                           .toList(),
                       isRedeem: widget.isRedeem,
-                        displayeElements: userInformation.length,
+                      displayeElements: userInformation.length,
                       onUserRemove: (removedUser) {
                         ref.read(userInformationProvider.notifier).removeUser(removedUser);
                       },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../splashscreen/splashscreen.dart';
-import '../userregister/userregister.dart';
+import '../../splashscreen/splash_screen.dart';
+import '../user_register/user_register.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -15,6 +15,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    bool isTablet = screenWidth > 600;
+
+
     return SafeArea(child: Scaffold(
         body: Center(
           child: Padding(
@@ -30,7 +36,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 const SizedBox(height: 52),
                 if(!_isSigningIn)
                   SizedBox(
-                      width: double.infinity,
+                      width: isTablet ? 600 : double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
