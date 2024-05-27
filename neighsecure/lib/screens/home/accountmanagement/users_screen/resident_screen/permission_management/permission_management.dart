@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/adding_visit/adding_visit.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_state_screen/visitors_state_screen.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_screen.dart';
 import '../../../../../../providers/testing_user_information_notifier.dart';
 import '../../../../../../providers/testnameprovider.dart';
-import '../../../account_management.dart';
 
 class PermissionManagement extends ConsumerStatefulWidget {
   const PermissionManagement({super.key});
@@ -21,7 +20,6 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
 
   var completedVisitors = false;
 
-
   @override
   Widget build(BuildContext context) {
     final userInformation = ref
@@ -32,7 +30,6 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
     print(userInformation);
 
     final name = ref.watch(nameProvider.notifier).state;
-
 
     return SafeArea(
       child: Scaffold(
@@ -49,7 +46,6 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                     children: [
                       GestureDetector(
                         onTap: () {
-//set name to empty
                           ref.read(nameProvider.notifier).updateName('');
                           Navigator.pop(context);
                         },
@@ -246,7 +242,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
-                          const AccountManagement(),
+                          const AddingVisit(),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         return FadeTransition(

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/permission_management.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/resident_screen.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/visitor_screen/visitor_screen.dart';
 
-import 'users_screen/resident_screen/house_management/house_management.dart';
-import 'users_screen/qrscreen/qr_screen.dart';
 import 'users_screen/vigilant_screen/vigilant_screen.dart';
 
 class AccountManagement extends ConsumerStatefulWidget {

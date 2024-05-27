@@ -94,6 +94,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
           itemBuilder: (context, index) {
             if(index < filteredName.length) {
               return GestureDetector(
+
                 onTap: () {
                   ref.read(nameProvider.notifier).updateName('');
                   Navigator.push(
