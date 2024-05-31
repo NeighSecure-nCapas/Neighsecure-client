@@ -14,6 +14,7 @@ class PermissionManagement extends ConsumerStatefulWidget {
 }
 
 class _PermissionManagementState extends ConsumerState<PermissionManagement> {
+
   final _formKey = GlobalKey<FormState>();
 
   var pendingVisitors = false;
@@ -22,7 +23,8 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
 
   @override
   Widget build(BuildContext context) {
-    final userInformation = ref
+
+    var userInformation = ref
         .watch(userInformationProvider)
         .where((user) => user['role'] == 'visitante')
         .toList();

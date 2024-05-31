@@ -39,11 +39,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 48,
-              ),
               const SizedBox(height: 20),
               const Text('Error!',
                   textAlign: TextAlign.center,
@@ -103,7 +98,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
     if (isValid) {
       _formKey.currentState!.save();
 
-      Map<String, String>? user;
+      Map<String, dynamic>? user;
 
       try {
         user = ref
@@ -125,11 +120,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 48,
-                ),
                 const SizedBox(height: 20),
                 const Text('Error!',
                     textAlign: TextAlign.center,
@@ -201,11 +191,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 48,
-                ),
                 const SizedBox(height: 20),
                 const Text('Listo!',
                     textAlign: TextAlign.center,

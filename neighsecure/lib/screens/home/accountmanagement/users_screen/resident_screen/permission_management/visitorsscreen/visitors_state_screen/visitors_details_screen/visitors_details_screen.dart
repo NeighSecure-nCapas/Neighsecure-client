@@ -9,7 +9,7 @@ class VisitorsDetailsScreen extends ConsumerStatefulWidget {
     required this.userInformation,
   });
 
-  final Map<String, String> userInformation;
+  final Map<String, dynamic> userInformation;
 
   @override
   _VisitorsDetailsScreenState createState() => _VisitorsDetailsScreenState();
@@ -17,7 +17,7 @@ class VisitorsDetailsScreen extends ConsumerStatefulWidget {
 
 class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
 
-  void _acceptVisit(Map<String, String> userInformation) {
+  void _acceptVisit(Map<String, dynamic> userInformation) {
 
     showDialog(
       context: context,
@@ -70,7 +70,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
     );
   }
 
-  void _submit(Map<String, String> userInformation) {
+  void _submit(Map<String, dynamic> userInformation) {
     FocusScope.of(context).unfocus();
 
     showDialog(
@@ -228,7 +228,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
             ),
             const SizedBox(height: 12),
             Column(
-              children: entryHoursList.map((entryHour) {
+              children: entryHoursList.map<Widget>((entryHour) {
                 return Column(
                   children: [
                     Text(

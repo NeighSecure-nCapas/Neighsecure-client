@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
+class UserInformationNotifier
+    extends StateNotifier<List<Map<String, dynamic>>> {
   UserInformationNotifier()
       : super([
           {
@@ -9,7 +10,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'email': 'caliente1@gmail.com',
             'tipoOfTicket': 'true',
             'redeem': 'false',
-            'inviteBy': 'Pamela Gomez'
+            'inviteBy': 'Pamela Gomez',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Victor Jose',
@@ -17,7 +31,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'email': 'caliente2@gmail.com',
             'tipoOfTicket': 'true',
             'redeem': 'false',
-            'inviteBy': 'Pamela Gomez'
+            'inviteBy': 'Pamela Gomez',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Alejandro Jose',
@@ -25,7 +52,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'email': 'caliente3@gmail.com',
             'tipoOfTicket': 'true',
             'redeem': 'false',
-            'inviteBy': 'Pamela Gomez'
+            'inviteBy': 'Pamela Gomez',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Melvin Jose',
@@ -33,7 +73,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'email': 'caliente4@gmail.com',
             'tipoOfTicket': 'true',
             'redeem': 'false',
-            'inviteBy': 'Pamela Gomez'
+            'inviteBy': 'Pamela Gomez',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Pamela Monica',
@@ -41,7 +94,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'email': 'caliente5@gmail.com',
             'tipoOfTicket': 'true',
             'redeem': 'false',
-            'inviteBy': 'Pamela Gomez'
+            'inviteBy': 'Pamela Gomez',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Claudia Rosales',
@@ -49,7 +115,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'email': 'caliente6@gmail.com',
             'tipoOfTicket': 'true',
             'redeem': 'false',
-            'inviteBy': 'Diego Gomez'
+            'inviteBy': 'Diego Gomez',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Steve Rene',
@@ -57,7 +136,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
             'email': 'caliente7@gmail.com',
             'tipoOfTicket': 'true',
             'redeem': 'false',
-            'inviteBy': 'Diego Gomez'
+            'inviteBy': 'Diego Gomez',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Billy Caliente',
@@ -76,7 +168,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
               '2024-04-25 18:00 pm',
             ].join(','),
             'redeem': 'true',
-            'inviteBy': 'Diego Viana'
+            'inviteBy': 'Diego Viana',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Melvin Diaz',
@@ -92,7 +197,20 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
               '2024-04-25 15:00 pm',
             ].join(','),
             'redeem': 'true',
-            'inviteBy': 'Diego Viana'
+            'inviteBy': 'Diego Viana',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Alejandro Diaz',
@@ -108,26 +226,53 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
               '2024-04-25 15:00 pm',
             ].join(','),
             'redeem': 'true',
-            'inviteBy': 'Diego Viana'
+            'inviteBy': 'Diego Viana',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
           },
           {
             'name': 'Juan Perez',
             'role': 'residente',
-            'email': 'juanperez@gmail.com'
+            'email': 'juanperez@gmail.com',
           },
           {
             'name': 'Pamela Perez',
             'role': 'residente',
             'email': 'pamelaperez@gmail.com'
           },
+          {
+            'name': 'John Doe',
+            'email': 'johndave@gmail.com',
+            'phone': '12345678',
+            'role': 'encargado',
+            'permisos': 'true',
+          },
+          {
+            'name': 'Diego Viana Doe',
+            'email': 'diegovianadoe@gmail.com',
+            'phone': '12345678',
+            'role': 'vigilante',
+            'permisos': 'true',
+          },
         ]);
 
-  void removeUser(Map<String, String> user) {
+  void removeUser(Map<String, dynamic> user) {
     state = state.where((element) => element != user).toList();
   }
 
   //Update the user redeem
-  void updateUserRedeem(Map<String, String> user) {
+  void updateUserRedeem(Map<String, dynamic> user) {
     state = state.map((element) {
       if (element == user) {
         return {
@@ -140,7 +285,7 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
   }
 
   //Update the user role to residente
-  void updateUserRole(Map<String, String> user) {
+  void updateUserRole(Map<String, dynamic> user) {
     state = state.map((element) {
       if (element == user) {
         return {
@@ -153,7 +298,7 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
   }
 
   //Return the user role to visitante
-  void returnUserRole(Map<String, String> user) {
+  void returnUserRole(Map<String, dynamic> user) {
     state = state.map((element) {
       if (element == user) {
         return {
@@ -166,13 +311,13 @@ class UserInformationNotifier extends StateNotifier<List<Map<String, String>>> {
   }
 
   //Add a new user
-  void addUser(Map<String, String> user) {
+  void addUser(Map<String, dynamic> user) {
     state = [...state, user];
   }
 }
 
 final userInformationProvider =
-    StateNotifierProvider<UserInformationNotifier, List<Map<String, String>>>(
+    StateNotifierProvider<UserInformationNotifier, List<Map<String, dynamic>>>(
         (ref) {
   return UserInformationNotifier();
 });

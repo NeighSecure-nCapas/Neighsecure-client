@@ -34,15 +34,27 @@ class _QRViewExampleState extends State<QRViewExample> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+    bool isProcessing = false;
+
     setState(() {
       this.controller = controller;
     });
+
     controller.scannedDataStream.listen((scanData) {
+
+      if(isProcessing){
+        return;
+      }
+
       setState(() {
         result = scanData;
       });
 
       if (result != null) {
+        isProcessing = true;
+        controller.pauseCamera();
+
+
         showModalBottomSheet(
           context: context,
           builder: (context) => Container(
@@ -58,11 +70,6 @@ class _QRViewExampleState extends State<QRViewExample> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 48,
-                ),
                 const SizedBox(height: 20),
                 const Text('Listo!',
                     textAlign: TextAlign.center,
@@ -72,7 +79,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                         color: Colors.black)),
                 const SizedBox(height: 20),
                 const Text(
-                    'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
+                    'El código QR se ha escaneado exitosamente. Acceso concedido. ¡Bienvenido/a!.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 14,
@@ -117,10 +124,7 @@ class _QRViewExampleState extends State<QRViewExample> {
           ),
         );
       }
-
     });
-
-
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {

@@ -76,7 +76,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                   'Vigilante',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.grey,
                                   ),
                                   textAlign: TextAlign.start,
@@ -140,14 +140,14 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                               Icon(
                                                 Icons.badge_outlined,
                                                 color: Colors.black,
-                                                size: 42,
+                                                size: 36,
                                               ),
                                               SizedBox(width: 16),
                                               Text(
                                                 'Visitante',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 18,
+                                                  fontSize: 14,
                                                   color: Colors.black,
                                                 ),
                                               ),
@@ -158,7 +158,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                             'Escanea el código QR del visitante para permitir acceso.',
                                             style: TextStyle(
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.grey,
                                             ),
                                           ),
@@ -238,14 +238,14 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                               Icon(
                                                 Icons.badge_outlined,
                                                 color: Colors.black,
-                                                size: 42,
+                                                size: 36,
                                               ),
                                               SizedBox(width: 16),
                                               Text(
                                                 'Visita anónima',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 18,
+                                                  fontSize: 14,
                                                   color: Colors.black,
                                                 ),
                                               ),
@@ -256,7 +256,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                             'Registra una visita anónima',
                                             style: TextStyle(
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.grey,
                                             ),
                                           ),

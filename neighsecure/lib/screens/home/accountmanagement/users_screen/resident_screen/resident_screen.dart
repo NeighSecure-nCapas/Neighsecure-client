@@ -151,12 +151,12 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
                                             color: Colors.black,
                                             size: 24,
                                           ),
-                                          SizedBox(width: 21),
+                                          SizedBox(width: 14),
                                           Text(
                                             'Gestionar hogar',
                                             style: TextStyle(
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 20,
+                                              fontSize: 14,
                                               color: Colors.black,
                                             ),
                                           ),
@@ -248,12 +248,12 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
                                           color: Colors.black,
                                           size: 24,
                                         ),
-                                        SizedBox(width: 21),
+                                        SizedBox(width: 14),
                                         Text(
                                           'Gestionar visitas',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w700,
-                                            fontSize: 20,
+                                            fontSize: 14,
                                             color: Colors.black,
                                           ),
                                         ),

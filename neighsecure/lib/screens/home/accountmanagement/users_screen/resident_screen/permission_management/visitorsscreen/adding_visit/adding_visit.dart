@@ -2,7 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:day_picker/day_picker.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:intl/intl.dart';
+import 'package:neighsecure/components/custom_text.dart';
+import 'package:neighsecure/components/custom_elevated_button.dart';
+import 'package:neighsecure/components/date_text.dart';
+import 'package:neighsecure/components/selected_days_text.dart';
 
 enum DatePickerMode { single, range, multiple }
 
@@ -40,10 +44,9 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
 
   final customWidgetKey = GlobalKey<SelectWeekDaysState>();
 
-  final List<int> _selectedWeekDays = [];
+  late List<int>? _selectDaysOfWeek = [];
 
   EntryType _entryType = EntryType.single;
-
 
   Future<void> _selectDate(BuildContext context) async {
     switch (_datePickerMode) {
@@ -56,8 +59,10 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
         );
 
         if (picked != null) {
-          _dateStart = picked;
-          _dateEnd = picked;
+          setState(() {
+            _dateStart = picked;
+            _dateEnd = picked;
+          });
           if (kDebugMode) {
             print('Selected Date: ${picked.toString()}');
           }
@@ -75,76 +80,90 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
         );
 
         if (picked != null) {
-          _dateStart = picked.start;
-          _dateEnd = picked.end;
-          print('Start Date: ${picked.start.toString()}');
-          print('End Date: ${picked.end.toString()}');
+          setState(() {
+            _dateStart = picked.start;
+            _dateEnd = picked.end;
+          });
+          if (kDebugMode) {
+            print('Start Date: ${picked.start.toString()}');
+            print('End Date: ${picked.end.toString()}');
+          }
         }
         break;
 
       case DatePickerMode.multiple:
-        final DateRangePickerController controller = DateRangePickerController();
-        const DateRangePickerSelectionMode selectionMode = DateRangePickerSelectionMode.multiple;
+        final DateTimeRange? picked = await showDateRangePicker(
+          context: context,
+          initialDateRange: DateTimeRange(
+            start: DateTime.now(),
+            end: DateTime.now().add(const Duration(days: 1)),
+          ),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2050),
+        );
 
-        showDialog(
+        if (picked != null) {
+          setState(() {
+            _dateStart = picked.start;
+            _dateEnd = picked.end;
+          });
+        }
+
+        List<int>? selectedDaysOfWeek = await showDialog<List<int>>(
           context: context,
           builder: (BuildContext context) {
-            return Dialog(
-              child: SizedBox(
-                width: double.infinity,
-                //minimo necesario
-                child: Container(
-                  padding: const EdgeInsets.all(20.0), // Add padding
-                  decoration: BoxDecoration(
-                    color: Colors.white, // Change background color
-                    border: Border.all(color: Colors.black, width: 2.0), // Add border
-                    borderRadius: BorderRadius.circular(10.0), // Add border radius
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SfDateRangePicker(
-                        backgroundColor: Colors.white,
-                        view: DateRangePickerView.month,
-                        headerStyle: const DateRangePickerHeaderStyle(
-                          textAlign: TextAlign.start,
-                          backgroundColor: Colors.white,
-                        ),
-                        controller: controller,
-                        selectionMode: selectionMode,
-                        onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                          if (args.value is PickerDateRange) {
-                            final PickerDateRange range = args.value;
-                            _dateStart = range.startDate;
-                            _dateEnd = range.endDate;
-                          } else if (args.value is DateTime) {
-                            _dateStart = args.value;
-                            _dateEnd = args.value;
-                          } else if (args.value is List<DateTime>) {
-                            List<DateTime> dates = args.value;
-                            // Do something with the selected dates
-                          }
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          if (kDebugMode) {
-                            print('Selected Dates: ${controller.selectedDates}');
-                          }
-                          // Save the selected dates here
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+            return AlertDialog(
+              title: const Text(
+                'Selecciona los dias se la semana',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black),
               ),
+              content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        for (var i = 1; i <= 7; i++)
+                          CheckboxListTile(
+                            title: Text(
+                              DateFormat.E().format(DateTime(2024, 1, i)),
+                            ),
+                            value: _selectDaysOfWeek?.contains(i),
+                            onChanged: (bool? value) {
+                              setState(() {
+                                if (value == true) {
+                                  _selectDaysOfWeek?.add(i);
+                                } else {
+                                  _selectDaysOfWeek?.remove(i);
+                                }
+                              });
+                            },
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(_selectDaysOfWeek);
+                  },
+                ),
+              ],
             );
           },
         );
+
+        if (picked != null) {
+          setState(() {
+            _selectDaysOfWeek = selectedDaysOfWeek;
+          });
+        }
+
         break;
     }
   }
@@ -171,7 +190,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
       initialTime: TimeOfDay.now(),
     );
 
-    if (picked != null) {
+    if (picked != null && mounted) {
       if (kDebugMode) {
         print(picked.format(context));
       }
@@ -187,7 +206,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
       initialTime: TimeOfDay.now(),
     );
 
-    if (picked != null) {
+    if (picked != null && mounted) {
       if (kDebugMode) {
         print(picked.format(context));
       }
@@ -203,7 +222,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
       initialTime: TimeOfDay.now(),
     );
 
-    if (picked != null) {
+    if (picked != null && mounted) {
       if (kDebugMode) {
         print(picked.format(context));
       }
@@ -505,6 +524,10 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                         onChanged: (EntryType? value) {
                           setState(() {
                             _entryType = value!;
+                            _dateEnd = null;
+                            _dateStart = null;
+                            _timeEndRange = null;
+                            _timeStartRange = null;
                           });
                         },
                       ),
@@ -517,25 +540,25 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                         onChanged: (EntryType? value) {
                           setState(() {
                             _entryType = value!;
+                            _dateEnd = null;
+                            _dateStart = null;
+                            _timeEndRange = null;
+                            _timeStartRange = null;
                           });
                         },
                       ),
                     ),
                     _entryType == EntryType.multiple
-                        ? const Padding(
+                        ? Padding(
                             padding: EdgeInsets.all(30),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  'Entrada única',
-                                  style: TextStyle(
+                                CustomText(
+                                    instruction: 'Entrada única',
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                                    color: Colors.grey),
                               ],
                             ),
                           )
@@ -554,31 +577,63 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          'Entrada única',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black,
-                                          ),
+                                        CustomText(
+                                          instruction: 'Entrada única',
+                                          fontSize: 16,
+                                          color: Colors.grey,
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 24),
-                                    const Text(
-                                      'Selecciona una hora específica.',
-                                      style: TextStyle(
+                                    CustomText(
+                                        instruction:
+                                            'Selecciona el dia de ingreso.',
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey,
+                                        color: Colors.grey),
+                                    const SizedBox(height: 24),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        _selectDate(context);
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            WidgetStateProperty.all(
+                                          const Color(0xFF001E2C),
+                                        ),
+                                        padding: WidgetStateProperty.all(
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                          ),
+                                        ),
+                                        shape: WidgetStateProperty.all(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
                                       ),
+                                      child: CustomText(
+                                          instruction: 'Selecciona una fecha',
+                                          fontSize: 14,
+                                          color: Colors.grey),
                                     ),
+                                    _dateStart != null
+                                        ? DateText(
+                                            date: _dateStart!,
+                                            label: 'Fecha de inicio')
+                                        : const SizedBox(),
+                                    const SizedBox(height: 24),
+                                    CustomText(
+                                        instruction:
+                                            'Selecciona una hora específica.',
+                                        color: Colors.grey,
+                                        fontSize: 14),
                                     const SizedBox(height: 24),
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -615,14 +670,11 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                       ),
                                     ),
                                     const SizedBox(height: 24),
-                                    const Text(
-                                      'Selecciona un rango de horas.',
-                                      style: TextStyle(
+                                    CustomText(
+                                        instruction:
+                                            'Selecciona un rango de horas.',
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                        color: Colors.grey),
                                     const SizedBox(height: 24),
                                     Row(
                                       mainAxisAlignment:
@@ -630,7 +682,6 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        // Line
                                         const Expanded(
                                           child: Divider(
                                             color: Colors.grey,
@@ -639,7 +690,6 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                           ),
                                         ),
                                         const SizedBox(width: 24),
-                                        // Circle
                                         Container(
                                           width: 12,
                                           height: 12,
@@ -733,20 +783,16 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                             ),
                           ),
                     _entryType == EntryType.single
-                        ? const Padding(
-                            padding: EdgeInsets.all(30),
+                        ? Padding(
+                            padding: const EdgeInsets.all(30),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  'Entrada multiple',
-                                  style: TextStyle(
+                                CustomText(
+                                    instruction: 'Entrada única',
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                                    color: Colors.grey),
                               ],
                             ),
                           )
@@ -765,31 +811,24 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          'Entrada multiple',
-                                          style: TextStyle(
+                                        CustomText(
+                                            instruction: 'Entrada multiple',
                                             fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black,
-                                          ),
-                                        ),
+                                            color: Colors.grey),
                                       ],
                                     ),
                                     const SizedBox(height: 24),
-                                    const Text(
-                                      'Selecciona un rango de horas.',
-                                      style: TextStyle(
+                                    CustomText(
+                                        instruction:
+                                            'Selecciona un rango de horas.',
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                        color: Colors.grey),
                                     const SizedBox(height: 24),
                                     Row(
                                       mainAxisAlignment:
@@ -805,7 +844,8 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                               Text(
                                                 _timeStart == null
                                                     ? 'Hora de inicio'
-                                                    : _timeStart!.format(context),
+                                                    : _timeStart!
+                                                        .format(context),
                                                 style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w400,
@@ -839,8 +879,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                   angle: 90 * 3.14159 / 180,
                                                   child: IconButton(
                                                     onPressed: () {
-                                                      _selectTimeEnd(
-                                                          context);
+                                                      _selectTimeEnd(context);
                                                     },
                                                     icon: const Icon(
                                                       Icons.arrow_forward_ios,
@@ -854,14 +893,11 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                       ],
                                     ),
                                     const SizedBox(height: 24),
-                                    const Text(
-                                      'Selecciona el dia o rango de dias.',
-                                      style: TextStyle(
+                                    CustomText(
+                                        instruction:
+                                            'Selecciona el dia o rango de dias.',
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                        color: Colors.grey),
                                     const SizedBox(height: 24),
                                     Row(
                                       mainAxisAlignment:
@@ -915,35 +951,49 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                           ],
                                         ),
                                         ElevatedButton(
-                                          onPressed: () => _selectDate(context),
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                WidgetStateProperty.all(
-                                              const Color(0xFF001E2C),
-                                            ),
-                                            padding: WidgetStateProperty.all(
-                                              const EdgeInsets.symmetric(
-                                                horizontal: 24,
+                                            onPressed: () {
+                                              _selectDate(context);
+                                            },
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  WidgetStateProperty.all(
+                                                const Color(0xFF001E2C),
+                                              ),
+                                              padding: WidgetStateProperty.all(
+                                                const EdgeInsets.symmetric(
+                                                  vertical: 6,
+                                                  horizontal: 12,
+                                                ),
+                                              ),
+                                              shape: WidgetStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
                                               ),
                                             ),
-                                            shape: WidgetStateProperty.all(
-                                              RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                            ),
-                                          ),
-                                          child: const Text(
-                                            'Select Date',
-                                            style: TextStyle(
+                                            child: CustomText(
+                                              instruction:
+                                                  'Selecciona una fecha',
                                               fontSize: 14,
-                                              fontWeight: FontWeight.w400,
                                               color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
+                                            )),
                                       ],
-                                    )
+                                    ),
+                                    _dateStart != null
+                                        ? DateText(
+                                            date: _dateStart!,
+                                            label: 'Fecha de inicio')
+                                        : const SizedBox(),
+                                    _dateEnd != null
+                                        ? DateText(
+                                            date: _dateEnd!,
+                                            label: 'Fecha de fin')
+                                        : const SizedBox(),
+                                    _selectDaysOfWeek!.isNotEmpty
+                                        ? SelectedDaysText(
+                                            selectedDays: _selectDaysOfWeek)
+                                        : const SizedBox(),
                                   ]),
                             ),
                           ),
@@ -954,40 +1004,8 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
           ),
         )),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              _submit();
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
-                const Color(0xFF001E2C),
-              ),
-              padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(
-                  vertical: 18,
-                  horizontal: 28,
-                ),
-              ),
-              shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            child: const Text(
-              'Listo',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
+      bottomNavigationBar: CustomElevatedButton(
+        onPressed: _submit,
       ),
     ));
   }
