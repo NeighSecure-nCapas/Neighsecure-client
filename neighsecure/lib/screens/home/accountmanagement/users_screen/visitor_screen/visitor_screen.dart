@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/components/buttons/custom_visitor_button.dart';
 
-import '../qrscreen/qr_screen.dart';
+import '../../../../../components/cards/visitor_card.dart';
+import '../../../../../components/cards/visitor_card_dates.dart';
 
 class VisitorScreen extends ConsumerStatefulWidget {
   const VisitorScreen(
@@ -69,7 +71,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'Residennte ${widget.userInformation['role']}',
+                              '${widget.userInformation['role']}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
@@ -168,51 +170,10 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                                         selectPassIndex = index;
                                       });
                                     },
-                                    child: SizedBox(
-                                        width: double.infinity,
-                                        child: Card(
-                                            elevation: selectPassIndex == index
-                                                ? 8.0
-                                                : 0.0,
-                                            color: Theme.of(context)
-                                                .scaffoldBackgroundColor,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(12),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      'Visita ${pass['typeofVisit']}',
-                                                      style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16)),
-                                                  const SizedBox(height: 12),
-                                                  Text(
-                                                    'Estado: ${pass['state']}',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 12),
-                                                  Text(
-                                                    'Fecha: ${pass['date']}',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ))),
+                                    child: VisitDateCard(
+                                      pass: pass,
+                                      isSelected: selectPassIndex == index,
+                                    ),
                                   ),
                                 if (pass['typeofVisit'] == 'multiple')
                                   GestureDetector(
@@ -221,61 +182,10 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                                         selectPassIndex = index;
                                       });
                                     },
-                                    child: SizedBox(
-                                        width: double.infinity,
-                                        child: Card(
-                                          elevation: selectPassIndex == index
-                                              ? 8.0
-                                              : 0.0,
-                                          color: Theme.of(context)
-                                              .scaffoldBackgroundColor,
-                                          child: Padding(
-                                              padding: const EdgeInsets.all(12),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      'Visita ${pass['typeofVisit']}',
-                                                      style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16)),
-                                                  const SizedBox(height: 12),
-                                                  Text(
-                                                    'Estado: ${pass['state']}',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 12),
-                                                  Text(
-                                                    'Dias: ${pass['dias']}',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 12),
-                                                  Text(
-                                                    'Rango: ${pass['range']}',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                        )),
+                                    child: VisitCard(
+                                      pass: pass,
+                                      isSelected: selectPassIndex == index,
+                                    ),
                                   ),
                                 const SizedBox(height: 30),
                               ],
@@ -289,62 +199,8 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
             ],
           ),
         )),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                selectPassIndex != null
-                    ? Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  const QrScreen(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            );
-                          },
-                        ),
-                      ).then((value) {
-                        setState(() {
-                          selectPassIndex = null;
-                        });
-                      })
-                    : null;
-              },
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(
-                  selectPassIndex != null
-                      ? const Color(0xFF001E2C)
-                      : Colors.grey,
-                ),
-                padding: WidgetStateProperty.all(
-                  const EdgeInsets.symmetric(
-                    vertical: 18,
-                    horizontal: 28,
-                  ),
-                ),
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              child: const Text(
-                'Generar QR',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
+        bottomNavigationBar: GenerateQRButton(
+          isPassSelected: selectPassIndex != null,
         ),
       ),
     );
