@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({super.key});
@@ -40,8 +41,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       this.controller = controller;
     });
 
-    controller.scannedDataStream.listen((scanData) {
-
+    controller.scannedDataStream.listen((scanData) async {
       if(isProcessing){
         return;
       }
@@ -50,11 +50,11 @@ class _QRViewExampleState extends State<QRViewExample> {
         result = scanData;
       });
 
-      if (result != null) {
+      if (result != null ) {
         isProcessing = true;
         controller.pauseCamera();
 
-
+        String? url = result!.code;
         showModalBottomSheet(
           context: context,
           builder: (context) => Container(
@@ -89,7 +89,12 @@ class _QRViewExampleState extends State<QRViewExample> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      if(await launchUrl(url! as Uri)){
+                        await launchUrl(url as Uri);
+                      }else{
+                        log('Could not launch $url');
+                      }
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },
@@ -126,7 +131,6 @@ class _QRViewExampleState extends State<QRViewExample> {
       }
     });
   }
-
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {

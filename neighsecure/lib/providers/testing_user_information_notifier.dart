@@ -5,12 +5,46 @@ class UserInformationNotifier
   UserInformationNotifier()
       : super([
           {
+            'name': 'Billy Caliente',
+            'role': 'visitante',
+            'email': 'caliente8@gmail.com',
+            'tipoOfTicket': 'false',
+            'entryhours': [
+              '2024-04-25 10:00 am',
+              '2024-04-25 11:00 am',
+              '2024-04-25 12:00 pm',
+              '2024-04-25 13:00 pm',
+              '2024-04-25 14:00 pm',
+              '2024-04-25 15:00 pm',
+              '2024-04-25 16:00 pm',
+              '2024-04-25 17:00 pm',
+              '2024-04-25 18:00 pm',
+            ].join(','),
+            'redeem': 'true',
+            'inviteBy': 'Diego Viana',
+            'permisos': 'true',
+            'arrayofpasses': [
+              {
+                'typeofVisit': 'unica',
+                'state': 'vigente',
+                'date': '2024-04-25 10:00 am',
+              },
+              {
+                'typeofVisit': 'multiple',
+                'state': 'vigente',
+                'dias': 'Lunes - Martes - Viernes',
+                'range': '10:00am - 16:00pm',
+              },
+            ],
+          },
+          {
             'name': 'Victor Rene',
             'role': 'visitante',
             'email': 'caliente1@gmail.com',
             'tipoOfTicket': 'true',
             'redeem': 'false',
             'inviteBy': 'Pamela Gomez',
+            'permisos': 'true',
             'arrayofpasses': [
               {
                 'typeofVisit': 'unica',
@@ -32,6 +66,7 @@ class UserInformationNotifier
             'tipoOfTicket': 'true',
             'redeem': 'false',
             'inviteBy': 'Pamela Gomez',
+            'permisos': 'false',
             'arrayofpasses': [
               {
                 'typeofVisit': 'unica',
@@ -53,6 +88,7 @@ class UserInformationNotifier
             'tipoOfTicket': 'true',
             'redeem': 'false',
             'inviteBy': 'Pamela Gomez',
+            'permisos': 'true',
             'arrayofpasses': [
               {
                 'typeofVisit': 'unica',
@@ -74,6 +110,7 @@ class UserInformationNotifier
             'tipoOfTicket': 'true',
             'redeem': 'false',
             'inviteBy': 'Pamela Gomez',
+            'permisos': 'false',
             'arrayofpasses': [
               {
                 'typeofVisit': 'unica',
@@ -95,6 +132,7 @@ class UserInformationNotifier
             'tipoOfTicket': 'true',
             'redeem': 'false',
             'inviteBy': 'Pamela Gomez',
+            'permisos': 'true',
             'arrayofpasses': [
               {
                 'typeofVisit': 'unica',
@@ -116,6 +154,7 @@ class UserInformationNotifier
             'tipoOfTicket': 'true',
             'redeem': 'false',
             'inviteBy': 'Diego Gomez',
+            'permisos': 'true',
             'arrayofpasses': [
               {
                 'typeofVisit': 'unica',
@@ -137,38 +176,7 @@ class UserInformationNotifier
             'tipoOfTicket': 'true',
             'redeem': 'false',
             'inviteBy': 'Diego Gomez',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Billy Caliente',
-            'role': 'visitante',
-            'email': 'caliente8@gmail.com',
-            'tipoOfTicket': 'false',
-            'entryhours': [
-              '2024-04-25 10:00 am',
-              '2024-04-25 11:00 am',
-              '2024-04-25 12:00 pm',
-              '2024-04-25 13:00 pm',
-              '2024-04-25 14:00 pm',
-              '2024-04-25 15:00 pm',
-              '2024-04-25 16:00 pm',
-              '2024-04-25 17:00 pm',
-              '2024-04-25 18:00 pm',
-            ].join(','),
-            'redeem': 'true',
-            'inviteBy': 'Diego Viana',
+            'permisos': 'true',
             'arrayofpasses': [
               {
                 'typeofVisit': 'unica',
@@ -198,6 +206,7 @@ class UserInformationNotifier
             ].join(','),
             'redeem': 'true',
             'inviteBy': 'Diego Viana',
+            'permisos': 'true',
             'arrayofpasses': [
               {
                 'typeofVisit': 'unica',
@@ -217,6 +226,7 @@ class UserInformationNotifier
             'role': 'visitante',
             'email': 'caliente10@gmail.com',
             'tipoOfTicket': 'false',
+            'permisos': 'true',
             'entryhours': [
               '2024-04-25 10:00 am',
               '2024-04-25 11:00 am',

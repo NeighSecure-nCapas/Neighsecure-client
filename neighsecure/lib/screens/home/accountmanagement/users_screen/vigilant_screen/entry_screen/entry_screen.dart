@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../ anonymous_screen/anonymous_screen.dart';
+import 'anonumous_screen/anonymous_screen.dart';
 import '../../../../../../components/cards/anonymous_visit_card.dart';
 import '../../../../../../components/cards/qr_reader_card.dart';
-import '../qr_reader/qr_reader.dart';
+import 'qr_reader/qr_reader.dart';
 
 class EntryScreen extends ConsumerStatefulWidget {
   const EntryScreen({super.key, required this.userInformation});

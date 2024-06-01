@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/resident_screen.dart';
@@ -22,10 +23,13 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
     //Lets get the user with the specific rol
     var userInformation = ref
         .watch(userInformationProvider)
-        .firstWhere((user) => user['role'] == 'encargado', orElse: () => {});
+        .firstWhere((user) => user['role'] == 'visitante', orElse: () => {});
 
     var entryPasses = userInformation['arrayofpasses'] != null ? userInformation['arrayofpasses'] as List : [];
 
+    if (kDebugMode) {
+      print(entryPasses);
+    }
     Widget? maincontent;
 
     Widget visit = VisitorScreen(userInformation: userInformation, entryPasses: entryPasses);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../../components/floatingbuttons/invitation_button.dart';
 import '../../../../../../providers/testing_user_information_notifier.dart';
 import 'invitationscreen/invitation_screen.dart';
 
@@ -15,6 +16,26 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
   final totalUsers = 5;
 
   late List<Map<String, dynamic>> userInformation;
+
+  void _submitToInvitation() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            InvitationScreen(
+              totalUsers: totalUsers,
+              currentUserCount: userInformation.length,
+            ),
+        transitionsBuilder:
+            (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -242,43 +263,10 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
               ),
             ),
           ),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
-            child: SizedBox(
-              height: 64,
-              width: 64,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          InvitationScreen(
-                        totalUsers: totalUsers,
-                        currentUserCount: userInformation.length,
-                      ),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-                backgroundColor: const Color(0xFF001E2C),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.add,
-                    size: 32,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          )),
+          floatingActionButton: InvitationButton(
+            onSubmit: _submitToInvitation,
+          ),
+      ),
     );
   }
 }
