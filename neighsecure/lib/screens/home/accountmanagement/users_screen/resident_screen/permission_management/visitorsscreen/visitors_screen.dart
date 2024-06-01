@@ -18,9 +18,9 @@ class VisitorsScreen extends ConsumerStatefulWidget {
 
   late int? displayeElements;
 
-  final List<Map<String, String>> userInformation;
+  final List<Map<String, dynamic>> userInformation;
 
-  final Function(Map<String, String>)? onUserRemove;
+  final Function(Map<String, dynamic>)? onUserRemove;
 
   bool isRedeem;
 
@@ -33,7 +33,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
 
   List<Map<String, String>> filtereduserInformation = [];
 
-  List<Map<String, String>> filterUserInformation(String name) {
+  List<Map<String, dynamic>> filterUserInformation(String name) {
     final filtereduserInformation = widget.isRedeem
         ? widget.userInformation
             .where((item) => item['redeem'] == 'true')
@@ -89,6 +89,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
         }
 
         return ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: defaultdisplayed,
           itemBuilder: (context, index) {

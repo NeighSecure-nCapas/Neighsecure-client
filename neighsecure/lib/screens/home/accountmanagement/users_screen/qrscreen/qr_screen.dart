@@ -125,7 +125,7 @@ class _QrScreenState extends ConsumerState<QrScreen> {
             QrImageView(
               data: _qr,
               version: QrVersions.auto,
-              size: 300.0,
+              size: 200.0,
             ),
             const SizedBox(height: 18),
             Column(

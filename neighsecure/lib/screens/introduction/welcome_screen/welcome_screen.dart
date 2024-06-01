@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../components/buttons/custom_tablet_button.dart';
 import '../onboarding_screen/onboarding_screen.dart';
 
 class WelcomeScreen extends ConsumerStatefulWidget {
@@ -12,8 +13,7 @@ class WelcomeScreen extends ConsumerStatefulWidget {
 
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
-
-  _submit() {
+  void _submit() {
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -41,7 +41,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
@@ -49,57 +49,30 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                 width: 250,
                 height: 250,
               ),
-              const SizedBox(height: 165.5),
+              const SizedBox(height: 50),
               const Text(
                 'Bienvenido a NeighSecure',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 32),
                 child: Text(
                   'Tu nueva aplicación para acceder a la residencial de forma mas rápida!',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                   textAlign: TextAlign.center,
                 ),
               ),
               const SizedBox(height: 88.5),
-              SizedBox(
-                width: isTablet ? 600 : double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _submit();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(
-                      const Color(0xFF001E2C),
-                    ),
-                    padding: WidgetStateProperty.all(
-                      const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 28,
-                      ),
-                    ),
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    'Comenzar',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: CustomSubmitButton(
+        onPressed: _submit,
+        isTablet: isTablet,
+      )
     ));
   }
 }

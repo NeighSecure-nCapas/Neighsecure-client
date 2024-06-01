@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../components/text/terms_and_privacy_text.dart';
 import '../../splashscreen/splash_screen.dart';
 import '../user_register/user_register.dart';
 
@@ -94,17 +96,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             ),
           ),
         ),
-        bottomNavigationBar: const Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-          child:  Text(
-            'Se aplicarán los Términos y Condiciones y la Política de Privacidad.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
-              color: Colors.grey,
-            ),
-          ),
+        bottomNavigationBar: TermsAndPrivacyNotice(
+          onTermsTap: () {
+            if (kDebugMode) {
+              print('Terms and Conditions');
+            }
+          },
+          onPrivacyTap: () {
+            if (kDebugMode) {
+              print('Privacy Policy');
+            }
+          },
         )
     ));
   }

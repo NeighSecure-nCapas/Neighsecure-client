@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neighsecure/screens/introduction/welcome_screen/welcome_screen.dart';
 
 void main() {
+
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: App()));
 }
 
@@ -12,6 +15,24 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (MediaQuery.of(context).size.width < 600) {
+        // If the screen width is less than 600, set the orientation to portrait
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+      } else {
+        // If the screen width is more than 600, set the orientation to landscape
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
+      }
+    });
+
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NeighSecure',

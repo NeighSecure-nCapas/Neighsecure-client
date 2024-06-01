@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({super.key});
@@ -34,15 +35,26 @@ class _QRViewExampleState extends State<QRViewExample> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+    bool isProcessing = false;
+
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+
+    controller.scannedDataStream.listen((scanData) async {
+      if(isProcessing){
+        return;
+      }
+
       setState(() {
         result = scanData;
       });
 
-      if (result != null) {
+      if (result != null ) {
+        isProcessing = true;
+        controller.pauseCamera();
+
+        String? url = result!.code;
         showModalBottomSheet(
           context: context,
           builder: (context) => Container(
@@ -58,11 +70,6 @@ class _QRViewExampleState extends State<QRViewExample> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 48,
-                ),
                 const SizedBox(height: 20),
                 const Text('Listo!',
                     textAlign: TextAlign.center,
@@ -72,7 +79,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                         color: Colors.black)),
                 const SizedBox(height: 20),
                 const Text(
-                    'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
+                    'El código QR se ha escaneado exitosamente. Acceso concedido. ¡Bienvenido/a!.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 14,
@@ -82,7 +89,12 @@ class _QRViewExampleState extends State<QRViewExample> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      if(await launchUrl(url! as Uri)){
+                        await launchUrl(url as Uri);
+                      }else{
+                        log('Could not launch $url');
+                      }
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },
@@ -117,12 +129,8 @@ class _QRViewExampleState extends State<QRViewExample> {
           ),
         );
       }
-
     });
-
-
   }
-
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {

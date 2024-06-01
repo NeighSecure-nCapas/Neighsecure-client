@@ -50,6 +50,10 @@ dependencies:
   crypto: ^3.0.3
   qr_flutter: ^4.1.0
   qr_code_scanner: ^1.0.1
+  day_picker: ^2.2.0
+  syncfusion_flutter_datepicker: ^25.2.5
+  url_launcher: ^6.2.6
+
 
 
 dev_dependencies:

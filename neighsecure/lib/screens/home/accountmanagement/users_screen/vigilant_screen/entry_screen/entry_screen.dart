@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../ anonymous_screen/anonymous_screen.dart';
-import '../qr_reader/qr_reader.dart';
+import 'anonumous_screen/anonymous_screen.dart';
+import '../../../../../../components/cards/anonymous_visit_card.dart';
+import '../../../../../../components/cards/qr_reader_card.dart';
+import 'qr_reader/qr_reader.dart';
 
 class EntryScreen extends ConsumerStatefulWidget {
   const EntryScreen({super.key, required this.userInformation});
@@ -14,6 +16,50 @@ class EntryScreen extends ConsumerStatefulWidget {
 }
 
 class _EntryScreenState extends ConsumerState<EntryScreen> {
+
+  void _submitToAnonymous() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => const AnonymousScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = const Offset(-1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  void _submitToQRreader(){
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => const QRViewExample(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = const Offset(-1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -76,7 +122,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                                   'Vigilante',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.grey,
                                   ),
                                   textAlign: TextAlign.start,
@@ -92,96 +138,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                         padding: const EdgeInsets.all(4),
                         child: GestureDetector(
                           onTap: (){
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) => const QRViewExample(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  var begin = const Offset(-1.0, 0.0);
-                                  var end = Offset.zero;
-                                  var curve = Curves.ease;
-
-                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
-                              ),
-                            );
+                            _submitToQRreader();
                           },
-                          child: SizedBox(
-                            width: isTablet ? 600 : double.infinity,
-                            child: Card(
-                              elevation: 0.0,
-                              margin: const EdgeInsets.only(bottom: 30),
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Colors.black, width: 1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const  Padding(
-                                padding:
-                                EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.badge_outlined,
-                                                color: Colors.black,
-                                                size: 42,
-                                              ),
-                                              SizedBox(width: 16),
-                                              Text(
-                                                'Visitante',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 18,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            'Escanea el código QR del visitante para permitir acceso.',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 16,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          SizedBox(height: 8),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 40),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.black,
-                                          size: 24,
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
+                          child: VisitorCard(
+                            isTablet: isTablet,
                           ),
                         ),
                       ),
@@ -190,118 +150,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                         padding: const EdgeInsets.all(4),
                         child: GestureDetector(
                           onTap: (){
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) => const AnonymousScreen(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  var begin = const Offset(-1.0, 0.0);
-                                  var end = Offset.zero;
-                                  var curve = Curves.ease;
-
-                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
-                              ),
-                            );
+                            _submitToAnonymous();
                           },
-                          child: SizedBox(
-                            width: isTablet ? 600 : double.infinity,
-                            child: Card(
-                              elevation: 0.0,
-                              margin: const EdgeInsets.only(bottom: 30),
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Colors.black, width: 1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Expanded(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.badge_outlined,
-                                                color: Colors.black,
-                                                size: 42,
-                                              ),
-                                              SizedBox(width: 16),
-                                              Text(
-                                                'Visita anónima',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 18,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            'Registra una visita anónima',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 16,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          SizedBox(height: 8),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 40),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                pageBuilder: (context, animation, secondaryAnimation) => const AnonymousScreen(),
-                                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                                  var begin = const Offset(-1.0, 0.0);
-                                                  var end = Offset.zero;
-                                                  var curve = Curves.ease;
-
-                                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                                  return SlideTransition(
-                                                    position: animation.drive(tween),
-                                                    child: child,
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          },
-                                          child: const Icon(
-                                            Icons.arrow_forward_ios,
-                                            color: Colors.black,
-                                            size: 24,
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
+                          child: AnonymousVisitCard(
+                            isTablet: isTablet,
                           ),
                         ),
                       )
