@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../components/buttons/custom_tablet_button.dart';
 import '../onboarding_screen/onboarding_screen.dart';
 
 class WelcomeScreen extends ConsumerStatefulWidget {
@@ -11,7 +12,8 @@ class WelcomeScreen extends ConsumerStatefulWidget {
 }
 
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
-  _submit() {
+
+  void _submit() {
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -67,41 +69,10 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: isTablet
-            ? const EdgeInsets.symmetric(horizontal: 325, vertical: 24)
-            : const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-        child: SizedBox(
-          width: isTablet ? 600 : double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              _submit();
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(const Color(0xFF001E2C)),
-              padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(
-                  vertical: 18,
-                  horizontal: 28,
-                ),
-              ),
-              shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            child: const Text(
-              'Listo',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ),
+      bottomNavigationBar: CustomSubmitButton(
+        onPressed: _submit,
+        isTablet: isTablet,
+      )
     ));
   }
 }

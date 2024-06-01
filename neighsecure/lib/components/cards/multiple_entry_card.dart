@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:neighsecure/components/selected_days_text.dart';
+import 'package:neighsecure/components/text/selected_days_text.dart';
 
-import 'custom_elevated_button.dart';
-import 'custom_text.dart';
-import 'date_text.dart';
+import '../buttons/custom_elevated_button.dart';
+import '../text/custom_text.dart';
+import '../text/date_text.dart';
 
-import '../enums/date_picker_mode.dart' as datepickermodeenum;
+import '../../enums/date_picker_mode.dart' as datepickermodeenum;
 
 class MultipleEntryCard extends StatefulWidget {
   final TimeOfDay? timeStart;
@@ -62,6 +62,7 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
                   CustomText(
                     instruction: 'Entrada multiple',
                     fontSize: 16,
+                      color: Colors.grey
                   ),
                 ],
               ),
@@ -69,7 +70,8 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
               CustomText(
                   instruction:
                   'Selecciona un rango de horas.',
-                  fontSize: 14),
+                  fontSize: 14,
+                  color: Colors.grey),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment:
@@ -137,7 +139,8 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
               CustomText(
                   instruction:
                   'Selecciona el dia o rango de dias.',
-                  fontSize: 14),
+                  fontSize: 14,
+                  color: Colors.grey),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment:
@@ -190,7 +193,7 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
                   ),
                   CustomElevatedButton(onPressed: () {
                     widget.selectDate(context);
-                  }),
+                  }, text: 'Seleccionar fechas'),
                 ],
               ),
               widget.dateStart != null

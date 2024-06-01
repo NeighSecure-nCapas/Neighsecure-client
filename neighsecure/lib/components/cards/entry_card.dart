@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:neighsecure/components/custom_text.dart';
+import 'package:neighsecure/components/text/custom_text.dart';
 
-import 'date_text.dart';
+import '../text/date_text.dart';
 
 class EntryCard extends StatelessWidget {
   final VoidCallback onPressed;
@@ -40,11 +40,12 @@ class EntryCard extends StatelessWidget {
                   CustomText(
                     instruction: 'Entrada única',
                     fontSize: 16,
+                      color: Colors.grey
                   ),
                 ],
               ),
               const SizedBox(height: 24),
-              CustomText(instruction: 'Selecciona el dia de ingreso.', fontSize: 14),
+              CustomText(instruction: 'Selecciona el dia de ingreso.', fontSize: 14, color: Colors.grey),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: onPressed,
@@ -66,6 +67,7 @@ class EntryCard extends StatelessWidget {
                 child: CustomText(
                   instruction: 'Selecciona una fecha',
                   fontSize: 14,
+                    color: Colors.grey
                 ),
               ),
               dateStart != null
@@ -76,7 +78,7 @@ class EntryCard extends StatelessWidget {
               const SizedBox(height: 24),
               CustomText(
                   instruction: 'Selecciona una hora específica.',
-                  fontSize: 14),
+                  fontSize: 14, color: Colors.grey),
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
@@ -110,7 +112,7 @@ class EntryCard extends StatelessWidget {
               const SizedBox(height: 24),
               CustomText(
                   instruction: 'Selecciona un rango de horas.',
-                  fontSize: 14),
+                  fontSize: 14, color: Colors.grey,),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +179,7 @@ class EntryCard extends StatelessWidget {
                               ),
                             )),
                         const SizedBox(width: 24),
-                        CustomText(instruction: 'Hora de fin', fontSize: 14),
+                        CustomText(instruction: 'Hora de fin', fontSize: 14, color: Colors.grey),
                         Transform.rotate(
                             angle: 90 * 3.14159 / 180,
                             child: IconButton(

@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
-class CustomElevatedButton extends StatelessWidget {
+class CustomSubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final bool isTablet;
 
-  CustomElevatedButton({super.key, required this.onPressed});
+  CustomSubmitButton({Key? key, required this.onPressed, required this.isTablet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+      padding: isTablet
+          ? const EdgeInsets.symmetric(horizontal: 325, vertical: 24)
+          : const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
       child: SizedBox(
-        width: double.infinity,
+        width: isTablet ? 600 : double.infinity,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(
-              const Color(0xFF001E2C),
-            ),
+            backgroundColor: WidgetStateProperty.all(const Color(0xFF001E2C)),
             padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(
                 vertical: 18,

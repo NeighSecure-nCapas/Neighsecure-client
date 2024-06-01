@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:day_picker/day_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:neighsecure/components/custom_text.dart';
-import 'package:neighsecure/components/custom_elevated_button.dart';
-import 'package:neighsecure/components/date_text.dart';
-import 'package:neighsecure/components/selected_days_text.dart';
+import 'package:neighsecure/components/text/custom_text.dart';
+import 'package:neighsecure/components/buttons/custom_elevated_button.dart';
+import 'package:neighsecure/components/text/date_text.dart';
+import 'package:neighsecure/components/text/selected_days_text.dart';
 
 enum DatePickerMode { single, range, multiple }
 
@@ -558,7 +558,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                 CustomText(
                                     instruction: 'Entrada única',
                                     fontSize: 16,
-                                    color: Colors.grey),
+                                    color: Colors.black),
                               ],
                             ),
                           )
@@ -586,7 +586,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                         CustomText(
                                           instruction: 'Entrada única',
                                           fontSize: 16,
-                                          color: Colors.grey,
+                                          color: Colors.black,
                                         ),
                                       ],
                                     ),
@@ -621,7 +621,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                       child: CustomText(
                                           instruction: 'Selecciona una fecha',
                                           fontSize: 14,
-                                          color: Colors.grey),
+                                          color: Colors.white),
                                     ),
                                     _dateStart != null
                                         ? DateText(
@@ -790,9 +790,9 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 CustomText(
-                                    instruction: 'Entrada única',
+                                    instruction: 'Entrada multiple',
                                     fontSize: 16,
-                                    color: Colors.grey),
+                                    color: Colors.black),
                               ],
                             ),
                           )
@@ -820,7 +820,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                         CustomText(
                                             instruction: 'Entrada multiple',
                                             fontSize: 16,
-                                            color: Colors.grey),
+                                            color: Colors.black),
                                       ],
                                     ),
                                     const SizedBox(height: 24),
@@ -1006,6 +1006,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
       ),
       bottomNavigationBar: CustomElevatedButton(
         onPressed: _submit,
+        text: 'Listo',
       ),
     ));
   }

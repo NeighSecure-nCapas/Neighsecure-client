@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/screens/home/accountmanagement/account_management.dart';
 
+import '../../../components/buttons/custom_register_button.dart';
+import '../../../components/inputs/dui_input_field.dart';
+
 class UserRegister extends ConsumerStatefulWidget {
   const UserRegister({super.key});
   @override
@@ -96,54 +99,14 @@ class _UserRegisterState extends ConsumerState<UserRegister> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextFormField(
-                    maxLength: 10,
-                    decoration: InputDecoration(
-                      labelText: 'DUI',
-                      fillColor: Colors.grey[200], // background color
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none, // border color
-                      ),
-                      labelStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey,
-                      ),
-                      alignLabelWithHint: true,
-                    ),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey,
-                    ),
-                    obscureText: false,
-                    autocorrect: false,
-                    textCapitalization: TextCapitalization.none,
-                    inputFormatters: [
-                      DuiInputFormatter(),
-                    ],
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingresa un valor valido de DUI';
-                      } else {
-                        String pattern = r'^\d{8}-\d$';
-                        RegExp regex = RegExp(pattern);
-                        if (!regex.hasMatch(value)) {
-                          return 'Please enter a valid DUI';
-                        }
-                      }
-                      return null;
+                  DuiInputField(
+                    onChanged: (value) {
+                      setState(() {
+                        _dui = value!;
+                      });
                     },
                     onSaved: (value) {
                       _dui = value!;
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _dui = value;
-                      });
                     },
                   ),
                 ],
@@ -152,60 +115,15 @@ class _UserRegisterState extends ConsumerState<UserRegister> {
           ],
         ),
       )),
-      bottomNavigationBar: Padding(
-        padding: isTablet
-            ? const EdgeInsets.symmetric(horizontal:325, vertical: 24)
-            : const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-        child: SizedBox(
-          width: isTablet ? 600 : double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              _dui.isNotEmpty ? _submit() : null;
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
-                _dui.isNotEmpty ? const Color(0xFF001E2C) : Colors.grey,
-              ),
-              padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(
-                  vertical: 18,
-                  horizontal: 28,
-                ),
-              ),
-              shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            child: const Text(
-              'Listo',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
+      bottomNavigationBar: CustomSubmitButton(
+        onPressed: () {
+          if (_dui.isNotEmpty) {
+            _submit();
+          }
+        },
+        isTablet: isTablet,
+        isDuiNotEmpty: _dui.isNotEmpty,
       ),
     ));
-  }
-}
-
-class DuiInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String newText = newValue.text;
-    if (newValue.text.length == 8 && oldValue.text.length == 7) {
-      newText = '${newValue.text}-';
-    } else if (oldValue.text.length == 9 && newValue.text.length == 8) {
-      newText = newValue.text.substring(0, 8);
-    }
-    return TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: newText.length),
-    );
   }
 }
