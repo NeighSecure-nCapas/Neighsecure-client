@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/models/entities/user.dart';
 
 import 'anonumous_screen/anonymous_screen.dart';
 import '../../../../../../components/cards/anonymous_visit_card.dart';
@@ -9,10 +10,10 @@ import 'qr_reader/qr_reader.dart';
 class EntryScreen extends ConsumerStatefulWidget {
   const EntryScreen({super.key, required this.userInformation});
 
-  final Map<String, dynamic>? userInformation;
+  final User userInformation;
 
   @override
-  _EntryScreenState createState() => _EntryScreenState();
+  ConsumerState<EntryScreen> createState() => _EntryScreenState();
 }
 
 class _EntryScreenState extends ConsumerState<EntryScreen> {
@@ -108,7 +109,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${widget.userInformation?['name']}',
+                                  widget.userInformation.name,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,

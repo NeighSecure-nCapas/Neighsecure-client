@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../../../../../models/entities/user.dart';
 import '../../../../../../../../../providers/testing_user_information_notifier.dart';
 
 class VisitorsDetailsScreen extends ConsumerStatefulWidget {
@@ -9,15 +10,15 @@ class VisitorsDetailsScreen extends ConsumerStatefulWidget {
     required this.userInformation,
   });
 
-  final Map<String, dynamic> userInformation;
+  final User userInformation;
 
   @override
-  _VisitorsDetailsScreenState createState() => _VisitorsDetailsScreenState();
+  ConsumerState<VisitorsDetailsScreen> createState() => _VisitorsDetailsScreenState();
 }
 
 class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
 
-  void _acceptVisit(Map<String, dynamic> userInformation) {
+  void _acceptVisit(User userInformation) {
 
     showDialog(
       context: context,
@@ -70,7 +71,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
     );
   }
 
-  void _submit(Map<String, dynamic> userInformation) {
+  void _submit(User userInformation) {
     FocusScope.of(context).unfocus();
 
     showDialog(
@@ -128,7 +129,8 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var entryHoursList = widget.userInformation['entryhours']?.split(',') ?? [];
+
+    var entryHoursList = widget.userInformation.entries ?? [];
 
     return SafeArea(
         child: Scaffold(
@@ -179,7 +181,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${widget.userInformation['name']}',
+                            widget.userInformation.name,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -190,7 +192,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Residennte ${widget.userInformation['inviteBy']}',
+                            'Residennte ${widget.userInformation}',
                             style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 16,
@@ -206,7 +208,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                 )),
             const SizedBox(height: 30),
             Text(
-              widget.userInformation['tipoOfTicket'] == 'true'
+              widget.userInformation.permissions.first.type == 'single'
                   ? 'Visita única'
                   : 'Visita multiple',
               style: const TextStyle(
@@ -217,7 +219,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              widget.userInformation['redeem'] == 'true'
+              widget.userInformation.permissions.first.type == 'multiple'
                   ? 'Estado: Completado'
                   : 'Estado: Pendiente',
               style: const TextStyle(
@@ -253,13 +255,13 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              widget.userInformation['redeem'] == 'true' ?
+              widget.userInformation.permissions.first.status == true ?
                _submit(widget.userInformation) :
               _acceptVisit(widget.userInformation);
             },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(
-                widget.userInformation['redeem'] == 'true'
+                widget.userInformation.permissions.first.status == true
                     ? const Color(0xFFBA1A1A)
                     : const Color(0xFF001E2C),
               ),
@@ -276,7 +278,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               ),
             ),
             child: Text(
-              widget.userInformation['redeem'] == 'true'
+              widget.userInformation.permissions.first.status == true
                   ? 'Eliminar'
                   : 'Aceptar visita',
               style: const TextStyle(

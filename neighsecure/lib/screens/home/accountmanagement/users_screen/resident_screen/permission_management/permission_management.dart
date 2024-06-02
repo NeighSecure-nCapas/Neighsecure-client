@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/adding_visit/adding_visit.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_state_screen/visitors_state_screen.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_screen.dart';
@@ -7,7 +9,10 @@ import '../../../../../../providers/testing_user_information_notifier.dart';
 import '../../../../../../providers/testnameprovider.dart';
 
 class PermissionManagement extends ConsumerStatefulWidget {
-  const PermissionManagement({super.key});
+  const PermissionManagement({super.key, required this.userInformation});
+
+  final User userInformation;
+
   @override
   ConsumerState<PermissionManagement> createState() =>
       _PermissionManagementState();
@@ -21,15 +26,20 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
 
   var completedVisitors = false;
 
+  late List<User> usersInformation;
+
   @override
   Widget build(BuildContext context) {
 
-    var userInformation = ref
+    usersInformation = ref
         .watch(userInformationProvider)
-        .where((user) => user['role'] == 'visitante')
+        .where((user) => user.roles.any((role) => role.role == 'visitante'))
         .toList();
 
-    print(userInformation);
+
+    if (kDebugMode) {
+      print(usersInformation);
+    }
 
     final name = ref.watch(nameProvider.notifier).state;
 
@@ -147,9 +157,9 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                           final name = ref.watch(nameProvider.notifier).state;
                           return VisitorsScreen(
                             userInformation: name.isEmpty
-                                ? userInformation
-                                : userInformation
-                                    .where((item) => item['name'] == name)
+                                ? usersInformation
+                                : usersInformation
+                                    .where((item) => item.name == name)
                                     .toList(),
                             isRedeem: false,
                             onUserRemove: (removedUser) {
@@ -214,9 +224,9 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                           final name = ref.watch(nameProvider.notifier).state;
                           return VisitorsScreen(
                             userInformation: name.isEmpty
-                                ? userInformation
-                                : userInformation
-                                    .where((item) => item['name'] == name)
+                                ? usersInformation
+                                : usersInformation
+                                    .where((item) => item.name == name)
                                     .toList(),
                             isRedeem: true,
                             onUserRemove: (removedUser) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/models/entities/role.dart';
 
+import '../../../../../../../models/entities/user.dart';
 import '../../../../../../../providers/testing_user_information_notifier.dart';
 
 class InvitationScreen extends ConsumerStatefulWidget {
@@ -11,13 +13,30 @@ class InvitationScreen extends ConsumerStatefulWidget {
   final int currentUserCount;
 
   @override
-  _InvitationScreenState createState() => _InvitationScreenState();
+  ConsumerState<InvitationScreen> createState() => _InvitationScreenState();
 }
 
 class _InvitationScreenState extends ConsumerState<InvitationScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String _email = '';
+
+  void updateUserRole(User user) {
+    String oldRole = user.roles.first.role;
+    String newRole;
+
+    if (oldRole == 'visitante') {
+      newRole = 'residente';
+    } else if (oldRole == 'residente') {
+      newRole = 'visitante';
+    } else {
+      throw Exception('Invalid role');
+    }
+
+    ref
+        .read(userInformationProvider.notifier)
+        .updateUserRole(user, oldRole, newRole);
+  }
 
   void _submit() {
     final isValid = _formKey.currentState!.validate();
@@ -98,12 +117,13 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
     if (isValid) {
       _formKey.currentState!.save();
 
-      Map<String, dynamic>? user;
+      User? user;
 
       try {
         user = ref
             .read(userInformationProvider)
-            .firstWhere((user) => user['email'] == _email);
+            .firstWhere((user) => user.email == _email);
+
       } catch (e) {
         showModalBottomSheet(
           context: context,
@@ -211,10 +231,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      //update to new rol
-                      ref
-                          .read(userInformationProvider.notifier)
-                          .updateUserRole(user!);
+                      updateUserRole(user!);
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },

@@ -1,21 +1,91 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/models/entities/user.dart';
 
 import '../../../../../../components/floatingbuttons/invitation_button.dart';
 import '../../../../../../providers/testing_user_information_notifier.dart';
 import 'invitationscreen/invitation_screen.dart';
 
 class HouseManagement extends ConsumerStatefulWidget {
-  const HouseManagement({super.key});
+  const HouseManagement({super.key, required this.userInformation});
+
+  final User userInformation;
 
   @override
-  _HouseManagementState createState() => _HouseManagementState();
+  ConsumerState<HouseManagement> createState() => _HouseManagementState();
 }
 
 class _HouseManagementState extends ConsumerState<HouseManagement> {
   final totalUsers = 5;
 
-  late List<Map<String, dynamic>> userInformation;
+  late List<User> usersInformation;
+
+  void updateUserRole(User user) {
+    String oldRole = user.roles.first.role;
+    String newRole;
+
+    if (oldRole == 'visitante') {
+      newRole = 'residente';
+    } else if (oldRole == 'residente') {
+      newRole = 'visitante';
+    } else {
+      throw Exception('Invalid role');
+    }
+
+    ref
+        .read(userInformationProvider.notifier)
+        .updateUserRole(user, oldRole, newRole);
+  }
+
+  void showDeleteUserDialog(BuildContext context, User user) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: const Text(
+            'Eliminar usuario',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          content: const Text('¿Estás seguro de que deseas eliminar a este usuario?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Eliminar',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () {
+                updateUserRole(user);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _submitToInvitation() {
     Navigator.push(
@@ -24,7 +94,7 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
         pageBuilder: (context, animation, secondaryAnimation) =>
             InvitationScreen(
               totalUsers: totalUsers,
-              currentUserCount: userInformation.length,
+              currentUserCount: usersInformation.length,
             ),
         transitionsBuilder:
             (context, animation, secondaryAnimation, child) {
@@ -39,12 +109,16 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
 
   @override
   Widget build(BuildContext context) {
-    userInformation = ref
+
+    usersInformation = ref
         .watch(userInformationProvider)
-        .where((user) => user['role'] == 'residente')
+        .where((user) => user.roles.any((role) => role.role == 'residente') && user.home == widget.userInformation.home)
         .toList();
 
-    print(userInformation);
+    if (kDebugMode) {
+      print(usersInformation);
+    }
+
 
     return SafeArea(
       child: Scaffold(
@@ -108,7 +182,7 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
                     physics:const  NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
-                    itemCount: userInformation.length,
+                    itemCount: usersInformation.length,
                     itemBuilder: (context, index) {
                       return Card(
                         elevation: 0.0,
@@ -145,7 +219,7 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
                                   CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      userInformation[index]['name']!,
+                                      usersInformation[index].name,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18,
@@ -154,7 +228,7 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      userInformation[index]['role']!,
+                                      usersInformation[index].roles.first.role,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 16,
@@ -171,63 +245,7 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            backgroundColor: Theme.of(context)
-                                                .scaffoldBackgroundColor,
-                                            title: const Text(
-                                              'Eliminar usuario',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            content: const Text(
-                                                '¿Estás seguro de que deseas eliminar a este usuario?'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: const Text(
-                                                  'Cancelar',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                    FontWeight.w500,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: const Text(
-                                                  'Eliminar',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                    FontWeight.w600,
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  ref
-                                                      .read(
-                                                      userInformationProvider
-                                                          .notifier)
-                                                      .returnUserRole(
-                                                    userInformation[
-                                                    index],
-                                                  );
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                      showDeleteUserDialog(context, usersInformation[index]);
                                     },
                                     child: const Icon(
                                       Icons.close,
@@ -249,7 +267,7 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${userInformation.length}/$totalUsers restante',
+                        '${usersInformation.length}/$totalUsers restante',
                         style: const TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 18,

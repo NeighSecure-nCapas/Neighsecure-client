@@ -14,7 +14,7 @@ class VisitorsStateScreen extends ConsumerStatefulWidget {
   bool isRedeem;
 
   @override
-  _VisitorsStateScreenState createState() => _VisitorsStateScreenState();
+  ConsumerState<VisitorsStateScreen> createState() => _VisitorsStateScreenState();
 }
 
 class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
@@ -24,8 +24,7 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
   Widget build(BuildContext context) {
 
     final name = ref.watch(nameProvider.notifier).state;
-    final userInformation = ref.watch(userInformationProvider).where((user) => user['redeem'] == widget.isRedeem.toString()).toList();
-
+    final userInformation = ref.watch(userInformationProvider).where((user) => user.permissions.first.status == widget.isRedeem).toList();
 
     return SafeArea(child: Scaffold(
       body: SingleChildScrollView(
@@ -101,7 +100,7 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
                       userInformation: name.isEmpty
                           ? userInformation
                           : userInformation
-                          .where((item) => item['name'] == name)
+                          .where((item) => item.name == name)
                           .toList(),
                       isRedeem: widget.isRedeem,
                       displayeElements: userInformation.length,

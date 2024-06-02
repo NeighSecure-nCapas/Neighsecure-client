@@ -5,13 +5,14 @@ import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident
 
 import '../../../../../components/buttons/custom_elevated_button.dart';
 import '../../../../../components/cards/permission_management_card.dart';
+import '../../../../../models/entities/user.dart';
 import '../qrscreen/qr_screen.dart';
 import 'house_management/house_management.dart';
 
 class ResidentScreen extends ConsumerStatefulWidget {
   const ResidentScreen({super.key, required this.userInformation});
 
-  final Map<String, dynamic> userInformation;
+  final User userInformation;
 
   @override
   ConsumerState<ResidentScreen> createState() => _ResidentScreenState();
@@ -37,12 +38,12 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
     );
   }
 
-  void submitPermission(){
+  void submitPermission(User user){
     Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-        const PermissionManagement(),
+            PermissionManagement(userInformation: user),
         transitionsBuilder:
             (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -54,12 +55,11 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
     );
   }
 
-  void submitHouseManagement(){
+  void submitHouseManagement(User user){
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-        const HouseManagement(),
+        pageBuilder: (context, animation, secondaryAnimation) => HouseManagement(userInformation: user),
         transitionsBuilder:
             (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -112,7 +112,7 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${widget.userInformation['name']}',
+                                  widget.userInformation.name,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -123,7 +123,7 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  'Residennte ${widget.userInformation['role']}',
+                                  'Residennte ${widget.userInformation.roles.map((role) => role.role).join(', ')}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16,
@@ -164,17 +164,17 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
                         ],
                       )),
                   const SizedBox(height: 30),
-                  if (widget.userInformation['role'] == 'encargado')
+                  if (widget.userInformation.roles.any((role) => role.role == 'encargado'))
                     GestureDetector(
                       onTap: () {
-                        submitHouseManagement();
+                        submitHouseManagement(widget.userInformation);
                       },
                       child: const HouseManagementCard(),
                     ),
                   const SizedBox(height: 30),
                   GestureDetector(
                     onTap: () {
-                      submitPermission();
+                      submitPermission(widget.userInformation);
                     },
                     child: const PermissionManagementCard(),
                   ),

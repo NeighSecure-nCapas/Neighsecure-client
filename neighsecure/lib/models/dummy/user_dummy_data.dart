@@ -1,7 +1,9 @@
 import 'package:neighsecure/models/dummy/permission_dummy_data.dart';
 import 'package:neighsecure/models/dummy/role_dummy_data.dart';
+import 'package:neighsecure/models/dummy/token_dummy_data.dart';
 
 import '../entities/user.dart';
+import 'home_dummy_data.dart';
 
 
 List<User> dummyUsers = [
@@ -19,7 +21,21 @@ List<User> dummyUsers = [
     permissions: [
       dummyPermissions[0],
     ],
-    tokens: [], // Add dummy Token objects as needed
+    tokens: [
+      dummyTokens[0],
+    ],
+      home: dummyHomes[0],
+      entries: {
+        '2024-04-25 10:00 am',
+        '2024-04-25 11:00 am',
+        '2024-04-25 12:00 pm',
+        '2024-04-25 13:00 pm',
+        '2024-04-25 14:00 pm',
+        '2024-04-25 15:00 pm',
+        '2024-04-25 16:00 pm',
+        '2024-04-25 17:00 pm',
+        '2024-04-25 18:00 pm',
+      }.toList()// Add dummy Token objects as needed
   ),
   User(
     id: '2',
@@ -36,7 +52,21 @@ List<User> dummyUsers = [
       dummyPermissions[0],
       dummyPermissions[1],
     ], // Add dummy Permission objects as needed
-    tokens: [], // Add dummy Token objects as needed
+    tokens: [
+      dummyTokens[1]
+    ],
+    home: dummyHomes[1],
+      entries: {
+        '2024-04-25 10:00 am',
+        '2024-04-25 11:00 am',
+        '2024-04-25 12:00 pm',
+        '2024-04-25 13:00 pm',
+        '2024-04-25 14:00 pm',
+        '2024-04-25 15:00 pm',
+        '2024-04-25 16:00 pm',
+        '2024-04-25 17:00 pm',
+        '2024-04-25 18:00 pm',
+      }.toList()// Add dummy Token objects as needed
   ),
   User(
     id: '3',
@@ -52,6 +82,20 @@ List<User> dummyUsers = [
     permissions: [
       dummyPermissions[1],
     ], // Add dummy Permission objects as needed
-    tokens: [], // Add dummy Token objects as needed
+    tokens: [
+      dummyTokens[2]
+    ],
+    home: dummyHomes[2],
+    entries: {
+      '2024-04-25 10:00 am',
+      '2024-04-25 11:00 am',
+      '2024-04-25 12:00 pm',
+      '2024-04-25 13:00 pm',
+      '2024-04-25 14:00 pm',
+      '2024-04-25 15:00 pm',
+      '2024-04-25 16:00 pm',
+      '2024-04-25 17:00 pm',
+      '2024-04-25 18:00 pm',
+    }.toList(),// Add dummy Token objects as needed
   ),
 ];

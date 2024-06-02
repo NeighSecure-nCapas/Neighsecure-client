@@ -1,7 +1,10 @@
+/*
 import 'package:flutter/material.dart';
 
+import '../../models/entities/entry.dart';
+
 class VisitCard extends StatelessWidget {
-  final Map<String, dynamic> pass;
+  final Entry pass;
   final bool isSelected;
 
   VisitCard({Key? key, required this.pass, required this.isSelected}) : super(key: key);
@@ -20,7 +23,7 @@ class VisitCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Visita ${pass['typeofVisit']}',
+                'Visita ${pass.permission.type}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -28,7 +31,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Estado: ${pass['state']}',
+                'Estado: ${pass.permission.status ? 'Vigente' : 'Caducado'}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -37,7 +40,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Dias: ${pass['dias']}',
+                'Dias: ${pass.permission.days}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -46,7 +49,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Rango: ${pass['range']}',
+                'Rango: ${pass.permission.startTime} - ${pass.permission.endTime}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -60,3 +63,5 @@ class VisitCard extends StatelessWidget {
     );
   }
 }
+
+ */

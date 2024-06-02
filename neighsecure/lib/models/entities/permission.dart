@@ -15,8 +15,6 @@ class Permission {
   final Key key;
   final DateTime generationDate;
   final String days;
-  final Home home;
-  final User user;
   final List<Entry> entries;
 
   Permission({
@@ -31,8 +29,6 @@ class Permission {
     required this.key,
     required this.generationDate,
     required this.days,
-    required this.home,
-    required this.user,
     required this.entries,
   });
 
@@ -49,8 +45,6 @@ class Permission {
       key: Key.fromJson(json['key']),
       generationDate: DateTime.parse(json['generationDate']),
       days: json['days'],
-      home: Home.fromJson(json['home']),
-      user: User.fromJson(json['user']),
       entries: (json['entries'] as List).map((i) => Entry.fromJson(i)).toList(),
     );
   }
@@ -68,9 +62,37 @@ class Permission {
       'key': key.toJson(),
       'generationDate': generationDate.toIso8601String(),
       'days': days,
-      'home': home.toJson(),
-      'user': user.toJson(),
       'entries': entries.map((entry) => entry.toJson()).toList(),
     };
+  }
+
+  Permission copyWith({
+    String? id,
+    String? type,
+    DateTime? startDate,
+    DateTime? endDate,
+    DateTime? startTime,
+    DateTime? endTime,
+    bool? status,
+    bool? valid,
+    Key? key,
+    DateTime? generationDate,
+    String? days,
+    List<Entry>? entries,
+  }) {
+    return Permission(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      status: status ?? this.status,
+      valid: valid ?? this.valid,
+      key: key ?? this.key,
+      generationDate: generationDate ?? this.generationDate,
+      days: days ?? this.days,
+      entries: entries ?? this.entries,
+    );
   }
 }

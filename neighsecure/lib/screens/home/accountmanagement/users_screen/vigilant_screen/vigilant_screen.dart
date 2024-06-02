@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/models/entities/user.dart';
 
 import '../../../../../components/buttons/custom_no_vehicular_entry_button.dart';
 import '../../../../../components/buttons/custom_vehicular_entry_button.dart';
 import 'entry_screen/entry_screen.dart';
 
 class VigilantScreen extends ConsumerStatefulWidget {
-  const VigilantScreen({super.key, this.userInformation});
+  const VigilantScreen({super.key, required this.userInformation});
 
-  final Map<String, dynamic>? userInformation;
+  final User userInformation;
 
   @override
-  _VigilantScreenState createState() => _VigilantScreenState();
+  ConsumerState<VigilantScreen> createState() => _VigilantScreenState();
 }
 
 class _VigilantScreenState extends ConsumerState<VigilantScreen> {
@@ -96,7 +97,7 @@ class _VigilantScreenState extends ConsumerState<VigilantScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${widget.userInformation?['name']}',
+                                  widget.userInformation.name,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,

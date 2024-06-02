@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:neighsecure/models/entities/permission.dart';
+
+import '../../models/entities/entry.dart';
 
 class VisitDateCard extends StatelessWidget {
-  final Map<String, dynamic> pass;
+  final Permission pass;
   final bool isSelected;
 
   VisitDateCard({Key? key, required this.pass, required this.isSelected}) : super(key: key);
@@ -20,7 +23,7 @@ class VisitDateCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Visita ${pass['typeofVisit']}',
+                'Visita ${pass.type}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -28,7 +31,7 @@ class VisitDateCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Estado: ${pass['state']}',
+                'Estado: ${pass.status ? 'Vigente' : 'Caducado'}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -37,7 +40,7 @@ class VisitDateCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Fecha: ${pass['date']}',
+                'Fecha y hora: ${pass.startDate} - ${pass.endDate}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,

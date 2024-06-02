@@ -16,7 +16,7 @@ class AddingVisit extends ConsumerStatefulWidget {
   const AddingVisit({super.key});
 
   @override
-  _AddingVisitState createState() => _AddingVisitState();
+  ConsumerState<AddingVisit> createState() => _AddingVisitState();
 }
 
 class _AddingVisitState extends ConsumerState<AddingVisit> {

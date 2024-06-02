@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/components/buttons/custom_visitor_button.dart';
+import 'package:neighsecure/models/entities/permission.dart';
+import 'package:neighsecure/models/entities/user.dart';
 
 import '../../../../../components/cards/visitor_card.dart';
 import '../../../../../components/cards/visitor_card_dates.dart';
+import '../../../../../models/entities/entry.dart';
 
 class VisitorScreen extends ConsumerStatefulWidget {
   const VisitorScreen(
-      {super.key, required this.userInformation, required this.entryPasses});
+      {super.key, required this.userInformation, required this.permissions});
 
-  final Map<String, dynamic> userInformation;
-
-  final List<dynamic> entryPasses;
+  final User userInformation;
+  final List<Permission> permissions;
 
   @override
   ConsumerState<VisitorScreen> createState() => _VisitorScreenState();
@@ -22,6 +24,10 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    List<String> entries = widget.userInformation.entries;
+
+
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -60,7 +66,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${widget.userInformation['name']}',
+                              widget.userInformation.name,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -71,7 +77,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              '${widget.userInformation['role']}',
+                              '${widget.userInformation..roles.map((role) => role.role).join(', ')}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
@@ -85,7 +91,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                       )
                     ],
                   )),
-              if (widget.userInformation['permisos'] == 'false')
+              if (!widget.userInformation.permissions.any((permission) => permission.valid))
                 const Expanded(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -121,7 +127,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                     )),
                   ],
                 )),
-              if (widget.userInformation['permisos'] == 'true')
+              if (widget.userInformation.permissions.any((permission) => permission.valid))
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -154,16 +160,32 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                             ],
                           )),
                       const SizedBox(height: 30),
-                      Expanded(
+
+                    ],
+                  ),
+                )
+            ],
+          ),
+        )),
+        bottomNavigationBar: GenerateQRButton(
+          isPassSelected: selectPassIndex != null,
+        ),
+      ),
+    );
+  }
+}
+
+/*
+        Expanded(
                         child: ListView.builder(
-                          itemCount: widget.entryPasses.length,
+                          itemCount: entries.length,
                           itemBuilder: (context, index) {
-                            var pass = widget.entryPasses[index];
+                            var pass = entries[index];
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (pass['typeofVisit'] == 'unica')
+                                if (pass.permission.type == 'single')
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -175,7 +197,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                                       isSelected: selectPassIndex == index,
                                     ),
                                   ),
-                                if (pass['typeofVisit'] == 'multiple')
+                                if (pass.permission.type == 'multiple')
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -193,16 +215,4 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                           },
                         ),
                       ),
-                    ],
-                  ),
-                )
-            ],
-          ),
-        )),
-        bottomNavigationBar: GenerateQRButton(
-          isPassSelected: selectPassIndex != null,
-        ),
-      ),
-    );
-  }
-}
+ */

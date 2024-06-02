@@ -5,7 +5,7 @@ class AnonymousScreen extends ConsumerStatefulWidget {
   const AnonymousScreen({super.key});
 
   @override
-  _AnonymousScreenState createState() => _AnonymousScreenState();
+  ConsumerState<AnonymousScreen> createState() => _AnonymousScreenState();
 }
 
 class _AnonymousScreenState extends ConsumerState<AnonymousScreen> {

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/providers/testing_user_information_notifier.dart';
 import 'package:neighsecure/providers/testnameprovider.dart';
 
@@ -18,37 +19,36 @@ class VisitorsScreen extends ConsumerStatefulWidget {
 
   late int? displayeElements;
 
-  final List<Map<String, dynamic>> userInformation;
+  final List<User> userInformation;
 
-  final Function(Map<String, dynamic>)? onUserRemove;
+  final Function(User)? onUserRemove;
 
   bool isRedeem;
 
   @override
-  _VisitorsScreenState createState() => _VisitorsScreenState();
+  ConsumerState<VisitorsScreen> createState() => _VisitorsScreenState();
 }
 
 class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
   var defaultDisplayElements = 3;
 
-  List<Map<String, String>> filtereduserInformation = [];
+  List<User> filtereduserInformation = [];
 
-  List<Map<String, dynamic>> filterUserInformation(String name) {
+  List<User> filterUserInformation(String name) {
     final filtereduserInformation = widget.isRedeem
         ? widget.userInformation
-            .where((item) => item['redeem'] == 'true')
-            .toList()
+        .where((item) => item.permissions.first.status == true)
+        .toList()
         : widget.userInformation
-            .where((item) => item['redeem'] == 'false')
-            .toList();
+        .where((item) => item.permissions.first.status == false)
+        .toList();
 
     return name.isEmpty
         ? filtereduserInformation
         : filtereduserInformation
-            .where((item) =>
-                item['name']?.toLowerCase().contains(name.toLowerCase()) ??
-                false)
-            .toList();
+        .where((item) =>
+        item.name.toLowerCase().contains(name.toLowerCase()))
+        .toList();
   }
 
 
@@ -147,7 +147,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                filteredName[index]['name']!,
+                                filteredName[index].name,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18,
@@ -156,7 +156,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                filteredName[index]['role']!,
+                                filteredName[index].roles.map((e) => e.role).join(', '),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
@@ -165,7 +165,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                filteredName[index]['inviteBy']!,
+                                filteredName[index].permissions.map((e) => e.id).join(', '),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
@@ -182,7 +182,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                filteredName[index]['redeem']! == 'true'
+                                filteredName[index].permissions.first.status == true
                                     ? showDialog(
                                   context: context,
                                   builder: (context) {
@@ -290,7 +290,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                 );
                               },
                               child: Icon(
-                                filteredName[index]['redeem']! == 'true'
+                                filteredName[index].permissions.first.status == true
                                     ? Icons.close
                                     : Icons.check,
                                 color: Colors.black,
