@@ -14,7 +14,6 @@ List<User> dummyUsers = [
     phone: '1234567890',
     roles: [
       dummyRoles[0],
-      dummyRoles[1],
     ],
     dui: 'dummy-dui-1',
     isActive: true,
@@ -43,8 +42,7 @@ List<User> dummyUsers = [
     email: 'dummy2@email.com',
     phone: '0987654321',
     roles: [
-      dummyRoles[2],
-      dummyRoles[3],
+      dummyRoles[1],
     ], // Add dummy Role objects as needed
     dui: 'dummy-dui-2',
     isActive: false,
@@ -74,8 +72,7 @@ List<User> dummyUsers = [
     email: 'dummy3@email.com',
     phone: '1122334455',
     roles: [
-      dummyRoles[0],
-      dummyRoles[1],
+      dummyRoles[3],
     ], // Add dummy Role objects as needed
     dui: 'dummy-dui-3',
     isActive: true,
