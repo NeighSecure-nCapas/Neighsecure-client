@@ -1,6 +1,3 @@
-import 'user.dart';
-import 'permission.dart';
-
 class Home {
   final String id;
   final int homeNumber;

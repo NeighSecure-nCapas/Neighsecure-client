@@ -4,7 +4,9 @@ class PedestrianEntryButton extends StatelessWidget {
   final bool isTablet;
   final VoidCallback onSubmit;
 
-  PedestrianEntryButton({Key? key, required this.isTablet, required this.onSubmit}) : super(key: key);
+  PedestrianEntryButton(
+      {Key? key, required this.isTablet, required this.onSubmit})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

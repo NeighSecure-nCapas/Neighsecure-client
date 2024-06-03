@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:neighsecure/models/entities/permission.dart';
 
-import '../../models/entities/entry.dart';
-
 class VisitDateCard extends StatelessWidget {
   final Permission pass;
   final bool isSelected;
 
-  VisitDateCard({Key? key, required this.pass, required this.isSelected}) : super(key: key);
+  VisitDateCard({Key? key, required this.pass, required this.isSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

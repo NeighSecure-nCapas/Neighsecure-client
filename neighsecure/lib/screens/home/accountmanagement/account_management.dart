@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/entities/user.dart';
@@ -11,20 +10,19 @@ import 'users_screen/vigilant_screen/vigilant_screen.dart';
 
 class AccountManagement extends ConsumerStatefulWidget {
   const AccountManagement({super.key});
+
   @override
   ConsumerState<AccountManagement> createState() => _AccountManagementState();
 }
 
 class _AccountManagementState extends ConsumerState<AccountManagement> {
-
   int? selectPassIndex;
 
   @override
   Widget build(BuildContext context) {
-
-    User userInformation = ref
-        .watch(userInformationProvider)
-        .firstWhere((user) => user.roles.any((role) => role.role == 'encargado'), orElse: () {
+    User userInformation = ref.watch(userInformationProvider).firstWhere(
+        (user) => user.roles.any((role) => role.role == 'visitante'),
+        orElse: () {
       throw Exception('User with role visitante not found');
     });
 
@@ -44,13 +42,15 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
      */
     Widget? maincontent;
 
-    Widget visit = VisitorScreen(userInformation: userInformation, permissions: permissions);
+    Widget visit = VisitorScreen(
+        userInformation: userInformation, permissions: permissions);
 
     Widget residentInCharge = ResidentScreen(userInformation: userInformation);
 
     Widget vigilant = VigilantScreen(userInformation: userInformation);
 
-    if (hasRole(userInformation, 'encargado') || hasRole(userInformation, 'residente')) {
+    if (hasRole(userInformation, 'encargado') ||
+        hasRole(userInformation, 'residente')) {
       maincontent = residentInCharge;
     } else if (hasRole(userInformation, 'visitante')) {
       maincontent = visit;

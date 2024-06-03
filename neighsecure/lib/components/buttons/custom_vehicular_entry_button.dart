@@ -4,7 +4,9 @@ class VehicularEntryButton extends StatelessWidget {
   final bool isTablet;
   final VoidCallback onSubmit;
 
-  VehicularEntryButton({Key? key, required this.isTablet, required this.onSubmit}) : super(key: key);
+  VehicularEntryButton(
+      {Key? key, required this.isTablet, required this.onSubmit})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

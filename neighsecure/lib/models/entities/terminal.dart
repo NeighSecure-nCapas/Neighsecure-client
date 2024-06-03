@@ -1,5 +1,3 @@
-import 'entry.dart';
-
 class Terminal {
   final String id;
   final String entryType;
@@ -12,7 +10,8 @@ class Terminal {
   factory Terminal.fromJson(Map<String, dynamic> json) {
     return Terminal(
       id: json['id'],
-      entryType: json['entryType'],);
+      entryType: json['entryType'],
+    );
   }
 
   Map<String, dynamic> toJson() {

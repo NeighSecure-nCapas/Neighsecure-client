@@ -3,30 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/providers/testing_user_information_notifier.dart';
 import 'package:neighsecure/providers/testnameprovider.dart';
 
+import '../../../../../../../../models/entities/user.dart';
 import '../visitors_screen.dart';
 
 class VisitorsStateScreen extends ConsumerStatefulWidget {
   VisitorsStateScreen(
-      {super.key,
-        required this.isRedeem,
-      });
+      {super.key, required this.isRedeem, required this.userInformation});
 
   bool isRedeem;
 
+  final User userInformation;
+
   @override
-  ConsumerState<VisitorsStateScreen> createState() => _VisitorsStateScreenState();
+  ConsumerState<VisitorsStateScreen> createState() =>
+      _VisitorsStateScreenState();
 }
 
-class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
-
-
+class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen> {
   @override
   Widget build(BuildContext context) {
-
     final name = ref.watch(nameProvider.notifier).state;
-    final userInformation = ref.watch(userInformationProvider).where((user) => user.permissions.first.status == widget.isRedeem).toList();
+    final userInformation = ref
+        .watch(userInformationProvider)
+        .where((user) => user.permissions.first.status == widget.isRedeem)
+        .toList();
 
-    return SafeArea(child: Scaffold(
+    return SafeArea(
+        child: Scaffold(
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
@@ -54,8 +57,8 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
                     const Text(
                       'Administrar visitas',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w700),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
@@ -97,15 +100,18 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen>{
                   builder: (context, watch, child) {
                     final name = ref.watch(nameProvider.notifier).state;
                     return VisitorsScreen(
-                      userInformation: name.isEmpty
+                      userInformation: widget.userInformation,
+                      usersInformation: name.isEmpty
                           ? userInformation
                           : userInformation
-                          .where((item) => item.name == name)
-                          .toList(),
+                              .where((item) => item.name == name)
+                              .toList(),
                       isRedeem: widget.isRedeem,
                       displayeElements: userInformation.length,
                       onUserRemove: (removedUser) {
-                        ref.read(userInformationProvider.notifier).removeUser(removedUser);
+                        ref
+                            .read(userInformationProvider.notifier)
+                            .removeUser(removedUser);
                       },
                     );
                   },

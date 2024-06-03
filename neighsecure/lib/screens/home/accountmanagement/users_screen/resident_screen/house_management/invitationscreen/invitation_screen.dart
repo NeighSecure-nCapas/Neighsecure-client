@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/models/entities/role.dart';
 
 import '../../../../../../../models/entities/home.dart';
 import '../../../../../../../models/entities/user.dart';
@@ -32,12 +30,14 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
   }
 
   Future<void> updateUserHome(String email, Home home) async {
-    await ref.read(userInformationProvider.notifier).updateUserHome(email, home);
+    await ref
+        .read(userInformationProvider.notifier)
+        .updateUserHome(email, home);
   }
 
   Future<void> updateInformation(String email, Home newHome) async {
-     await updateUserHome(email, newHome);
-     await updateUserRole(email);
+    await updateUserHome(email, newHome);
+    await updateUserRole(email);
   }
 
   void _submit() async {
@@ -161,7 +161,8 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await updateInformation(user.email, widget.userInformation.home);
+                      await updateInformation(
+                          user.email, widget.userInformation.home);
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },
@@ -195,7 +196,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
             ),
           ),
         );
-
       } catch (e) {
         showModalBottomSheet(
           context: context,
@@ -266,7 +266,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
           ),
         );
       }
-
     }
   }
 

@@ -8,7 +8,6 @@ import '../models/entities/permission.dart';
 import '../models/entities/role.dart';
 
 class UserInformationNotifier extends StateNotifier<List<User>> {
-
   final StateNotifierProviderRef<UserInformationNotifier, List<User>> ref;
 
   UserInformationNotifier(this.ref) : super(dummyUsers);
@@ -53,7 +52,8 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
       state[index] = updatedUser;
 
       if (kDebugMode) {
-        print('After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.roles.first.role}');
+        print(
+            'After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.roles.first.role}');
       }
     }
 
@@ -70,7 +70,8 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
       state[index] = updatedUser;
 
       if (kDebugMode) {
-        print('After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.home}');
+        print(
+            'After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.home}');
       }
     }
 

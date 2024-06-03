@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({super.key});
@@ -42,7 +41,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     });
 
     controller.scannedDataStream.listen((scanData) async {
-      if(isProcessing){
+      if (isProcessing) {
         return;
       }
 
@@ -50,7 +49,7 @@ class _QRViewExampleState extends State<QRViewExample> {
         result = scanData;
       });
 
-      if (result != null ) {
+      if (result != null) {
         isProcessing = true;
         controller.pauseCamera();
 
@@ -89,7 +88,6 @@ class _QRViewExampleState extends State<QRViewExample> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },
@@ -126,6 +124,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       }
     });
   }
+
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {

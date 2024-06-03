@@ -21,23 +21,23 @@ class _GenerateQRButtonState extends State<GenerateQRButton> {
         child: ElevatedButton(
           onPressed: widget.isPassSelected
               ? () {
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                const QrScreen(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              ),
-            ).then((value) {
-              setState(() {});
-            });
-          }
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const QrScreen(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                    ),
+                  ).then((value) {
+                    setState(() {});
+                  });
+                }
               : null,
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(

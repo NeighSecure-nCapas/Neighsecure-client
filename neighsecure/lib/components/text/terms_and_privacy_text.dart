@@ -5,7 +5,9 @@ class TermsAndPrivacyNotice extends StatelessWidget {
   final VoidCallback onTermsTap;
   final VoidCallback onPrivacyTap;
 
-  TermsAndPrivacyNotice({Key? key, required this.onTermsTap, required this.onPrivacyTap}) : super(key: key);
+  TermsAndPrivacyNotice(
+      {Key? key, required this.onTermsTap, required this.onPrivacyTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class TermsAndPrivacyNotice extends StatelessWidget {
             ),
             TextSpan(
               text: 'Política de Privacidad.',
-              style:  const TextStyle(
+              style: const TextStyle(
                 color: Colors.grey,
                 decoration: TextDecoration.underline,
               ),

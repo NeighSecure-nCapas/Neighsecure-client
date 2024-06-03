@@ -1,5 +1,4 @@
 import 'terminal.dart';
-import 'permission.dart';
 
 class Entry {
   final String id;

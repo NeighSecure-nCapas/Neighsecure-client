@@ -12,6 +12,7 @@ class VisitorsScreen extends ConsumerStatefulWidget {
   VisitorsScreen({
     super.key,
     required this.userInformation,
+    required this.usersInformation,
     required this.isRedeem,
     this.displayeElements,
     this.onUserRemove,
@@ -19,7 +20,9 @@ class VisitorsScreen extends ConsumerStatefulWidget {
 
   late int? displayeElements;
 
-  final List<User> userInformation;
+  final User userInformation;
+
+  final List<User> usersInformation;
 
   final Function(User)? onUserRemove;
 
@@ -36,22 +39,77 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
 
   List<User> filterUserInformation(String name) {
     final filtereduserInformation = widget.isRedeem
-        ? widget.userInformation
-        .where((item) => item.permissions.first.status == true)
-        .toList()
-        : widget.userInformation
-        .where((item) => item.permissions.first.status == false)
-        .toList();
+        ? widget.usersInformation
+            .where((item) =>
+                item.permissions.first.status == true &&
+                item.roles.any((role) => role.role == 'visitante'))
+            .toList()
+        : widget.usersInformation
+            .where((item) =>
+                item.permissions.first.status == false &&
+                item.roles.any((role) => role.role == 'visitante'))
+            .toList();
 
     return name.isEmpty
         ? filtereduserInformation
         : filtereduserInformation
-        .where((item) =>
-        item.name.toLowerCase().contains(name.toLowerCase()))
-        .toList();
+            .where(
+                (item) => item.name.toLowerCase().contains(name.toLowerCase()))
+            .toList();
   }
 
-
+  void showAcceptUserInvitationDialog(BuildContext context, User user) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: const Text(
+            'Aceptar la solicitud de invitacion de usuario',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          content: const Text(
+              '¿Estás seguro de que deseas aceptar la invitacion de este usuario?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Aceptar',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green,
+                ),
+              ),
+              onPressed: () {
+                //Remove user from the provider
+                ref
+                    .read(userInformationProvider.notifier)
+                    .updateUserRedeem(user);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +151,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
           shrinkWrap: true,
           itemCount: defaultdisplayed,
           itemBuilder: (context, index) {
-            if(index < filteredName.length) {
+            if (index < filteredName.length) {
               return GestureDetector(
                 onTap: () {
                   ref.read(nameProvider.notifier).updateName('');
@@ -102,8 +160,8 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
                           VisitorsDetailsScreen(
-                            userInformation: filteredName[index],
-                          ),
+                        userInformation: filteredName[index],
+                      ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         return FadeTransition(
@@ -123,8 +181,8 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Padding(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 18),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,7 +214,10 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                filteredName[index].roles.map((e) => e.role).join(', '),
+                                filteredName[index]
+                                    .roles
+                                    .map((e) => e.role)
+                                    .join(', '),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
@@ -165,7 +226,10 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                filteredName[index].permissions.map((e) => e.invetedBy).join(', '),
+                                filteredName[index]
+                                    .permissions
+                                    .map((e) => e.invetedBy)
+                                    .join(', '),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
@@ -181,122 +245,215 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                filteredName[index].permissions.first.status == true
-                                    ? showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      backgroundColor:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                      title: const Text(
-                                        'Eliminar usuario',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      content: const Text(
-                                          '¿Estás seguro de que deseas eliminar a este usuario?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text(
-                                            'Cancelar',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: const Text(
-                                            'Eliminar',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (widget.displayeElements != null) {
-                                                ref.read(userInformationProvider.notifier).removeUser(filteredName[index]);
-                                                widget.onUserRemove!(filteredName[index]);
-                                                widget.displayeElements = widget.displayeElements! - 1;
-                                              } else {
-                                                ref.read(userInformationProvider.notifier).removeUser(filteredName[index]);
-                                                widget.onUserRemove!(filteredName[index]);
-                                              }
-                                            });
+                                onTap: () {
+                                  widget.userInformation.roles.any(
+                                          (role) => role.role == 'encargado')
+                                      ? filteredName[index]
+                                                  .permissions
+                                                  .first
+                                                  .status ==
+                                              true
+                                          ? showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  backgroundColor: Theme.of(
+                                                          context)
+                                                      .scaffoldBackgroundColor,
+                                                  title: const Text(
+                                                    'Eliminar usuario',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  content: const Text(
+                                                      '¿Estás seguro de que deseas eliminar a este usuario?'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: const Text(
+                                                        'Cancelar',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: const Text(
+                                                        'Eliminar',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          if (widget
+                                                                  .displayeElements !=
+                                                              null) {
+                                                            ref
+                                                                .read(userInformationProvider
+                                                                    .notifier)
+                                                                .removeUser(
+                                                                    filteredName[
+                                                                        index]);
+                                                            widget.onUserRemove!(
+                                                                filteredName[
+                                                                    index]);
+                                                            widget.displayeElements =
+                                                                widget.displayeElements! -
+                                                                    1;
+                                                          } else {
+                                                            ref
+                                                                .read(userInformationProvider
+                                                                    .notifier)
+                                                                .removeUser(
+                                                                    filteredName[
+                                                                        index]);
+                                                            widget.onUserRemove!(
+                                                                filteredName[
+                                                                    index]);
+                                                          }
+                                                        });
 
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ) : showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                                      title: const Text(
-                                        'Aceptar la solicitud de invitacion de usuario',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      content: const Text(
-                                          '¿Estás seguro de que deseas aceptar la invitacion de este usuario?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text(
-                                            'Cancelar',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: const Text(
-                                            'Aceptar',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: Color(0xFF001E2C),
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            //Remove user from the provider
-                                            ref.read(userInformationProvider.notifier).updateUserRedeem(filteredName[index]);
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              child: Icon(
-                                filteredName[index].permissions.first.status == true
-                                    ? Icons.close
-                                    : Icons.check,
-                                color: Colors.black,
-                                size: 24,
-                              ),
-                            )
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            )
+                                          : showAcceptUserInvitationDialog(
+                                              context, filteredName[index])
+                                      : filteredName[index]
+                                                  .permissions
+                                                  .first
+                                                  .status ==
+                                              true
+                                          ? showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  backgroundColor: Theme.of(
+                                                          context)
+                                                      .scaffoldBackgroundColor,
+                                                  title: const Text(
+                                                    'Eliminar usuario',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  content: const Text(
+                                                      '¿Estás seguro de que deseas eliminar a este usuario?'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: const Text(
+                                                        'Cancelar',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: const Text(
+                                                        'Eliminar',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          if (widget
+                                                                  .displayeElements !=
+                                                              null) {
+                                                            ref
+                                                                .read(userInformationProvider
+                                                                    .notifier)
+                                                                .removeUser(
+                                                                    filteredName[
+                                                                        index]);
+                                                            widget.onUserRemove!(
+                                                                filteredName[
+                                                                    index]);
+                                                            widget.displayeElements =
+                                                                widget.displayeElements! -
+                                                                    1;
+                                                          } else {
+                                                            ref
+                                                                .read(userInformationProvider
+                                                                    .notifier)
+                                                                .removeUser(
+                                                                    filteredName[
+                                                                        index]);
+                                                            widget.onUserRemove!(
+                                                                filteredName[
+                                                                    index]);
+                                                          }
+                                                        });
+
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            )
+                                          : null;
+                                },
+                                child: Icon(
+                                  widget.userInformation.roles.any(
+                                          (role) => role.role == 'encargado')
+                                      ? filteredName[index]
+                                                  .permissions
+                                                  .first
+                                                  .status ==
+                                              true
+                                          ? Icons.close
+                                          : Icons.check
+                                      : filteredName[index]
+                                                  .permissions
+                                                  .first
+                                                  .status ==
+                                              true
+                                          ? Icons.close
+                                          : Icons.pending_actions,
+                                  color: widget.userInformation.roles.any(
+                                              (role) =>
+                                                  role.role == 'residente') &&
+                                          !filteredName[index]
+                                              .permissions
+                                              .first
+                                              .status
+                                      ? Colors.red
+                                      : Colors.black,
+                                  size: 24,
+                                ))
                           ],
                         )
                       ],
@@ -304,7 +461,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                   ),
                 ),
               );
-            }else{
+            } else {
               return const SizedBox.shrink();
             }
           },
@@ -313,4 +470,3 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
     );
   }
 }
-

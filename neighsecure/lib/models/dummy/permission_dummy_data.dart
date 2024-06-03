@@ -1,13 +1,12 @@
 import 'package:neighsecure/models/dummy/entry_dummy_data.dart';
-import 'package:neighsecure/models/dummy/user_dummy_data.dart';
+
 import '../entities/permission.dart';
-import 'home_dummy_data.dart';
 import 'key_dummy_data.dart';
 
 List<Permission> dummyPermissions = [
   Permission(
     id: '1',
-    type: 'single',
+    type: 'unica',
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 1)),
     startTime: DateTime.now(),
@@ -22,7 +21,7 @@ List<Permission> dummyPermissions = [
   ),
   Permission(
     id: '2',
-    type: 'single',
+    type: 'unica',
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 2)),
     startTime: DateTime.now(),

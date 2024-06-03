@@ -6,7 +6,6 @@ import 'package:neighsecure/models/entities/user.dart';
 
 import '../../../../../components/cards/visitor_card.dart';
 import '../../../../../components/cards/visitor_card_dates.dart';
-import '../../../../../models/entities/entry.dart';
 
 class VisitorScreen extends ConsumerStatefulWidget {
   const VisitorScreen(
@@ -24,9 +23,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     List<String> entries = widget.userInformation.entries;
-
 
     return SafeArea(
       child: Scaffold(
@@ -77,7 +74,9 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              '${widget.userInformation..roles.map((role) => role.role).join(', ')}',
+                              widget.userInformation.roles
+                                  .map((role) => role.role)
+                                  .join(', '),
                               style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
@@ -91,7 +90,8 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                       )
                     ],
                   )),
-              if (!widget.userInformation.permissions.any((permission) => permission.valid))
+              if (!widget.userInformation.permissions
+                  .any((permission) => permission.valid))
                 const Expanded(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -127,7 +127,8 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                     )),
                   ],
                 )),
-              if (widget.userInformation.permissions.any((permission) => permission.valid))
+              if (widget.userInformation.permissions
+                  .any((permission) => permission.valid))
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -160,7 +161,51 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                             ],
                           )),
                       const SizedBox(height: 30),
-
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: entries.length,
+                          itemBuilder: (context, index) {
+                            var pass = entries[index];
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (widget.userInformation.permissions.first
+                                        .type ==
+                                    'single')
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectPassIndex = index;
+                                      });
+                                    },
+                                    child: VisitDateCard(
+                                      pass: widget
+                                          .userInformation.permissions.first,
+                                      isSelected: selectPassIndex == index,
+                                    ),
+                                  ),
+                                if (widget.userInformation.permissions.first
+                                        .type ==
+                                    'multiple')
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectPassIndex = index;
+                                      });
+                                    },
+                                    child: VisitCard(
+                                      pass: widget
+                                          .userInformation.permissions.first,
+                                      isSelected: selectPassIndex == index,
+                                    ),
+                                  ),
+                                const SizedBox(height: 30),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -176,43 +221,5 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
 }
 
 /*
-        Expanded(
-                        child: ListView.builder(
-                          itemCount: entries.length,
-                          itemBuilder: (context, index) {
-                            var pass = entries[index];
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (pass.permission.type == 'single')
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectPassIndex = index;
-                                      });
-                                    },
-                                    child: VisitDateCard(
-                                      pass: pass,
-                                      isSelected: selectPassIndex == index,
-                                    ),
-                                  ),
-                                if (pass.permission.type == 'multiple')
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectPassIndex = index;
-                                      });
-                                    },
-                                    child: VisitCard(
-                                      pass: pass,
-                                      isSelected: selectPassIndex == index,
-                                    ),
-                                  ),
-                                const SizedBox(height: 30),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
+
  */

@@ -1,13 +1,12 @@
-/*
 import 'package:flutter/material.dart';
-
-import '../../models/entities/entry.dart';
+import 'package:neighsecure/models/entities/permission.dart';
 
 class VisitCard extends StatelessWidget {
-  final Entry pass;
+  final Permission pass;
   final bool isSelected;
 
-  VisitCard({Key? key, required this.pass, required this.isSelected}) : super(key: key);
+  VisitCard({Key? key, required this.pass, required this.isSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class VisitCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Visita ${pass.permission.type}',
+                'Visita ${pass.type}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -31,7 +30,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Estado: ${pass.permission.status ? 'Vigente' : 'Caducado'}',
+                'Estado: ${pass.status ? 'Vigente' : 'Caducado'}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -40,7 +39,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Dias: ${pass.permission.days}',
+                'Dias: ${pass.days}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -49,7 +48,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Rango: ${pass.permission.startTime} - ${pass.permission.endTime}',
+                'Rango: ${pass.startTime} - ${pass.endTime}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -63,5 +62,3 @@ class VisitCard extends StatelessWidget {
     );
   }
 }
-
- */

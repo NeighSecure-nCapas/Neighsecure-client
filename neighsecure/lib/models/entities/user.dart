@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'home.dart';
 import 'permission.dart';
 import 'role.dart';
@@ -41,7 +39,9 @@ class User {
       roles: (json['roles'] as List).map((i) => Role.fromJson(i)).toList(),
       dui: json['dui'],
       isActive: json['isActive'],
-      permissions: (json['permissions'] as List).map((i) => Permission.fromJson(i)).toList(),
+      permissions: (json['permissions'] as List)
+          .map((i) => Permission.fromJson(i))
+          .toList(),
       tokens: (json['tokens'] as List).map((i) => Token.fromJson(i)).toList(),
       entries: (json['entries'] as List).map((i) => i.toString()).toList(),
       home: Home.fromJson(json['home']),
@@ -57,7 +57,8 @@ class User {
       'roles': roles.map((role) => role.toJson()).toList(),
       'dui': dui,
       'isActive': isActive,
-      'permissions': permissions.map((permission) => permission.toJson()).toList(),
+      'permissions':
+          permissions.map((permission) => permission.toJson()).toList(),
       'tokens': tokens.map((token) => token.toJson()).toList(),
       'entries': entries,
       'home': home.toJson(),
@@ -96,15 +97,11 @@ class User {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is User &&
-        other.email == email;
-
+    return other is User && other.email == email;
   }
 
   @override
   int get hashCode {
-    return
-    email.hashCode;
+    return email.hashCode;
   }
-
 }

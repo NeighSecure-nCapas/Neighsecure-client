@@ -1,5 +1,3 @@
-import 'user.dart';
-
 class Token {
   final String id;
   final String content;

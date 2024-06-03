@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/adding_visit/adding_visit.dart';
-import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_state_screen/visitors_state_screen.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_screen.dart';
+import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_state_screen/visitors_state_screen.dart';
+
 import '../../../../../../components/buttons/custom_floating_action_button.dart';
 import '../../../../../../providers/testing_user_information_notifier.dart';
 import '../../../../../../providers/testnameprovider.dart';
@@ -32,7 +33,8 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const AddingVisit(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const AddingVisit(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
@@ -47,7 +49,9 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => VisitorsStateScreen(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            VisitorsStateScreen(
+          userInformation: widget.userInformation,
           isRedeem: isRedeem,
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -59,11 +63,14 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
       ),
     );
   }
+
   void navigateToVisitorsState2Screen(BuildContext context, bool isRedeem) {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => VisitorsStateScreen(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            VisitorsStateScreen(
+          userInformation: widget.userInformation,
           isRedeem: isRedeem,
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -200,7 +207,8 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                         builder: (context, watch, child) {
                           final name = ref.watch(nameProvider.notifier).state;
                           return VisitorsScreen(
-                            userInformation: name.isEmpty
+                            userInformation: widget.userInformation,
+                            usersInformation: name.isEmpty
                                 ? usersInformation
                                 : usersInformation
                                     .where((item) => item.name == name)
@@ -251,7 +259,8 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                         builder: (context, watch, child) {
                           final name = ref.watch(nameProvider.notifier).state;
                           return VisitorsScreen(
-                            userInformation: name.isEmpty
+                            userInformation: widget.userInformation,
+                            usersInformation: name.isEmpty
                                 ? usersInformation
                                 : usersInformation
                                     .where((item) => item.name == name)

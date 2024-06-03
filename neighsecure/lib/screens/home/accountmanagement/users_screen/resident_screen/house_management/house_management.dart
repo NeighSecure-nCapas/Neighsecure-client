@@ -120,7 +120,6 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
 
   @override
   Widget build(BuildContext context) {
-
     usersInformation = ref
         .watch(userInformationProvider)
         .where((user) =>

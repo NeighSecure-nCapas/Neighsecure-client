@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'dart:math';
 
 class QrScreen extends ConsumerStatefulWidget {
   const QrScreen({super.key});
+
   @override
   ConsumerState<QrScreen> createState() => _QrScreenState();
 }
@@ -125,7 +126,7 @@ class _QrScreenState extends ConsumerState<QrScreen> {
             QrImageView(
               data: _qr,
               version: QrVersions.auto,
-              size: 200.0,
+              size: 275.0,
             ),
             const SizedBox(height: 18),
             Column(

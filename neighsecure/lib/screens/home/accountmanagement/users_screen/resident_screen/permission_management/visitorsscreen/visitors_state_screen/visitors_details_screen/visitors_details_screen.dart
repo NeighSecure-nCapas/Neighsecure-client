@@ -13,13 +13,12 @@ class VisitorsDetailsScreen extends ConsumerStatefulWidget {
   final User userInformation;
 
   @override
-  ConsumerState<VisitorsDetailsScreen> createState() => _VisitorsDetailsScreenState();
+  ConsumerState<VisitorsDetailsScreen> createState() =>
+      _VisitorsDetailsScreenState();
 }
 
 class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
-
   void _acceptVisit(User userInformation) {
-
     showDialog(
       context: context,
       builder: (context) {
@@ -60,7 +59,9 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               ),
               onPressed: () {
                 //Remove user from the provider
-                ref.read(userInformationProvider.notifier).updateUserRedeem(userInformation);
+                ref
+                    .read(userInformationProvider.notifier)
+                    .updateUserRedeem(userInformation);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
@@ -129,7 +130,6 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     var entryHoursList = widget.userInformation.entries ?? [];
 
     return SafeArea(
@@ -192,7 +192,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Residennte ${widget.userInformation}',
+                            'Residente ${widget.userInformation}',
                             style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 16,
@@ -255,9 +255,9 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              widget.userInformation.permissions.first.status == true ?
-               _submit(widget.userInformation) :
-              _acceptVisit(widget.userInformation);
+              widget.userInformation.permissions.first.status == true
+                  ? _submit(widget.userInformation)
+                  : _acceptVisit(widget.userInformation);
             },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(

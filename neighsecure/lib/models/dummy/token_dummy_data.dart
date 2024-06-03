@@ -1,7 +1,3 @@
-import 'package:neighsecure/models/dummy/user_dummy_data.dart';
-import 'package:neighsecure/models/entities/user.dart';
-
-
 import '../entities/toke.dart';
 
 List<Token> dummyTokens = [

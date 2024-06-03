@@ -42,12 +42,12 @@ List<User> dummyUsers = [
       phone: '0987654321',
       roles: [
         dummyRoles[1],
-      ], // Add dummy Role objects as needed
+      ],
+      // Add dummy Role objects as needed
       dui: 'dummy-dui-2',
       isActive: false,
-      permissions: [
-        dummyPermissions[1],
-      ], // Add dummy Permission objects as needed
+      permissions: [dummyPermissions[1], dummyPermissions[2]],
+      // Add dummy Permission objects as needed
       tokens: [dummyTokens[1]],
       home: dummyHomes[1],
       entries: {
@@ -69,12 +69,14 @@ List<User> dummyUsers = [
     phone: '1122334455',
     roles: [
       dummyRoles[3],
-    ], // Add dummy Role objects as needed
+    ],
+    // Add dummy Role objects as needed
     dui: 'dummy-dui-3',
     isActive: true,
     permissions: [
       dummyPermissions[1],
-    ], // Add dummy Permission objects as needed
+    ],
+    // Add dummy Permission objects as needed
     tokens: [dummyTokens[2]],
     home: dummyHomes[2],
     entries: {

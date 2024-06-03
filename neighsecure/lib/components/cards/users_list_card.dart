@@ -1,12 +1,13 @@
-import '../../models/entities/user.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/entities/user.dart';
 
 class UsersList extends StatelessWidget {
   final List<User> usersInformation;
   final Function showDeleteUserDialog;
 
-  UsersList({required this.usersInformation, required this.showDeleteUserDialog});
+  UsersList(
+      {required this.usersInformation, required this.showDeleteUserDialog});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,8 @@ class UsersList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () => showDeleteUserDialog(context, usersInformation[index]),
+                      onTap: () => showDeleteUserDialog(
+                          context, usersInformation[index]),
                       child: const Icon(
                         Icons.close,
                         color: Colors.black,

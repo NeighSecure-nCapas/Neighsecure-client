@@ -5,7 +5,12 @@ class CustomSubmitButton extends StatelessWidget {
   final bool isTablet;
   final bool isDuiNotEmpty;
 
-  CustomSubmitButton({Key? key, required this.onPressed, required this.isTablet, required this.isDuiNotEmpty}) : super(key: key);
+  CustomSubmitButton(
+      {Key? key,
+      required this.onPressed,
+      required this.isTablet,
+      required this.isDuiNotEmpty})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
