@@ -18,6 +18,7 @@ List<Permission> dummyPermissions = [
     generationDate: DateTime.now(),
     days: 'Martes',
     entries: [dummyEntries[0]],
+    invetedBy: 'Diego Campos',
   ),
   Permission(
     id: '2',
@@ -32,6 +33,7 @@ List<Permission> dummyPermissions = [
     generationDate: DateTime.now(),
     days: 'Lunes',
     entries: [dummyEntries[1]],
+    invetedBy: 'Fernando Martinez',
   ),
   Permission(
     id: '3',
@@ -46,5 +48,6 @@ List<Permission> dummyPermissions = [
     generationDate: DateTime.now(),
     days: 'Lunes, Martes, Miercoles, Jueves, Viernes, Sabado, Domingo',
     entries: [dummyEntries[1]],
+    invetedBy: 'Pamela Martinez',
   ),
 ];

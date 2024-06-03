@@ -16,6 +16,7 @@ class Permission {
   final DateTime generationDate;
   final String days;
   final List<Entry> entries;
+  final String invetedBy;
 
   Permission({
     required this.id,
@@ -30,6 +31,7 @@ class Permission {
     required this.generationDate,
     required this.days,
     required this.entries,
+    required this.invetedBy,
   });
 
   factory Permission.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class Permission {
       generationDate: DateTime.parse(json['generationDate']),
       days: json['days'],
       entries: (json['entries'] as List).map((i) => Entry.fromJson(i)).toList(),
+      invetedBy: json['invetedBy'],
     );
   }
 
@@ -63,6 +66,7 @@ class Permission {
       'generationDate': generationDate.toIso8601String(),
       'days': days,
       'entries': entries.map((entry) => entry.toJson()).toList(),
+      'invetedBy': invetedBy,
     };
   }
 
@@ -79,6 +83,7 @@ class Permission {
     DateTime? generationDate,
     String? days,
     List<Entry>? entries,
+    String? invetedBy,
   }) {
     return Permission(
       id: id ?? this.id,
@@ -93,6 +98,7 @@ class Permission {
       generationDate: generationDate ?? this.generationDate,
       days: days ?? this.days,
       entries: entries ?? this.entries,
+      invetedBy: invetedBy ?? this.invetedBy,
     );
   }
 }

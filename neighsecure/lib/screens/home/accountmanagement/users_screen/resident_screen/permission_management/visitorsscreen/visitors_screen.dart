@@ -165,7 +165,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                filteredName[index].permissions.map((e) => e.id).join(', '),
+                                filteredName[index].permissions.map((e) => e.invetedBy).join(', '),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,

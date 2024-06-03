@@ -1,16 +1,22 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/entities/role.dart';
 
+import '../../../../../../../models/entities/home.dart';
 import '../../../../../../../models/entities/user.dart';
 import '../../../../../../../providers/testing_user_information_notifier.dart';
 
 class InvitationScreen extends ConsumerStatefulWidget {
   const InvitationScreen(
-      {super.key, required this.totalUsers, required this.currentUserCount});
+      {super.key,
+      required this.totalUsers,
+      required this.currentUserCount,
+      required this.userInformation});
 
   final int totalUsers;
   final int currentUserCount;
+  final User userInformation;
 
   @override
   ConsumerState<InvitationScreen> createState() => _InvitationScreenState();
@@ -21,24 +27,20 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
 
   String _email = '';
 
-  void updateUserRole(User user) {
-    String oldRole = user.roles.first.role;
-    String newRole;
-
-    if (oldRole == 'visitante') {
-      newRole = 'residente';
-    } else if (oldRole == 'residente') {
-      newRole = 'visitante';
-    } else {
-      throw Exception('Invalid role');
-    }
-
-    ref
-        .read(userInformationProvider.notifier)
-        .updateUserRole(user, oldRole, newRole);
+  Future<void> updateUserRole(String email) async {
+    await ref.read(userInformationProvider.notifier).updateUserRole(email);
   }
 
-  void _submit() {
+  Future<void> updateUserHome(String email, Home home) async {
+    await ref.read(userInformationProvider.notifier).updateUserHome(email, home);
+  }
+
+  Future<void> updateInformation(String email, Home newHome) async {
+     await updateUserHome(email, newHome);
+     await updateUserRole(email);
+  }
+
+  void _submit() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
 
@@ -117,12 +119,82 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
     if (isValid) {
       _formKey.currentState!.save();
 
-      User? user;
+      User user;
 
       try {
         user = ref
             .read(userInformationProvider)
             .firstWhere((user) => user.email == _email);
+
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                const Text('Listo!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black)),
+                const SizedBox(height: 20),
+                const Text(
+                    'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey)),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await updateInformation(user.email, widget.userInformation.home);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        const Color(0xFF001E2C),
+                      ),
+                      padding: WidgetStateProperty.all(
+                        const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 28,
+                        ),
+                      ),
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Listo',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
 
       } catch (e) {
         showModalBottomSheet(
@@ -195,77 +267,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
         );
       }
 
-      if (user != null) {
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 20),
-                const Text('Listo!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black)),
-                const SizedBox(height: 20),
-                const Text(
-                    'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey)),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      updateUserRole(user!);
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        const Color(0xFF001E2C),
-                      ),
-                      padding: WidgetStateProperty.all(
-                        const EdgeInsets.symmetric(
-                          vertical: 18,
-                          horizontal: 28,
-                        ),
-                      ),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'Listo',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
-      }
     }
   }
 

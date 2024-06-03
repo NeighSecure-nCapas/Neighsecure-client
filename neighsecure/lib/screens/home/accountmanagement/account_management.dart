@@ -24,7 +24,7 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
 
     User userInformation = ref
         .watch(userInformationProvider)
-        .firstWhere((user) => user.roles.any((role) => role.role == 'visitante'), orElse: () {
+        .firstWhere((user) => user.roles.any((role) => role.role == 'encargado'), orElse: () {
       throw Exception('User with role visitante not found');
     });
 
@@ -34,9 +34,14 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
 
     List<Permission> permissions = userInformation.permissions;
 
+    /*
     if (kDebugMode) {
-      print(permissions);
-    }
+      print(userInformation.toJson());
+      print('\n\n');
+      for (var permission in permissions) {
+        print(permission.toJson());
+      }}
+     */
     Widget? maincontent;
 
     Widget visit = VisitorScreen(userInformation: userInformation, permissions: permissions);

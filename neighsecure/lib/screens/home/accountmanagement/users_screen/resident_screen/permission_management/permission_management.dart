@@ -5,6 +5,7 @@ import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/adding_visit/adding_visit.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_state_screen/visitors_state_screen.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/permission_management/visitorsscreen/visitors_screen.dart';
+import '../../../../../../components/buttons/custom_floating_action_button.dart';
 import '../../../../../../providers/testing_user_information_notifier.dart';
 import '../../../../../../providers/testnameprovider.dart';
 
@@ -19,23 +20,82 @@ class PermissionManagement extends ConsumerStatefulWidget {
 }
 
 class _PermissionManagementState extends ConsumerState<PermissionManagement> {
-
   final _formKey = GlobalKey<FormState>();
 
   var pendingVisitors = false;
 
   var completedVisitors = false;
 
-  late List<User> usersInformation;
+  late List<User> usersInformation = [];
+
+  void navigateToAddVisit(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => const AddingVisit(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  void navigateToVisitorsState1Screen(BuildContext context, bool isRedeem) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => VisitorsStateScreen(
+          isRedeem: isRedeem,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+  void navigateToVisitorsState2Screen(BuildContext context, bool isRedeem) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => VisitorsStateScreen(
+          isRedeem: isRedeem,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+  }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     usersInformation = ref
         .watch(userInformationProvider)
         .where((user) => user.roles.any((role) => role.role == 'visitante'))
         .toList();
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    usersInformation = ref
+        .watch(userInformationProvider)
+        .where((user) => user.roles.any((role) => role.role == 'visitante'))
+        .toList();
 
     if (kDebugMode) {
       print(usersInformation);
@@ -124,23 +184,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                             onPressed: () {
                               //set name to empty
                               ref.read(nameProvider.notifier).updateName('');
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      VisitorsStateScreen(
-                                    isRedeem: false,
-                                  ),
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    return FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
+                              navigateToVisitorsState2Screen(context, false);
                             },
                             child: const Text('Ver mas',
                                 style: TextStyle(
@@ -191,23 +235,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                             onPressed: () {
                               //set name to empty
                               ref.read(nameProvider.notifier).updateName('');
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      VisitorsStateScreen(
-                                    isRedeem: true,
-                                  ),
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    return FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
+                              navigateToVisitorsState1Screen(context, true);
                             },
                             child: const Text('Ver mas',
                                 style: TextStyle(
@@ -243,39 +271,10 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
               ),
             )),
           ),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
-            child: SizedBox(
-              height: 64,
-              width: 64,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          const AddingVisit(),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-                backgroundColor: const Color(0xFF001E2C),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.add,
-                    size: 32,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+          floatingActionButton: CustomFloatingActionButton(
+            onPressed: () {
+              navigateToAddVisit(context);
+            },
           )),
     );
   }

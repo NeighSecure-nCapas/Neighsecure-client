@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'home.dart';
 import 'permission.dart';
 import 'role.dart';
@@ -88,6 +90,21 @@ class User {
       entries: entries ?? this.entries,
       home: home ?? this.home,
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is User &&
+        other.email == email;
+
+  }
+
+  @override
+  int get hashCode {
+    return
+    email.hashCode;
   }
 
 }
