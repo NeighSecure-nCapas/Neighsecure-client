@@ -91,6 +91,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     usersInformation = ref
         .watch(userInformationProvider)
         .where((user) => user.roles.any((role) => role.role == 'visitante'))

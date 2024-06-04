@@ -111,6 +111,24 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
     );
   }
 
+  void navigateToVisitorsDetailsScreen(BuildContext context, User user) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            VisitorsDetailsScreen(
+          userInformation: user,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -155,22 +173,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
               return GestureDetector(
                 onTap: () {
                   ref.read(nameProvider.notifier).updateName('');
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          VisitorsDetailsScreen(
-                        userInformation: filteredName[index],
-                      ),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
+                  navigateToVisitorsDetailsScreen(context, filteredName[index]);
                 },
                 child: Card(
                   elevation: 0.0,

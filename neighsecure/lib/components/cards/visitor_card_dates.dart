@@ -13,8 +13,14 @@ class VisitDateCard extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Card(
-        elevation: isSelected ? 8.0 : 0.0,
+        elevation: 0.0,
         color: Theme.of(context).scaffoldBackgroundColor,
+        shape: isSelected
+            ? RoundedRectangleBorder(
+                side: const BorderSide(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              )
+            : null,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(

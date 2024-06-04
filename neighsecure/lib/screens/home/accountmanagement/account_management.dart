@@ -18,10 +18,21 @@ class AccountManagement extends ConsumerStatefulWidget {
 class _AccountManagementState extends ConsumerState<AccountManagement> {
   int? selectPassIndex;
 
+  String getRole(User user) {
+    if (user.roles.any((userRole) =>
+        userRole.role == 'encargado' || userRole.role == 'residente')) {
+      return 'encargado';
+    } else if (user.roles.any((userRole) => userRole.role == 'visitante')) {
+      return 'visitante';
+    } else {
+      return 'other';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     User userInformation = ref.watch(userInformationProvider).firstWhere(
-        (user) => user.roles.any((role) => role.role == 'visitante'),
+        (user) => user.roles.any((role) => role.role == 'encargado'),
         orElse: () {
       throw Exception('User with role visitante not found');
     });
@@ -42,20 +53,28 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
      */
     Widget? maincontent;
 
-    Widget visit = VisitorScreen(
-        userInformation: userInformation, permissions: permissions);
+    Widget visit = VisitorScreen(userInformation: userInformation);
 
-    Widget residentInCharge = ResidentScreen(userInformation: userInformation);
+    Widget resident = ResidentScreen(userInformation: userInformation);
 
     Widget vigilant = VigilantScreen(userInformation: userInformation);
 
-    if (hasRole(userInformation, 'encargado') ||
-        hasRole(userInformation, 'residente')) {
-      maincontent = residentInCharge;
-    } else if (hasRole(userInformation, 'visitante')) {
-      maincontent = visit;
-    } else {
-      maincontent = vigilant;
+    switch (getRole(userInformation)) {
+      case 'residente':
+      case 'encargado':
+        maincontent = resident;
+        break;
+      case 'visitante':
+        maincontent = visit;
+        break;
+      case 'vigilante':
+        maincontent = vigilant;
+        break;
+      default:
+        maincontent = const Center(
+          child: Text('No tiene permisos para acceder a esta sección'),
+        );
+        break;
     }
 
     return maincontent;
