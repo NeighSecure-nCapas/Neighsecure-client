@@ -5,14 +5,13 @@ class TermsAndPrivacyNotice extends StatelessWidget {
   final VoidCallback onTermsTap;
   final VoidCallback onPrivacyTap;
 
-  TermsAndPrivacyNotice(
-      {Key? key, required this.onTermsTap, required this.onPrivacyTap})
-      : super(key: key);
+  const TermsAndPrivacyNotice(
+      {super.key, required this.onTermsTap, required this.onPrivacyTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(

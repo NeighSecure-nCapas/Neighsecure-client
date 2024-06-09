@@ -7,7 +7,7 @@ class CustomText extends StatelessWidget {
   //Color text
   final Color color;
 
-  CustomText(
+  const CustomText(
       {super.key,
       required this.instruction,
       required this.fontSize,

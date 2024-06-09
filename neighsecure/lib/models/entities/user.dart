@@ -1,4 +1,3 @@
-import 'home.dart';
 import 'permission.dart';
 import 'role.dart';
 import 'toke.dart';
@@ -11,10 +10,8 @@ class User {
   final List<Role> roles;
   final String dui;
   final bool isActive;
-  final List<Permission> permissions;
   final List<Token> tokens;
-  final List<String> entries;
-  final Home home;
+  final String? homeId;
 
   User({
     required this.id,
@@ -24,10 +21,8 @@ class User {
     required this.roles,
     required this.dui,
     required this.isActive,
-    required this.permissions,
     required this.tokens,
-    this.entries = const [],
-    required this.home,
+    this.homeId,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -39,12 +34,8 @@ class User {
       roles: (json['roles'] as List).map((i) => Role.fromJson(i)).toList(),
       dui: json['dui'],
       isActive: json['isActive'],
-      permissions: (json['permissions'] as List)
-          .map((i) => Permission.fromJson(i))
-          .toList(),
       tokens: (json['tokens'] as List).map((i) => Token.fromJson(i)).toList(),
-      entries: (json['entries'] as List).map((i) => i.toString()).toList(),
-      home: Home.fromJson(json['home']),
+      homeId: json['home'],
     );
   }
 
@@ -57,11 +48,8 @@ class User {
       'roles': roles.map((role) => role.toJson()).toList(),
       'dui': dui,
       'isActive': isActive,
-      'permissions':
-          permissions.map((permission) => permission.toJson()).toList(),
       'tokens': tokens.map((token) => token.toJson()).toList(),
-      'entries': entries,
-      'home': home.toJson(),
+      'home': homeId,
     };
   }
 
@@ -75,8 +63,7 @@ class User {
     bool? isActive,
     List<Permission>? permissions,
     List<Token>? tokens,
-    List<String>? entries,
-    Home? home,
+    String? homeId,
   }) {
     return User(
       id: id ?? this.id,
@@ -86,22 +73,8 @@ class User {
       roles: roles ?? this.roles,
       dui: dui ?? this.dui,
       isActive: isActive ?? this.isActive,
-      permissions: permissions ?? this.permissions,
       tokens: tokens ?? this.tokens,
-      entries: entries ?? this.entries,
-      home: home ?? this.home,
+      homeId: homeId ?? this.homeId,
     );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is User && other.email == email;
-  }
-
-  @override
-  int get hashCode {
-    return email.hashCode;
   }
 }

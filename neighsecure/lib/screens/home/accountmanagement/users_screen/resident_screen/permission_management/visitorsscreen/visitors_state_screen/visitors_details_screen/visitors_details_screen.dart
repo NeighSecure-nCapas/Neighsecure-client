@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../../../../../models/entities/permission.dart';
 import '../../../../../../../../../models/entities/user.dart';
+import '../../../../../../../../../providers/testing_permission_information_notifier.dart';
 import '../../../../../../../../../providers/testing_user_information_notifier.dart';
 
 class VisitorsDetailsScreen extends ConsumerStatefulWidget {
-  const VisitorsDetailsScreen({
-    super.key,
-    required this.userInformation,
-  });
+  VisitorsDetailsScreen(
+      {super.key,
+      required this.userInformation,
+      required this.isRedeem,
+      required this.userInformationState});
 
-  final User userInformation;
+  final Permission userInformation;
+
+  final User userInformationState;
+
+  bool isRedeem;
 
   @override
   ConsumerState<VisitorsDetailsScreen> createState() =>
@@ -60,7 +67,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               onPressed: () {
                 //Remove user from the provider
                 ref
-                    .read(userInformationProvider.notifier)
+                    .read(permissionInformationProvider.notifier)
                     .updateUserRedeem(userInformation);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -181,7 +188,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.userInformation.name,
+                            widget.userInformation.user.name,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -208,7 +215,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                 )),
             const SizedBox(height: 30),
             Text(
-              widget.userInformation.permissions.first.type == 'single'
+              widget.userInformation.type == 'single'
                   ? 'Visita única'
                   : 'Visita multiple',
               style: const TextStyle(
@@ -219,7 +226,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              widget.userInformation.permissions.first.type == 'multiple'
+              widget.userInformation.type == 'multiple'
                   ? 'Estado: Completado'
                   : 'Estado: Pendiente',
               style: const TextStyle(
@@ -234,7 +241,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                 return Column(
                   children: [
                     Text(
-                      'Hora de entrada: $entryHour',
+                      'Hora de entrada: ${entryHour.entryDate.hour}:${entryHour.entryDate.minute}',
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
@@ -255,13 +262,51 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              widget.userInformation.permissions.first.status == true
-                  ? _submit(widget.userInformation)
-                  : _acceptVisit(widget.userInformation);
+              widget.userInformationState.roles
+                      .any((userRole) => userRole.role == 'encargado')
+                  ? (widget.userInformation.status == true
+                      ? _submit(widget.userInformation.user)
+                      : _acceptVisit(widget.userInformation.user))
+                  : (widget.userInformation.status == true
+                      ? showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Error'),
+                              content: const Text(
+                                  'Solo un encargado puede eliminar'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        )
+                      : showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Error'),
+                              content: Text('Esperando aprobacion'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ));
             },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(
-                widget.userInformation.permissions.first.status == true
+                widget.userInformation.status == true
                     ? const Color(0xFFBA1A1A)
                     : const Color(0xFF001E2C),
               ),
@@ -278,9 +323,14 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               ),
             ),
             child: Text(
-              widget.userInformation.permissions.first.status == true
-                  ? 'Eliminar'
-                  : 'Aceptar visita',
+              widget.userInformationState.roles
+                      .any((userRole) => userRole.role == 'encargado')
+                  ? (widget.userInformation.status == true
+                      ? 'Eliminar'
+                      : 'Aceptar visita')
+                  : (widget.userInformation.status == true
+                      ? 'Solo un encargado puede eliminar'
+                      : 'Esperando aprobacion'),
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 18,

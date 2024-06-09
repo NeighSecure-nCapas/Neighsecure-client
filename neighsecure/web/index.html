@@ -33,7 +33,15 @@
   <link rel="manifest" href="manifest.json">
 
   <script>
-    var serviceWorkerVersion = '{{flutter_service_worker_version}}';
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = {{flutter_service_worker_version}};
+    if ("serviceWorker" in navigator) {
+       window.addEventListener("load", function () {
+          // navigator.serviceWorker.register("/flutter_service_worker.js");
+          navigator.serviceWorker.register("/firebase_config/firebase-messaging-sw.js");
+       });
+    }
+
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
@@ -42,6 +50,8 @@
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
+      {{flutter_js}}
+      {{flutter_build_config}}
       _flutter.loader.load({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,

@@ -5,6 +5,8 @@ import 'package:neighsecure/models/entities/user.dart';
 
 import '../../../../../../components/cards/users_list_card.dart';
 import '../../../../../../components/floatingbuttons/invitation_button.dart';
+import '../../../../../../models/entities/home.dart';
+import '../../../../../../providers/testing_home_information_notifier.dart';
 import '../../../../../../providers/testing_user_information_notifier.dart';
 import 'invitationscreen/invitation_screen.dart';
 
@@ -20,10 +22,21 @@ class HouseManagement extends ConsumerStatefulWidget {
 class _HouseManagementState extends ConsumerState<HouseManagement> {
   final totalUsers = 5;
 
-  List<User> usersInformation = [];
+  Home getHomeInCharge(User user) {
+    return ref
+        .watch(testingHomeInformationProvider)
+        .firstWhere((home) => home.encargado == user);
+  }
+
+  List<Home> getHomeResident(User user) {
+    return ref
+        .watch(testingHomeInformationProvider)
+        .where((home) => home.users.contains(user))
+        .toList();
+  }
 
   void updateUserRole(User user) {
-    ref.read(userInformationProvider.notifier).updateUserRole(user.email);
+    ref.watch(userInformationProvider.notifier).updateUserRole(user.email);
   }
 
   void showDeleteUserDialog(BuildContext context, User user) {
@@ -83,13 +96,10 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             InvitationScreen(
-          totalUsers: totalUsers,
-          currentUserCount: ref
-              .watch(userInformationProvider)
-              .where((user) =>
-                  user.roles.any((role) => role.role == 'residente') &&
-                  user.home == widget.userInformation.home)
-              .length,
+          totalUsers: getHomeInCharge(widget.userInformation).homeNumber,
+          userHome: getHomeInCharge(widget.userInformation),
+          currentUserCount:
+              getHomeInCharge(widget.userInformation).users.length,
           userInformation: widget.userInformation,
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -103,32 +113,23 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    usersInformation = ref
-        .watch(userInformationProvider)
-        .where((user) =>
-            user.roles.any((role) => role.role == 'residente') &&
-            user.home == widget.userInformation.home)
-        .toList();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    usersInformation = ref
-        .watch(userInformationProvider)
-        .where((user) =>
-            user.roles.any((role) => role.role == 'residente') &&
-            user.home == widget.userInformation.home)
-        .toList();
+    final usersInformation = getHomeInCharge(widget.userInformation).users;
+
+    final allusersInformation = ref.watch(userInformationProvider).toList();
 
     if (kDebugMode) {
-      print(usersInformation);
+      for (var user in usersInformation) {
+        print(
+            'Name: ${user.name}, Home ID: ${user.homeId}, Role: ${user.roles.first.role}');
+      }
+    }
+
+    if (kDebugMode) {
+      for (var user in allusersInformation) {
+        print(
+            'Name: ${user.name}, Home ID: ${user.homeId}, Role: ${user.roles.first.role}');
+      }
     }
 
     return SafeArea(

@@ -6,8 +6,8 @@ class UsersList extends StatelessWidget {
   final List<User> usersInformation;
   final Function showDeleteUserDialog;
 
-  UsersList(
-      {required this.usersInformation, required this.showDeleteUserDialog});
+  const UsersList(
+      {super.key, required this.usersInformation, required this.showDeleteUserDialog});
 
   @override
   Widget build(BuildContext context) {

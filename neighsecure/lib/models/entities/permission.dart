@@ -1,4 +1,7 @@
+import 'package:neighsecure/models/entities/user.dart';
+
 import 'entry.dart';
+import 'home.dart';
 import 'key.dart';
 
 class Permission {
@@ -15,6 +18,8 @@ class Permission {
   final String days;
   final List<Entry> entries;
   final String invetedBy;
+  final User user;
+  final Home home;
 
   Permission({
     required this.id,
@@ -30,6 +35,8 @@ class Permission {
     required this.days,
     required this.entries,
     required this.invetedBy,
+    required this.user,
+    required this.home,
   });
 
   factory Permission.fromJson(Map<String, dynamic> json) {
@@ -47,6 +54,8 @@ class Permission {
       days: json['days'],
       entries: (json['entries'] as List).map((i) => Entry.fromJson(i)).toList(),
       invetedBy: json['invetedBy'],
+      user: User.fromJson(json['user']),
+      home: Home.fromJson(json['home']),
     );
   }
 
@@ -65,6 +74,8 @@ class Permission {
       'days': days,
       'entries': entries.map((entry) => entry.toJson()).toList(),
       'invetedBy': invetedBy,
+      'user': user.toJson(),
+      'home': home.toJson(),
     };
   }
 
@@ -82,6 +93,8 @@ class Permission {
     String? days,
     List<Entry>? entries,
     String? invetedBy,
+    User? user,
+    Home? home,
   }) {
     return Permission(
       id: id ?? this.id,
@@ -97,6 +110,8 @@ class Permission {
       days: days ?? this.days,
       entries: entries ?? this.entries,
       invetedBy: invetedBy ?? this.invetedBy,
+      user: user ?? this.user,
+      home: home ?? this.home,
     );
   }
 }

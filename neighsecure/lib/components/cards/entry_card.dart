@@ -9,7 +9,7 @@ class EntryCard extends StatelessWidget {
   final TimeOfDay? timeStart;
   final TimeOfDay? timeStartRange;
 
-  EntryCard({
+  const EntryCard({
     super.key,
     required this.onPressed,
     required this.dateStart,
@@ -33,7 +33,7 @@ class EntryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -44,7 +44,7 @@ class EntryCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              CustomText(
+              const CustomText(
                   instruction: 'Selecciona el dia de ingreso.',
                   fontSize: 14,
                   color: Colors.grey),
@@ -66,7 +66,7 @@ class EntryCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: CustomText(
+                child: const CustomText(
                     instruction: 'Selecciona una fecha',
                     fontSize: 14,
                     color: Colors.grey),
@@ -75,7 +75,7 @@ class EntryCard extends StatelessWidget {
                   ? DateText(date: dateStart!, label: 'Fecha de inicio')
                   : const SizedBox(),
               const SizedBox(height: 24),
-              CustomText(
+              const CustomText(
                   instruction: 'Selecciona una hora específica.',
                   fontSize: 14,
                   color: Colors.grey),
@@ -110,7 +110,7 @@ class EntryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              CustomText(
+              const CustomText(
                 instruction: 'Selecciona un rango de horas.',
                 fontSize: 14,
                 color: Colors.grey,
@@ -181,7 +181,7 @@ class EntryCard extends StatelessWidget {
                               ),
                             )),
                         const SizedBox(width: 24),
-                        CustomText(
+                        const CustomText(
                             instruction: 'Hora de fin',
                             fontSize: 14,
                             color: Colors.grey),

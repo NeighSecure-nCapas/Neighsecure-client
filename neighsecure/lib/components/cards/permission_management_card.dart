@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PermissionManagementCard extends StatelessWidget {
-  const PermissionManagementCard({Key? key}) : super(key: key);
+  const PermissionManagementCard({super.key});
 
   @override
   Widget build(BuildContext context) {

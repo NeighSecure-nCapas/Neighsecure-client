@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/components/buttons/custom_visitor_button.dart';
+import 'package:neighsecure/models/entities/permission.dart';
 import 'package:neighsecure/models/entities/user.dart';
+import 'package:neighsecure/providers/testing_permission_information_notifier.dart';
 
 import '../../../../../components/cards/visitor_card.dart';
 import '../../../../../components/cards/visitor_card_dates.dart';
@@ -20,6 +22,11 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Permission> permissions = ref
+        .watch(permissionInformationProvider)
+        .where((permission) => permission.user == widget.userInformation)
+        .toList();
+
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -85,8 +92,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                       )
                     ],
                   )),
-              if (!widget.userInformation.permissions
-                  .any((permission) => permission.valid))
+              if (permissions.isEmpty)
                 const Expanded(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -122,8 +128,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                     )),
                   ],
                 )),
-              if (widget.userInformation.permissions
-                  .any((permission) => permission.valid))
+              if (permissions.isNotEmpty)
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -158,10 +163,9 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
                       const SizedBox(height: 30),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: widget.userInformation.permissions.length,
+                          itemCount: permissions.length,
                           itemBuilder: (context, index) {
-                            var element =
-                                widget.userInformation.permissions[index];
+                            var element = permissions[index];
                             Widget card;
                             if (element.type == 'unica') {
                               card = GestureDetector(

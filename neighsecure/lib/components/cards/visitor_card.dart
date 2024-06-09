@@ -5,8 +5,7 @@ class VisitCard extends StatelessWidget {
   final Permission pass;
   final bool isSelected;
 
-  VisitCard({Key? key, required this.pass, required this.isSelected})
-      : super(key: key);
+  const VisitCard({super.key, required this.pass, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {

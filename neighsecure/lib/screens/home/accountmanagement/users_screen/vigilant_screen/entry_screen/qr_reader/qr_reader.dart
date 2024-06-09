@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({super.key});
@@ -53,6 +54,8 @@ class _QRViewExampleState extends State<QRViewExample> {
         isProcessing = true;
         controller.pauseCamera();
 
+        String? url = result!.code;
+
         showModalBottomSheet(
           context: context,
           builder: (context) => Container(
@@ -88,6 +91,11 @@ class _QRViewExampleState extends State<QRViewExample> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
+                      if (await canLaunchUrl(Uri.parse(url!))) {
+                        await launchUrl(Uri.parse(url));
+                      } else {
+                        throw 'Could not launch $url';
+                      }
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },

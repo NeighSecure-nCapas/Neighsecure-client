@@ -1,11 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:neighsecure/components/text/selected_days_text.dart';
-
-import '../../enums/date_picker_mode.dart' as datepickermodeenum;
-import '../buttons/custom_elevated_button.dart';
-import '../text/custom_text.dart';
-import '../text/date_text.dart';
-
+/*
 class MultipleEntryCard extends StatefulWidget {
   final TimeOfDay? timeStart;
   final TimeOfDay? timeEnd;
@@ -17,7 +10,7 @@ class MultipleEntryCard extends StatefulWidget {
   final Function selectTimeEnd;
   final Function selectDate;
 
-  MultipleEntryCard({
+  const MultipleEntryCard({
     super.key,
     required this.timeStart,
     required this.timeEnd,
@@ -51,7 +44,7 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -62,7 +55,7 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
                 ],
               ),
               const SizedBox(height: 24),
-              CustomText(
+              const CustomText(
                   instruction: 'Selecciona un rango de horas.',
                   fontSize: 14,
                   color: Colors.grey),
@@ -126,7 +119,7 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
                 ],
               ),
               const SizedBox(height: 24),
-              CustomText(
+              const CustomText(
                   instruction: 'Selecciona el dia o rango de dias.',
                   fontSize: 14,
                   color: Colors.grey),
@@ -200,3 +193,5 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
     );
   }
 }
+
+ */

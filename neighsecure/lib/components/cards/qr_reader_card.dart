@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class VisitorCard extends StatelessWidget {
   final bool isTablet;
 
-  VisitorCard({Key? key, required this.isTablet}) : super(key: key);
+  const VisitorCard({super.key, required this.isTablet});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,12 @@ class VisitorCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -5,8 +5,7 @@ class DuiInputField extends StatefulWidget {
   final Function(String?) onChanged;
   final Function(String?) onSaved;
 
-  DuiInputField({Key? key, required this.onChanged, required this.onSaved})
-      : super(key: key);
+  const DuiInputField({super.key, required this.onChanged, required this.onSaved});
 
   @override
   _DuiInputFieldState createState() => _DuiInputFieldState();

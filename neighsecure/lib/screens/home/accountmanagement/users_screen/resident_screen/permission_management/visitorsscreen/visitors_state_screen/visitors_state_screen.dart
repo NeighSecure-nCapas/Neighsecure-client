@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/providers/testing_user_information_notifier.dart';
+import 'package:neighsecure/models/entities/permission.dart';
 import 'package:neighsecure/providers/testnameprovider.dart';
 
 import '../../../../../../../../models/entities/user.dart';
+import '../../../../../../../../providers/testing_permission_information_notifier.dart';
 import '../visitors_screen.dart';
 
 class VisitorsStateScreen extends ConsumerStatefulWidget {
   VisitorsStateScreen(
-      {super.key, required this.isRedeem, required this.userInformation});
+      {super.key,
+      required this.isRedeem,
+      required this.usersInformation,
+      required this.userInformation});
 
   bool isRedeem;
 
   final User userInformation;
+
+  final List<Permission> usersInformation;
 
   @override
   ConsumerState<VisitorsStateScreen> createState() =>
@@ -23,9 +29,10 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen> {
   @override
   Widget build(BuildContext context) {
     final name = ref.watch(nameProvider.notifier).state;
-    final userInformation = ref
-        .watch(userInformationProvider)
-        .where((user) => user.permissions.first.status == widget.isRedeem)
+
+    final permissionInformation = ref
+        .watch(permissionInformationProvider)
+        .where((permission) => permission.type == widget.isRedeem.toString())
         .toList();
 
     return SafeArea(
@@ -102,16 +109,16 @@ class _VisitorsStateScreenState extends ConsumerState<VisitorsStateScreen> {
                     return VisitorsScreen(
                       userInformation: widget.userInformation,
                       usersInformation: name.isEmpty
-                          ? userInformation
-                          : userInformation
-                              .where((item) => item.name == name)
+                          ? permissionInformation
+                          : permissionInformation
+                              .where((item) => item.user.name == name)
                               .toList(),
                       isRedeem: widget.isRedeem,
-                      displayeElements: userInformation.length,
-                      onUserRemove: (removedUser) {
+                      displayeElements: permissionInformation.length,
+                      onUserRemove: (removedPermission) {
                         ref
-                            .read(userInformationProvider.notifier)
-                            .removeUser(removedUser);
+                            .read(permissionInformationProvider.notifier)
+                            .removePermission(removedPermission);
                       },
                     );
                   },

@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/models/entities/permission.dart';
 import 'package:neighsecure/models/entities/user.dart';
-import 'package:neighsecure/providers/testing_user_information_notifier.dart';
 import 'package:neighsecure/providers/testnameprovider.dart';
 
+import '../../../../../../../providers/testing_permission_information_notifier.dart';
 import 'visitors_state_screen/visitors_details_screen/visitors_details_screen.dart';
 
 class VisitorsScreen extends ConsumerStatefulWidget {
@@ -22,9 +23,9 @@ class VisitorsScreen extends ConsumerStatefulWidget {
 
   final User userInformation;
 
-  final List<User> usersInformation;
+  final List<Permission> usersInformation;
 
-  final Function(User)? onUserRemove;
+  final Function(Permission)? onUserRemove;
 
   bool isRedeem;
 
@@ -37,16 +38,19 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
 
   List<User> filtereduserInformation = [];
 
-  List<User> filterUserInformation(String name) {
+  /*
+  List<User> filterUserInformatio(String name) {
     final filtereduserInformation = widget.isRedeem
         ? widget.usersInformation
             .where((item) =>
-                item.permissions.first.status == true &&
+                item.permissions
+                    .any((permission) => permission.status == true) &&
                 item.roles.any((role) => role.role == 'visitante'))
             .toList()
         : widget.usersInformation
             .where((item) =>
-                item.permissions.first.status == false &&
+                item.permissions
+                    .any((permission) => permission.status == false) &&
                 item.roles.any((role) => role.role == 'visitante'))
             .toList();
 
@@ -55,6 +59,28 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
         : filtereduserInformation
             .where(
                 (item) => item.name.toLowerCase().contains(name.toLowerCase()))
+            .toList();
+  }
+  */
+
+  List<Permission> filterPermissionInformation(String name) {
+    final filteredPermissionInformation = widget.isRedeem
+        ? widget.usersInformation
+            .where((permission) =>
+                permission.status == true &&
+                permission.user.roles.any((role) => role.role == 'visitante'))
+            .toList()
+        : widget.usersInformation
+            .where((permission) =>
+                permission.status == false &&
+                permission.user.roles.any((role) => role.role == 'visitante'))
+            .toList();
+
+    return name.isEmpty
+        ? filteredPermissionInformation
+        : filteredPermissionInformation
+            .where((permission) =>
+                permission.user.name.toLowerCase().contains(name.toLowerCase()))
             .toList();
   }
 
@@ -99,8 +125,9 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
               ),
               onPressed: () {
                 //Remove user from the provider
+                //updateUserRedeem
                 ref
-                    .read(userInformationProvider.notifier)
+                    .read(permissionInformationProvider.notifier)
                     .updateUserRedeem(user);
                 Navigator.of(context).pop();
               },
@@ -111,13 +138,16 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
     );
   }
 
-  void navigateToVisitorsDetailsScreen(BuildContext context, User user) {
+  void navigateToVisitorsDetailsScreen(BuildContext context,
+      Permission permission, bool isRedeem, User userInformation) {
     Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             VisitorsDetailsScreen(
-          userInformation: user,
+          userInformationState: userInformation,
+          userInformation: permission,
+          isRedeem: isRedeem,
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -134,7 +164,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
     return Consumer(
       builder: (context, watch, child) {
         final name = ref.watch(nameProvider);
-        final filteredName = filterUserInformation(name);
+        final filteredName = filterPermissionInformation(name);
 
         if (filteredName.isEmpty) {
           return const Column(
@@ -173,7 +203,8 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
               return GestureDetector(
                 onTap: () {
                   ref.read(nameProvider.notifier).updateName('');
-                  navigateToVisitorsDetailsScreen(context, filteredName[index]);
+                  navigateToVisitorsDetailsScreen(context, filteredName[index],
+                      widget.isRedeem, widget.userInformation);
                 },
                 child: Card(
                   elevation: 0.0,
@@ -208,7 +239,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                filteredName[index].name,
+                                filteredName[index].user.name,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18,
@@ -218,6 +249,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               const SizedBox(height: 8),
                               Text(
                                 filteredName[index]
+                                    .user
                                     .roles
                                     .map((e) => e.role)
                                     .join(', '),
@@ -229,10 +261,9 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                filteredName[index]
-                                    .permissions
-                                    .map((e) => e.invetedBy)
-                                    .join(', '),
+                                widget.isRedeem
+                                    ? filteredName[index].invetedBy
+                                    : filteredName[index].invetedBy,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
@@ -251,11 +282,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                 onTap: () {
                                   widget.userInformation.roles.any(
                                           (role) => role.role == 'encargado')
-                                      ? filteredName[index]
-                                                  .permissions
-                                                  .first
-                                                  .status ==
-                                              true
+                                      ? filteredName[index].status == true
                                           ? showDialog(
                                               context: context,
                                               builder: (context) {
@@ -306,9 +333,9 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                                                   .displayeElements !=
                                                               null) {
                                                             ref
-                                                                .read(userInformationProvider
+                                                                .read(permissionInformationProvider
                                                                     .notifier)
-                                                                .removeUser(
+                                                                .removePermission(
                                                                     filteredName[
                                                                         index]);
                                                             widget.onUserRemove!(
@@ -319,9 +346,9 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                                                     1;
                                                           } else {
                                                             ref
-                                                                .read(userInformationProvider
+                                                                .read(permissionInformationProvider
                                                                     .notifier)
-                                                                .removeUser(
+                                                                .removePermission(
                                                                     filteredName[
                                                                         index]);
                                                             widget.onUserRemove!(
@@ -329,7 +356,6 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                                                     index]);
                                                           }
                                                         });
-
                                                         Navigator.of(context)
                                                             .pop();
                                                       },
@@ -339,12 +365,8 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                               },
                                             )
                                           : showAcceptUserInvitationDialog(
-                                              context, filteredName[index])
-                                      : filteredName[index]
-                                                  .permissions
-                                                  .first
-                                                  .status ==
-                                              true
+                                              context, filteredName[index].user)
+                                      : filteredName[index].status == true
                                           ? showDialog(
                                               context: context,
                                               builder: (context) {
@@ -395,9 +417,9 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                                                   .displayeElements !=
                                                               null) {
                                                             ref
-                                                                .read(userInformationProvider
+                                                                .read(permissionInformationProvider
                                                                     .notifier)
-                                                                .removeUser(
+                                                                .removePermission(
                                                                     filteredName[
                                                                         index]);
                                                             widget.onUserRemove!(
@@ -408,9 +430,9 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                                                     1;
                                                           } else {
                                                             ref
-                                                                .read(userInformationProvider
+                                                                .read(permissionInformationProvider
                                                                     .notifier)
-                                                                .removeUser(
+                                                                .removePermission(
                                                                     filteredName[
                                                                         index]);
                                                             widget.onUserRemove!(
@@ -432,27 +454,16 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                 child: Icon(
                                   widget.userInformation.roles.any(
                                           (role) => role.role == 'encargado')
-                                      ? filteredName[index]
-                                                  .permissions
-                                                  .first
-                                                  .status ==
-                                              true
+                                      ? filteredName[index].status
                                           ? Icons.close
                                           : Icons.check
-                                      : filteredName[index]
-                                                  .permissions
-                                                  .first
-                                                  .status ==
-                                              true
+                                      : filteredName[index].status
                                           ? Icons.close
                                           : Icons.pending_actions,
                                   color: widget.userInformation.roles.any(
                                               (role) =>
                                                   role.role == 'residente') &&
-                                          !filteredName[index]
-                                              .permissions
-                                              .first
-                                              .status
+                                          !filteredName[index].status
                                       ? Colors.red
                                       : Colors.black,
                                   size: 24,

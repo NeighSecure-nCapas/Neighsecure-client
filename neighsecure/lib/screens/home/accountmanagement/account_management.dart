@@ -4,7 +4,6 @@ import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/resident_screen.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/visitor_screen/visitor_screen.dart';
 
-import '../../../models/entities/permission.dart';
 import '../../../providers/testing_user_information_notifier.dart';
 import 'users_screen/vigilant_screen/vigilant_screen.dart';
 
@@ -19,11 +18,14 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
   int? selectPassIndex;
 
   String getRole(User user) {
-    if (user.roles.any((userRole) =>
-        userRole.role == 'encargado' || userRole.role == 'residente')) {
+    if (user.roles.any((userRole) => userRole.role == 'encargado')) {
       return 'encargado';
+    } else if (user.roles.any((userRole) => userRole.role == 'residente')) {
+      return 'residente';
     } else if (user.roles.any((userRole) => userRole.role == 'visitante')) {
       return 'visitante';
+    } else if (user.roles.any((userRole) => userRole.role == 'vigilante')) {
+      return 'vigilante';
     } else {
       return 'other';
     }
@@ -31,26 +33,13 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
 
   @override
   Widget build(BuildContext context) {
+    const rol = 'vigilante';
+
     User userInformation = ref.watch(userInformationProvider).firstWhere(
-        (user) => user.roles.any((role) => role.role == 'encargado'),
-        orElse: () {
+        (user) => user.roles.any((role) => role.role == rol), orElse: () {
       throw Exception('User with role visitante not found');
     });
 
-    bool hasRole(User user, String role) {
-      return user.roles.any((userRole) => userRole.role == role);
-    }
-
-    List<Permission> permissions = userInformation.permissions;
-
-    /*
-    if (kDebugMode) {
-      print(userInformation.toJson());
-      print('\n\n');
-      for (var permission in permissions) {
-        print(permission.toJson());
-      }}
-     */
     Widget? maincontent;
 
     Widget visit = VisitorScreen(userInformation: userInformation);

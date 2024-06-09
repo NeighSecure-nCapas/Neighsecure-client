@@ -5,7 +5,7 @@ import '../../screens/home/accountmanagement/users_screen/qrscreen/qr_screen.dar
 class GenerateQRButton extends StatefulWidget {
   final bool isPassSelected;
 
-  GenerateQRButton({Key? key, required this.isPassSelected}) : super(key: key);
+  const GenerateQRButton({super.key, required this.isPassSelected});
 
   @override
   _GenerateQRButtonState createState() => _GenerateQRButtonState();

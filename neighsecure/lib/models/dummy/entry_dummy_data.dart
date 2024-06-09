@@ -7,18 +7,18 @@ List<Entry> dummyEntries = [
     entryDate: DateTime.now(),
     terminal: dummyTerminals[0],
     // Assuming dummyPermissions is a list of Permission objects
-    comment: 'Dummy Comment 1',
+    comment: null,
   ),
   Entry(
     id: '2',
-    entryDate: DateTime.now().add(Duration(days: 1)),
+    entryDate: DateTime.now().add(const Duration(days: 1)),
     terminal: dummyTerminals[1],
     // Assuming dummyPermissions is a list of Permission objects
-    comment: 'Dummy Comment 2',
+    comment: null,
   ),
   Entry(
     id: '3',
-    entryDate: DateTime.now().add(Duration(days: 2)),
+    entryDate: DateTime.now().add(const Duration(days: 2)),
     terminal: dummyTerminals[1],
     // Assuming dummyPermissions is a list of Permission objects
     comment: 'Dummy Comment 3',

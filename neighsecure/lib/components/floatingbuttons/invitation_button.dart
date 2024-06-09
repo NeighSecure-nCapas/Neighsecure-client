@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class InvitationButton extends StatelessWidget {
   final VoidCallback onSubmit;
 
-  InvitationButton({Key? key, required this.onSubmit}) : super(key: key);
+  const InvitationButton({super.key, required this.onSubmit});
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,6 @@ import 'package:neighsecure/models/entities/user.dart';
 
 import '../models/dummy/user_dummy_data.dart';
 import '../models/entities/home.dart';
-import '../models/entities/permission.dart';
 import '../models/entities/role.dart';
 
 class UserInformationNotifier extends StateNotifier<List<User>> {
@@ -16,6 +15,7 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
     state = state.where((element) => element != user).toList();
   }
 
+  /*
   void updateUserRedeem(User user) {
     state = state.map((element) {
       if (element == user) {
@@ -28,25 +28,37 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
     }).toList();
   }
 
-  Future<void> updateUserRole(String email) async {
-    int index = state.indexWhere((element) => element.email == email);
-    if (index != -1) {
-      String oldRole = state[index].roles.first.role;
-      String newRole;
+   */
 
-      if (oldRole == 'visitante') {
-        newRole = 'residente';
-      } else if (oldRole == 'residente') {
-        newRole = 'visitante';
-      } else {
-        throw Exception('Invalid role');
+  Future<void> updateUserRole(String email) async {
+    try {
+      int index = state.indexWhere((element) => element.email == email);
+      if (index == -1) {
+        throw Exception('User not found');
       }
 
-      // Create a new role with the newRole value
-      Role updatedRole = Role(
-        id: state[index].roles.first.id, // assuming Role has an id property
-        role: newRole,
-      );
+      Role updatedRole; // Define updatedRole here
+
+      if (state[index].roles.isNotEmpty) {
+        String oldRole = state[index].roles.first.role.toString();
+        String newRole;
+
+        if (oldRole == 'visitante') {
+          newRole = 'residente';
+        } else if (oldRole == 'residente') {
+          newRole = 'visitante';
+        } else {
+          throw Exception('Invalid role');
+        }
+
+        // Assign a new role to updatedRole
+        updatedRole = Role(
+          id: state[index].roles.first.id, // assuming Role has an id property
+          role: newRole,
+        );
+      } else {
+        throw Exception('User has no roles');
+      }
 
       User updatedUser = state[index].copyWith(roles: [updatedRole]);
       state[index] = updatedUser;
@@ -55,23 +67,83 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
         print(
             'After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.roles.first.role}');
       }
+
+      // Directly update the state with the updated list of users
+      state = List.from(state);
+
+      return Future.value();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to update user role: $e');
+      }
+      rethrow;
     }
+  }
 
-    // Directly update the state with the updated list of users
-    state = List.from(state);
+  Future<void> updateUserRoleAndHome(String email, String houseId) async {
+    try {
+      int index = state.indexWhere((element) => element.email == email);
+      if (index == -1) {
+        throw Exception('User not found');
+      }
 
-    return Future.value();
+      Role updatedRole;
+
+      if (state[index].roles.isNotEmpty) {
+        String oldRole = state[index].roles.first.role.toString();
+        String newRole;
+        String newRoleId;
+
+        if (oldRole == 'visitante') {
+          newRole = 'residente';
+          newRoleId = '3'; // id for 'residente'
+        } else if (oldRole == 'residente') {
+          newRole = 'visitante';
+          newRoleId = '2'; // id for 'visitante'
+        } else {
+          throw Exception('Invalid role');
+        }
+
+        updatedRole = Role(
+          id: newRoleId, // assign the new id based on the role
+          role: newRole,
+        );
+        if (kDebugMode) {
+          print('Old role: $oldRole, New role: $newRole');
+        }
+      } else {
+        throw Exception('User has no roles');
+      } // Define updatedRole here
+
+      User updatedUser =
+          state[index].copyWith(roles: [updatedRole], homeId: houseId);
+      state[index] = updatedUser;
+
+      if (kDebugMode) {
+        print(
+            'U After update: ${updatedUser.name.toString()}, ${updatedUser.hashCode.toString()}, ${updatedUser.roles.first.role.toString()}, ${updatedUser.homeId.toString()}');
+      }
+
+      // Directly update the state with the updated list of users
+      state = List.from(state);
+
+      return Future.value();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to update user role and home: $e');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateUserHome(String email, Home newHome) async {
     int index = state.indexWhere((element) => element.email == email);
     if (index != -1) {
-      User updatedUser = state[index].copyWith(home: newHome);
+      User updatedUser = state[index].copyWith(homeId: newHome.id);
       state[index] = updatedUser;
 
       if (kDebugMode) {
-        print(
-            'After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.home}');
+        print(' U After update: $updatedUser, ${updatedUser.hashCode}');
       }
     }
 
