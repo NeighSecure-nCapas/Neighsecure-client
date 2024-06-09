@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AnonymousVisitCard extends StatelessWidget {
   final bool isTablet;
 
-  AnonymousVisitCard({Key? key, required this.isTablet}) : super(key: key);
+  const AnonymousVisitCard({super.key, required this.isTablet});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,12 @@ class AnonymousVisitCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +61,7 @@ class AnonymousVisitCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 40),
+              SizedBox(width: 40),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

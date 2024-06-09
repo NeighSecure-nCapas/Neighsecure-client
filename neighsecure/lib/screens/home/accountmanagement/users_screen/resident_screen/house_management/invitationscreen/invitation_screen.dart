@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../../../models/entities/home.dart';
+import '../../../../../../../models/entities/user.dart';
+import '../../../../../../../providers/testing_home_information_notifier.dart';
 import '../../../../../../../providers/testing_user_information_notifier.dart';
 
 class InvitationScreen extends ConsumerStatefulWidget {
   const InvitationScreen(
-      {super.key, required this.totalUsers, required this.currentUserCount});
+      {super.key,
+      required this.totalUsers,
+      required this.currentUserCount,
+      required this.userHome,
+      required this.userInformation});
 
   final int totalUsers;
   final int currentUserCount;
+  final User userInformation;
+  final Home userHome;
 
   @override
-  _InvitationScreenState createState() => _InvitationScreenState();
+  ConsumerState<InvitationScreen> createState() => _InvitationScreenState();
 }
 
 class _InvitationScreenState extends ConsumerState<InvitationScreen> {
@@ -19,78 +28,39 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
 
   String _email = '';
 
-  void _submit() {
+  Future<void> updateAllInformation(User user, Home home) async {
+    await ref
+        .watch(testingHomeInformationProvider.notifier)
+        .addUserAndUpdateRoleAndHome(user, home, home.id);
+  }
+
+  /*
+  Future<void> updateUserRoleAndHome(String email, Home home) async {
+    await ref
+        .read(userInformationProvider.notifier)
+        .updateUserRoleAndHome(email, home.id);
+  }
+
+  Future<void> updateUserHome(User user, Home home) async {
+    await ref
+        .read(testingHomeInformationProvider.notifier)
+        .addUserToHome(user, home);
+  }
+
+
+  Future<void> updateInformation(User user, Home home) async {
+    await updateAllInformation(user, home);
+  }
+  */
+
+  void _submit() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
 
     if (widget.currentUserCount >= widget.totalUsers) {
-      showModalBottomSheet(
-        context: context,
-        builder: (context) => Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          padding: const EdgeInsets.all(40.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 20),
-              const Text('Error!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black)),
-              const SizedBox(height: 20),
-              const Text(
-                  'Se ha excedido el número de residentes permitidos en tu hogar. Si deseas modificar el número de residentes permitidos, por favor contacta a soporte.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey)),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(
-                      const Color(0xFF001E2C),
-                    ),
-                    padding: WidgetStateProperty.all(
-                      const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 28,
-                      ),
-                    ),
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    'Listo',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+      _showModalBottomSheet(
+        'Error!',
+        'Se ha excedido el número de residentes permitidos en tu hogar. Si deseas modificar el número de residentes permitidos, por favor contacta a soporte.',
       );
       return;
     }
@@ -98,158 +68,94 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
     if (isValid) {
       _formKey.currentState!.save();
 
-      Map<String, dynamic>? user;
-
       try {
-        user = ref
+        User user = ref
             .read(userInformationProvider)
-            .firstWhere((user) => user['email'] == _email);
-      } catch (e) {
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 20),
-                const Text('Error!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black)),
-                const SizedBox(height: 20),
-                const Text(
-                    'No ha sido posible enviadar la invitación al correo electrónico que has proporcionado.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey)),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        const Color(0xFF001E2C),
-                      ),
-                      padding: WidgetStateProperty.all(
-                        const EdgeInsets.symmetric(
-                          vertical: 18,
-                          horizontal: 28,
-                        ),
-                      ),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'Listo',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
-      }
+            .firstWhere((user) => user.email == _email);
 
-      if (user != null) {
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 20),
-                const Text('Listo!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black)),
-                const SizedBox(height: 20),
-                const Text(
-                    'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey)),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      //update to new rol
-                      ref
-                          .read(userInformationProvider.notifier)
-                          .updateUserRole(user!);
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        const Color(0xFF001E2C),
-                      ),
-                      padding: WidgetStateProperty.all(
-                        const EdgeInsets.symmetric(
-                          vertical: 18,
-                          horizontal: 28,
-                        ),
-                      ),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'Listo',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+        await updateAllInformation(user, widget.userHome);
+
+        _showModalBottomSheet(
+          'Listo!',
+          'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
+        );
+      } catch (e) {
+        _showModalBottomSheet(
+          'Error!',
+          'No ha sido posible enviadar la invitación al correo electrónico que has proporcionado. ${e}',
         );
       }
     }
+  }
+
+  void _showModalBottomSheet(String title, String message) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 20),
+            Text(title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black)),
+            const SizedBox(height: 20),
+            Text(message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey)),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    const Color(0xFF001E2C),
+                  ),
+                  padding: WidgetStateProperty.all(
+                    const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 28,
+                    ),
+                  ),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  'Listo',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -326,10 +232,17 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
                         borderRadius: BorderRadius.circular(15),
                         borderSide: BorderSide.none, // border color
                       ),
+                      labelStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey,
+                      ),
+                      alignLabelWithHint: true,
                     ),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
+                      color: Colors.grey,
                     ),
                     obscureText: false,
                     autocorrect: false,

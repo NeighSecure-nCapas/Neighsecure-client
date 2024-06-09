@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 class SelectedDaysText extends StatelessWidget {
   final List<int>? selectedDays;
 
-  SelectedDaysText({required this.selectedDays});
+  const SelectedDaysText({super.key, required this.selectedDays});
 
   @override
   Widget build(BuildContext context) {

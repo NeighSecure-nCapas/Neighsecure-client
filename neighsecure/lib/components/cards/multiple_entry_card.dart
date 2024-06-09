@@ -1,12 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:neighsecure/components/text/selected_days_text.dart';
-
-import '../buttons/custom_elevated_button.dart';
-import '../text/custom_text.dart';
-import '../text/date_text.dart';
-
-import '../../enums/date_picker_mode.dart' as datepickermodeenum;
-
+/*
 class MultipleEntryCard extends StatefulWidget {
   final TimeOfDay? timeStart;
   final TimeOfDay? timeEnd;
@@ -18,7 +10,8 @@ class MultipleEntryCard extends StatefulWidget {
   final Function selectTimeEnd;
   final Function selectDate;
 
-  MultipleEntryCard({super.key,
+  const MultipleEntryCard({
+    super.key,
     required this.timeStart,
     required this.timeEnd,
     required this.dateStart,
@@ -35,10 +28,8 @@ class MultipleEntryCard extends StatefulWidget {
 }
 
 class _MultipleEntryCardState extends State<MultipleEntryCard> {
-
   @override
   Widget build(BuildContext context) {
-
     return Card(
       elevation: 0.0,
       margin: const EdgeInsets.only(bottom: 30),
@@ -53,42 +44,34 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-                crossAxisAlignment:
-                CrossAxisAlignment.center,
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CustomText(
-                    instruction: 'Entrada multiple',
-                    fontSize: 16,
-                      color: Colors.grey
-                  ),
+                      instruction: 'Entrada multiple',
+                      fontSize: 16,
+                      color: Colors.grey),
                 ],
               ),
               const SizedBox(height: 24),
-              CustomText(
-                  instruction:
-                  'Selecciona un rango de horas.',
+              const CustomText(
+                  instruction: 'Selecciona un rango de horas.',
                   fontSize: 14,
                   color: Colors.grey),
               const SizedBox(height: 24),
               Row(
-                mainAxisAlignment:
-                MainAxisAlignment.center,
-                crossAxisAlignment:
-                CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(
-                        left: 16, right: 16),
+                    padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Row(
                       children: [
                         Text(
                           widget.timeStart == null
                               ? 'Hora de inicio'
-                              : widget.timeStart!
-                              .format(context),
+                              : widget.timeStart!.format(context),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -136,17 +119,14 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
                 ],
               ),
               const SizedBox(height: 24),
-              CustomText(
-                  instruction:
-                  'Selecciona el dia o rango de dias.',
+              const CustomText(
+                  instruction: 'Selecciona el dia o rango de dias.',
                   fontSize: 14,
                   color: Colors.grey),
               const SizedBox(height: 24),
               Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment:
-                CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   DropdownButton<datepickermodeenum.DatePickerMode?>(
                     value: widget.datePickerMode,
@@ -155,7 +135,8 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
                         widget.datePickerMode = newValue!;
                       });
                     },
-                    items: const <DropdownMenuItem<datepickermodeenum.DatePickerMode?>>[
+                    items: const <DropdownMenuItem<
+                        datepickermodeenum.DatePickerMode?>>[
                       DropdownMenuItem<datepickermodeenum.DatePickerMode>(
                         value: datepickermodeenum.DatePickerMode.single,
                         child: Text(
@@ -191,27 +172,26 @@ class _MultipleEntryCardState extends State<MultipleEntryCard> {
                       ),
                     ],
                   ),
-                  CustomElevatedButton(onPressed: () {
-                    widget.selectDate(context);
-                  }, text: 'Seleccionar fechas'),
+                  CustomElevatedButton(
+                      onPressed: () {
+                        widget.selectDate(context);
+                      },
+                      text: 'Seleccionar fechas'),
                 ],
               ),
               widget.dateStart != null
-                  ? DateText(
-                  date: widget.dateStart!,
-                  label: 'Fecha de inicio')
+                  ? DateText(date: widget.dateStart!, label: 'Fecha de inicio')
                   : const SizedBox(),
               widget.dateEnd != null
-                  ? DateText(
-                  date: widget.dateEnd!,
-                  label: 'Fecha de fin')
+                  ? DateText(date: widget.dateEnd!, label: 'Fecha de fin')
                   : const SizedBox(),
               widget.selectDaysOfWeek!.isNotEmpty
-                  ? SelectedDaysText(
-                  selectedDays: widget.selectDaysOfWeek)
+                  ? SelectedDaysText(selectedDays: widget.selectDaysOfWeek)
                   : const SizedBox(),
             ]),
       ),
     );
   }
 }
+
+ */

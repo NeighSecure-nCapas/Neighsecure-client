@@ -5,29 +5,27 @@ import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident
 
 import '../../../../../components/buttons/custom_elevated_button.dart';
 import '../../../../../components/cards/permission_management_card.dart';
+import '../../../../../models/entities/user.dart';
 import '../qrscreen/qr_screen.dart';
 import 'house_management/house_management.dart';
 
 class ResidentScreen extends ConsumerStatefulWidget {
   const ResidentScreen({super.key, required this.userInformation});
 
-  final Map<String, dynamic> userInformation;
+  final User userInformation;
 
   @override
   ConsumerState<ResidentScreen> createState() => _ResidentScreenState();
 }
 
 class _ResidentScreenState extends ConsumerState<ResidentScreen> {
-
-
   void submitQR() {
     Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-        const QrScreen(),
-        transitionsBuilder:
-            (context, animation, secondaryAnimation, child) {
+            const QrScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
             child: child,
@@ -37,14 +35,13 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
     );
   }
 
-  void submitPermission(){
+  void submitPermission(User user) {
     Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-        const PermissionManagement(),
-        transitionsBuilder:
-            (context, animation, secondaryAnimation, child) {
+            PermissionManagement(userInformation: user),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
             child: child,
@@ -54,14 +51,13 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
     );
   }
 
-  void submitHouseManagement(){
+  void submitHouseManagement(User user) {
     Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-        const HouseManagement(),
-        transitionsBuilder:
-            (context, animation, secondaryAnimation, child) {
+            HouseManagement(userInformation: user),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
             child: child,
@@ -70,122 +66,124 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
-            child: SingleChildScrollView(
-              child: Column(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Bienvenido',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.badge_outlined,
-                            color: Colors.black,
-                            size: 36,
-                          ),
-                          const SizedBox(width: 32),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${widget.userInformation['name']}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
-                                  textAlign: TextAlign.start,
-                                  softWrap: true,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Residennte ${widget.userInformation['role']}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    color: Colors.grey,
-                                  ),
-                                  textAlign: TextAlign.start,
-                                  softWrap: true,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )),
-                  const SizedBox(height: 30),
-                  const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            color: Colors.grey,
-                            size: 32,
-                          ),
-                          SizedBox(width: 24),
-                          Expanded(
-                              child: Text(
-                                'Selecciona alguna de los módulos o genera un QR para acceder a la residencial.',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
-                                textAlign: TextAlign.start,
-                                softWrap: true,
-                              ))
-                        ],
-                      )),
-                  const SizedBox(height: 30),
-                  if (widget.userInformation['role'] == 'encargado')
-                    GestureDetector(
-                      onTap: () {
-                        submitHouseManagement();
-                      },
-                      child: const HouseManagementCard(),
-                    ),
-                  const SizedBox(height: 30),
-                  GestureDetector(
-                    onTap: () {
-                      submitPermission();
-                    },
-                    child: const PermissionManagementCard(),
+                  Text(
+                    'Bienvenido',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
-            ),
+              const SizedBox(height: 30),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.badge_outlined,
+                        color: Colors.black,
+                        size: 36,
+                      ),
+                      const SizedBox(width: 32),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.userInformation.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.start,
+                              softWrap: true,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              widget.userInformation.roles
+                                  .map((role) => role.role)
+                                  .join(', '),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.start,
+                              softWrap: true,
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
+              const SizedBox(height: 30),
+              const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.grey,
+                        size: 32,
+                      ),
+                      SizedBox(width: 24),
+                      Expanded(
+                          child: Text(
+                        'Selecciona alguna de los módulos o genera un QR para acceder a la residencial.',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.start,
+                        softWrap: true,
+                      ))
+                    ],
+                  )),
+              const SizedBox(height: 30),
+              if (widget.userInformation.roles
+                  .any((role) => role.role == 'encargado'))
+                GestureDetector(
+                  onTap: () {
+                    submitHouseManagement(widget.userInformation);
+                  },
+                  child: const HouseManagementCard(),
+                ),
+              const SizedBox(height: 30),
+              GestureDetector(
+                onTap: () {
+                  submitPermission(widget.userInformation);
+                },
+                child: const PermissionManagementCard(),
+              ),
+            ],
           ),
-          bottomNavigationBar: CustomElevatedButton(
-            onPressed: submitQR,
-            text: 'Generar QR',
-          ),
-        ));
+        ),
+      ),
+      bottomNavigationBar: CustomElevatedButton(
+        onPressed: submitQR,
+        text: 'Generar QR',
+      ),
+    ));
   }
 }

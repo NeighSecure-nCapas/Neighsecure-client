@@ -1,333 +1,172 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/models/entities/user.dart';
 
-class UserInformationNotifier
-    extends StateNotifier<List<Map<String, dynamic>>> {
-  UserInformationNotifier()
-      : super([
-          {
-            'name': 'Billy Caliente',
-            'role': 'visitante',
-            'email': 'caliente8@gmail.com',
-            'tipoOfTicket': 'false',
-            'entryhours': [
-              '2024-04-25 10:00 am',
-              '2024-04-25 11:00 am',
-              '2024-04-25 12:00 pm',
-              '2024-04-25 13:00 pm',
-              '2024-04-25 14:00 pm',
-              '2024-04-25 15:00 pm',
-              '2024-04-25 16:00 pm',
-              '2024-04-25 17:00 pm',
-              '2024-04-25 18:00 pm',
-            ].join(','),
-            'redeem': 'true',
-            'inviteBy': 'Diego Viana',
-            'permisos': 'true',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Victor Rene',
-            'role': 'visitante',
-            'email': 'caliente1@gmail.com',
-            'tipoOfTicket': 'true',
-            'redeem': 'false',
-            'inviteBy': 'Pamela Gomez',
-            'permisos': 'true',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Victor Jose',
-            'role': 'visitante',
-            'email': 'caliente2@gmail.com',
-            'tipoOfTicket': 'true',
-            'redeem': 'false',
-            'inviteBy': 'Pamela Gomez',
-            'permisos': 'false',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Alejandro Jose',
-            'role': 'visitante',
-            'email': 'caliente3@gmail.com',
-            'tipoOfTicket': 'true',
-            'redeem': 'false',
-            'inviteBy': 'Pamela Gomez',
-            'permisos': 'true',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Melvin Jose',
-            'role': 'visitante',
-            'email': 'caliente4@gmail.com',
-            'tipoOfTicket': 'true',
-            'redeem': 'false',
-            'inviteBy': 'Pamela Gomez',
-            'permisos': 'false',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Pamela Monica',
-            'role': 'visitante',
-            'email': 'caliente5@gmail.com',
-            'tipoOfTicket': 'true',
-            'redeem': 'false',
-            'inviteBy': 'Pamela Gomez',
-            'permisos': 'true',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Claudia Rosales',
-            'role': 'visitante',
-            'email': 'caliente6@gmail.com',
-            'tipoOfTicket': 'true',
-            'redeem': 'false',
-            'inviteBy': 'Diego Gomez',
-            'permisos': 'true',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Steve Rene',
-            'role': 'visitante',
-            'email': 'caliente7@gmail.com',
-            'tipoOfTicket': 'true',
-            'redeem': 'false',
-            'inviteBy': 'Diego Gomez',
-            'permisos': 'true',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Melvin Diaz',
-            'role': 'visitante',
-            'email': 'caliente9@gmail.com',
-            'tipoOfTicket': 'false',
-            'entryhours': [
-              '2024-04-25 10:00 am',
-              '2024-04-25 11:00 am',
-              '2024-04-25 12:00 pm',
-              '2024-04-25 13:00 pm',
-              '2024-04-25 14:00 pm',
-              '2024-04-25 15:00 pm',
-            ].join(','),
-            'redeem': 'true',
-            'inviteBy': 'Diego Viana',
-            'permisos': 'true',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Alejandro Diaz',
-            'role': 'visitante',
-            'email': 'caliente10@gmail.com',
-            'tipoOfTicket': 'false',
-            'permisos': 'true',
-            'entryhours': [
-              '2024-04-25 10:00 am',
-              '2024-04-25 11:00 am',
-              '2024-04-25 12:00 pm',
-              '2024-04-25 13:00 pm',
-              '2024-04-25 14:00 pm',
-              '2024-04-25 15:00 pm',
-            ].join(','),
-            'redeem': 'true',
-            'inviteBy': 'Diego Viana',
-            'arrayofpasses': [
-              {
-                'typeofVisit': 'unica',
-                'state': 'vigente',
-                'date': '2024-04-25 10:00 am',
-              },
-              {
-                'typeofVisit': 'multiple',
-                'state': 'vigente',
-                'dias': 'Lunes - Martes - Viernes',
-                'range': '10:00am - 16:00pm',
-              },
-            ],
-          },
-          {
-            'name': 'Juan Perez',
-            'role': 'residente',
-            'email': 'juanperez@gmail.com',
-          },
-          {
-            'name': 'Pamela Perez',
-            'role': 'residente',
-            'email': 'pamelaperez@gmail.com'
-          },
-          {
-            'name': 'John Doe',
-            'email': 'johndave@gmail.com',
-            'phone': '12345678',
-            'role': 'encargado',
-            'permisos': 'true',
-          },
-          {
-            'name': 'Diego Viana Doe',
-            'email': 'diegovianadoe@gmail.com',
-            'phone': '12345678',
-            'role': 'vigilante',
-            'permisos': 'true',
-          },
-        ]);
+import '../models/dummy/user_dummy_data.dart';
+import '../models/entities/home.dart';
+import '../models/entities/role.dart';
 
-  void removeUser(Map<String, dynamic> user) {
+class UserInformationNotifier extends StateNotifier<List<User>> {
+  final StateNotifierProviderRef<UserInformationNotifier, List<User>> ref;
+
+  UserInformationNotifier(this.ref) : super(dummyUsers);
+
+  void removeUser(User user) {
     state = state.where((element) => element != user).toList();
   }
 
-  //Update the user redeem
-  void updateUserRedeem(Map<String, dynamic> user) {
+  /*
+  void updateUserRedeem(User user) {
     state = state.map((element) {
       if (element == user) {
-        return {
-          ...element,
-          'redeem': 'true',
-        };
+        List<Permission> updatedPermissions = element.permissions.map((perm) {
+          return perm.copyWith(status: true);
+        }).toList();
+        return user.copyWith(permissions: updatedPermissions);
       }
       return element;
     }).toList();
   }
 
-  //Update the user role to residente
-  void updateUserRole(Map<String, dynamic> user) {
-    state = state.map((element) {
-      if (element == user) {
-        return {
-          ...element,
-          'role': 'residente',
-        };
+   */
+
+  Future<void> updateUserRole(String email) async {
+    try {
+      int index = state.indexWhere((element) => element.email == email);
+      if (index == -1) {
+        throw Exception('User not found');
       }
-      return element;
-    }).toList();
+
+      Role updatedRole; // Define updatedRole here
+
+      if (state[index].roles.isNotEmpty) {
+        String oldRole = state[index].roles.first.role.toString();
+        String newRole;
+
+        if (oldRole == 'visitante') {
+          newRole = 'residente';
+        } else if (oldRole == 'residente') {
+          newRole = 'visitante';
+        } else {
+          throw Exception('Invalid role');
+        }
+
+        // Assign a new role to updatedRole
+        updatedRole = Role(
+          id: state[index].roles.first.id, // assuming Role has an id property
+          role: newRole,
+        );
+      } else {
+        throw Exception('User has no roles');
+      }
+
+      User updatedUser = state[index].copyWith(roles: [updatedRole]);
+      state[index] = updatedUser;
+
+      if (kDebugMode) {
+        print(
+            'After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.roles.first.role}');
+      }
+
+      // Directly update the state with the updated list of users
+      state = List.from(state);
+
+      return Future.value();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to update user role: $e');
+      }
+      rethrow;
+    }
   }
 
-  //Return the user role to visitante
-  void returnUserRole(Map<String, dynamic> user) {
-    state = state.map((element) {
-      if (element == user) {
-        return {
-          ...element,
-          'role': 'visitante',
-        };
+  Future<void> updateUserRoleAndHome(String email, String houseId) async {
+    try {
+      int index = state.indexWhere((element) => element.email == email);
+      if (index == -1) {
+        throw Exception('User not found');
       }
-      return element;
-    }).toList();
+
+      Role updatedRole;
+
+      if (state[index].roles.isNotEmpty) {
+        String oldRole = state[index].roles.first.role.toString();
+        String newRole;
+        String newRoleId;
+
+        if (oldRole == 'visitante') {
+          newRole = 'residente';
+          newRoleId = '3'; // id for 'residente'
+        } else if (oldRole == 'residente') {
+          newRole = 'visitante';
+          newRoleId = '2'; // id for 'visitante'
+        } else {
+          throw Exception('Invalid role');
+        }
+
+        updatedRole = Role(
+          id: newRoleId, // assign the new id based on the role
+          role: newRole,
+        );
+        if (kDebugMode) {
+          print('Old role: $oldRole, New role: $newRole');
+        }
+      } else {
+        throw Exception('User has no roles');
+      } // Define updatedRole here
+
+      User updatedUser =
+          state[index].copyWith(roles: [updatedRole], homeId: houseId);
+      state[index] = updatedUser;
+
+      if (kDebugMode) {
+        print(
+            'U After update: ${updatedUser.name.toString()}, ${updatedUser.hashCode.toString()}, ${updatedUser.roles.first.role.toString()}, ${updatedUser.homeId.toString()}');
+      }
+
+      // Directly update the state with the updated list of users
+      state = List.from(state);
+
+      return Future.value();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to update user role and home: $e');
+      }
+      rethrow;
+    }
   }
 
-  //Add a new user
-  void addUser(Map<String, dynamic> user) {
-    state = [...state, user];
+  Future<void> updateUserHome(String email, Home newHome) async {
+    int index = state.indexWhere((element) => element.email == email);
+    if (index != -1) {
+      User updatedUser = state[index].copyWith(homeId: newHome.id);
+      state[index] = updatedUser;
+
+      if (kDebugMode) {
+        print(' U After update: $updatedUser, ${updatedUser.hashCode}');
+      }
+    }
+
+    // Directly update the state with the updated list of users
+    state = List.from(state);
+
+    return Future.value();
+  }
+
+  void addUser(User user) {
+    int index = state.indexWhere((element) => element.id == user.id);
+    if (index != -1) {
+      // If the user exists, replace the existing user with the new user
+      state[index] = user;
+    } else {
+      // If the user doesn't exist, add the new user to the state
+      state = [...state, user];
+    }
+    state = state;
   }
 }
 
 final userInformationProvider =
-    StateNotifierProvider<UserInformationNotifier, List<Map<String, dynamic>>>(
-        (ref) {
-  return UserInformationNotifier();
+    StateNotifierProvider<UserInformationNotifier, List<User>>((ref) {
+  return UserInformationNotifier(ref);
 });

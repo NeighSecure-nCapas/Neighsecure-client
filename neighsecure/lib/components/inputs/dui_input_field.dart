@@ -5,7 +5,7 @@ class DuiInputField extends StatefulWidget {
   final Function(String?) onChanged;
   final Function(String?) onSaved;
 
-  DuiInputField({Key? key, required this.onChanged, required this.onSaved}) : super(key: key);
+  const DuiInputField({super.key, required this.onChanged, required this.onSaved});
 
   @override
   _DuiInputFieldState createState() => _DuiInputFieldState();
@@ -20,7 +20,8 @@ class _DuiInputFieldState extends State<DuiInputField> {
       maxLength: 10,
       decoration: InputDecoration(
         labelText: 'DUI',
-        fillColor: Colors.grey[200], // background color
+        fillColor: Colors.grey[200],
+        // background color
         filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),

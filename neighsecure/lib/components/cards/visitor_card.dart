@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:neighsecure/models/entities/permission.dart';
 
 class VisitCard extends StatelessWidget {
-  final Map<String, dynamic> pass;
+  final Permission pass;
   final bool isSelected;
 
-  VisitCard({Key? key, required this.pass, required this.isSelected}) : super(key: key);
+  const VisitCard({super.key, required this.pass, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: Card(
-        elevation: isSelected ? 8.0 : 0.0,
+        elevation: 0.0,
         color: Theme.of(context).scaffoldBackgroundColor,
+        shape: isSelected
+            ? RoundedRectangleBorder(
+                side: const BorderSide(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              )
+            : null,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -20,7 +27,7 @@ class VisitCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Visita ${pass['typeofVisit']}',
+                'Visita ${pass.type}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -28,7 +35,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Estado: ${pass['state']}',
+                'Estado: ${pass.status ? 'Vigente' : 'Caducado'}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -37,7 +44,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Dias: ${pass['dias']}',
+                'Dias: ${pass.days}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -46,7 +53,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Rango: ${pass['range']}',
+                'Rango: ${pass.startTime} - ${pass.endTime}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,

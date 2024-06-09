@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:neighsecure/components/text/custom_text.dart';
 
 import '../text/date_text.dart';
@@ -10,7 +9,8 @@ class EntryCard extends StatelessWidget {
   final TimeOfDay? timeStart;
   final TimeOfDay? timeStartRange;
 
-  EntryCard({super.key,
+  const EntryCard({
+    super.key,
     required this.onPressed,
     required this.dateStart,
     required this.timeStart,
@@ -33,19 +33,21 @@ class EntryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CustomText(
-                    instruction: 'Entrada única',
-                    fontSize: 16,
-                      color: Colors.grey
-                  ),
+                      instruction: 'Entrada única',
+                      fontSize: 16,
+                      color: Colors.grey),
                 ],
               ),
               const SizedBox(height: 24),
-              CustomText(instruction: 'Selecciona el dia de ingreso.', fontSize: 14, color: Colors.grey),
+              const CustomText(
+                  instruction: 'Selecciona el dia de ingreso.',
+                  fontSize: 14,
+                  color: Colors.grey),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: onPressed,
@@ -64,21 +66,19 @@ class EntryCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: CustomText(
-                  instruction: 'Selecciona una fecha',
-                  fontSize: 14,
-                    color: Colors.grey
-                ),
+                child: const CustomText(
+                    instruction: 'Selecciona una fecha',
+                    fontSize: 14,
+                    color: Colors.grey),
               ),
               dateStart != null
-                  ? DateText(
-                  date: dateStart!,
-                  label: 'Fecha de inicio')
+                  ? DateText(date: dateStart!, label: 'Fecha de inicio')
                   : const SizedBox(),
               const SizedBox(height: 24),
-              CustomText(
+              const CustomText(
                   instruction: 'Selecciona una hora específica.',
-                  fontSize: 14, color: Colors.grey),
+                  fontSize: 14,
+                  color: Colors.grey),
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
@@ -110,9 +110,11 @@ class EntryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              CustomText(
-                  instruction: 'Selecciona un rango de horas.',
-                  fontSize: 14, color: Colors.grey,),
+              const CustomText(
+                instruction: 'Selecciona un rango de horas.',
+                fontSize: 14,
+                color: Colors.grey,
+              ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -179,7 +181,10 @@ class EntryCard extends StatelessWidget {
                               ),
                             )),
                         const SizedBox(width: 24),
-                        CustomText(instruction: 'Hora de fin', fontSize: 14, color: Colors.grey),
+                        const CustomText(
+                            instruction: 'Hora de fin',
+                            fontSize: 14,
+                            color: Colors.grey),
                         Transform.rotate(
                             angle: 90 * 3.14159 / 180,
                             child: IconButton(

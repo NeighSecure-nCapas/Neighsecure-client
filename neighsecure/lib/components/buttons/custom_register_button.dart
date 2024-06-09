@@ -5,7 +5,11 @@ class CustomSubmitButton extends StatelessWidget {
   final bool isTablet;
   final bool isDuiNotEmpty;
 
-  CustomSubmitButton({Key? key, required this.onPressed, required this.isTablet, required this.isDuiNotEmpty}) : super(key: key);
+  const CustomSubmitButton(
+      {super.key,
+      required this.onPressed,
+      required this.isTablet,
+      required this.isDuiNotEmpty});
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +22,16 @@ class CustomSubmitButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: isDuiNotEmpty ? onPressed : null,
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(
               isDuiNotEmpty ? const Color(0xFF001E2C) : Colors.grey,
             ),
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(
                 vertical: 18,
                 horizontal: 28,
               ),
             ),
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

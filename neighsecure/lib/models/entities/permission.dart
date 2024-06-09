@@ -1,7 +1,8 @@
-import 'key.dart';
-import 'home.dart';
-import 'user.dart';
+import 'package:neighsecure/models/entities/user.dart';
+
 import 'entry.dart';
+import 'home.dart';
+import 'key.dart';
 
 class Permission {
   final String id;
@@ -15,9 +16,10 @@ class Permission {
   final Key key;
   final DateTime generationDate;
   final String days;
-  final Home home;
-  final User user;
   final List<Entry> entries;
+  final String invetedBy;
+  final User user;
+  final Home home;
 
   Permission({
     required this.id,
@@ -31,9 +33,10 @@ class Permission {
     required this.key,
     required this.generationDate,
     required this.days,
-    required this.home,
-    required this.user,
     required this.entries,
+    required this.invetedBy,
+    required this.user,
+    required this.home,
   });
 
   factory Permission.fromJson(Map<String, dynamic> json) {
@@ -49,9 +52,10 @@ class Permission {
       key: Key.fromJson(json['key']),
       generationDate: DateTime.parse(json['generationDate']),
       days: json['days'],
-      home: Home.fromJson(json['home']),
-      user: User.fromJson(json['user']),
       entries: (json['entries'] as List).map((i) => Entry.fromJson(i)).toList(),
+      invetedBy: json['invetedBy'],
+      user: User.fromJson(json['user']),
+      home: Home.fromJson(json['home']),
     );
   }
 
@@ -68,9 +72,46 @@ class Permission {
       'key': key.toJson(),
       'generationDate': generationDate.toIso8601String(),
       'days': days,
-      'home': home.toJson(),
-      'user': user.toJson(),
       'entries': entries.map((entry) => entry.toJson()).toList(),
+      'invetedBy': invetedBy,
+      'user': user.toJson(),
+      'home': home.toJson(),
     };
+  }
+
+  Permission copyWith({
+    String? id,
+    String? type,
+    DateTime? startDate,
+    DateTime? endDate,
+    DateTime? startTime,
+    DateTime? endTime,
+    bool? status,
+    bool? valid,
+    Key? key,
+    DateTime? generationDate,
+    String? days,
+    List<Entry>? entries,
+    String? invetedBy,
+    User? user,
+    Home? home,
+  }) {
+    return Permission(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      status: status ?? this.status,
+      valid: valid ?? this.valid,
+      key: key ?? this.key,
+      generationDate: generationDate ?? this.generationDate,
+      days: days ?? this.days,
+      entries: entries ?? this.entries,
+      invetedBy: invetedBy ?? this.invetedBy,
+      user: user ?? this.user,
+      home: home ?? this.home,
+    );
   }
 }

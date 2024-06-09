@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class InvitationButton extends StatelessWidget {
-  final VoidCallback onSubmit;
+class CustomFloatingActionButton extends StatelessWidget {
+  final VoidCallback onPressed;
 
-  const InvitationButton({super.key, required this.onSubmit});
+  const CustomFloatingActionButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class InvitationButton extends StatelessWidget {
         height: 64,
         width: 64,
         child: FloatingActionButton(
-          onPressed: onSubmit,
+          onPressed: onPressed,
           backgroundColor: const Color(0xFF001E2C),
           child: const Padding(
             padding: EdgeInsets.all(8.0),

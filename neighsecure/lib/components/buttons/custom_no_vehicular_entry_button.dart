@@ -4,7 +4,8 @@ class PedestrianEntryButton extends StatelessWidget {
   final bool isTablet;
   final VoidCallback onSubmit;
 
-  PedestrianEntryButton({Key? key, required this.isTablet, required this.onSubmit}) : super(key: key);
+  const PedestrianEntryButton(
+      {super.key, required this.isTablet, required this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +16,16 @@ class PedestrianEntryButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onSubmit,
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(
               const Color(0xFF001E2C),
             ),
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(
                 vertical: 18,
                 horizontal: 28,
               ),
             ),
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

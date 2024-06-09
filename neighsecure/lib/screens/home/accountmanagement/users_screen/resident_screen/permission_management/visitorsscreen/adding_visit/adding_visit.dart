@@ -1,10 +1,10 @@
+import 'package:day_picker/day_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:day_picker/day_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:neighsecure/components/text/custom_text.dart';
 import 'package:neighsecure/components/buttons/custom_elevated_button.dart';
+import 'package:neighsecure/components/text/custom_text.dart';
 import 'package:neighsecure/components/text/date_text.dart';
 import 'package:neighsecure/components/text/selected_days_text.dart';
 
@@ -16,7 +16,7 @@ class AddingVisit extends ConsumerStatefulWidget {
   const AddingVisit({super.key});
 
   @override
-  _AddingVisitState createState() => _AddingVisitState();
+  ConsumerState<AddingVisit> createState() => _AddingVisitState();
 }
 
 class _AddingVisitState extends ConsumerState<AddingVisit> {
@@ -549,7 +549,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                       ),
                     ),
                     _entryType == EntryType.multiple
-                        ? Padding(
+                        ? const Padding(
                             padding: EdgeInsets.all(30),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -577,7 +577,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
+                                    const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
@@ -591,7 +591,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                       ],
                                     ),
                                     const SizedBox(height: 24),
-                                    CustomText(
+                                    const CustomText(
                                         instruction:
                                             'Selecciona el dia de ingreso.',
                                         fontSize: 14,
@@ -618,7 +618,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                           ),
                                         ),
                                       ),
-                                      child: CustomText(
+                                      child: const CustomText(
                                           instruction: 'Selecciona una fecha',
                                           fontSize: 14,
                                           color: Colors.white),
@@ -629,7 +629,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                             label: 'Fecha de inicio')
                                         : const SizedBox(),
                                     const SizedBox(height: 24),
-                                    CustomText(
+                                    const CustomText(
                                         instruction:
                                             'Selecciona una hora específica.',
                                         color: Colors.grey,
@@ -670,7 +670,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                       ),
                                     ),
                                     const SizedBox(height: 24),
-                                    CustomText(
+                                    const CustomText(
                                         instruction:
                                             'Selecciona un rango de horas.',
                                         fontSize: 14,
@@ -783,8 +783,8 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                             ),
                           ),
                     _entryType == EntryType.single
-                        ? Padding(
-                            padding: const EdgeInsets.all(30),
+                        ? const Padding(
+                            padding: EdgeInsets.all(30),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -811,7 +811,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
+                                    const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
@@ -824,7 +824,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                       ],
                                     ),
                                     const SizedBox(height: 24),
-                                    CustomText(
+                                    const CustomText(
                                         instruction:
                                             'Selecciona un rango de horas.',
                                         fontSize: 14,
@@ -893,7 +893,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                       ],
                                     ),
                                     const SizedBox(height: 24),
-                                    CustomText(
+                                    const CustomText(
                                         instruction:
                                             'Selecciona el dia o rango de dias.',
                                         fontSize: 14,
@@ -972,7 +972,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                 ),
                                               ),
                                             ),
-                                            child: CustomText(
+                                            child: const CustomText(
                                               instruction:
                                                   'Selecciona una fecha',
                                               fontSize: 14,

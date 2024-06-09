@@ -5,7 +5,7 @@ class AnonymousScreen extends ConsumerStatefulWidget {
   const AnonymousScreen({super.key});
 
   @override
-  _AnonymousScreenState createState() => _AnonymousScreenState();
+  ConsumerState<AnonymousScreen> createState() => _AnonymousScreenState();
 }
 
 class _AnonymousScreenState extends ConsumerState<AnonymousScreen> {
@@ -90,15 +90,15 @@ class _AnonymousScreenState extends ConsumerState<AnonymousScreen> {
                             SizedBox(width: 24),
                             Expanded(
                                 child: Text(
-                                  'Por favor ingresa un comentario con la información necesaria para agregar una entrada anónima.',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                  textAlign: TextAlign.start,
-                                  softWrap: true,
-                                )),
+                              'Por favor ingresa un comentario con la información necesaria para agregar una entrada anónima.',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.start,
+                              softWrap: true,
+                            )),
                           ],
                         )),
                     const SizedBox(height: 30),
@@ -119,7 +119,8 @@ class _AnonymousScreenState extends ConsumerState<AnonymousScreen> {
                               ),
                               alignLabelWithHint: true,
                               //Color F3F3F3
-                              fillColor: Colors.grey[100], // background color
+                              fillColor: Colors.grey[100],
+                              // background color
                               filled: true,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),

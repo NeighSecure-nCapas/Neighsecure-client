@@ -5,7 +5,7 @@ class DateText extends StatelessWidget {
   final DateTime date;
   final String label;
 
-  DateText({super.key, required this.date, required this.label});
+  const DateText({super.key, required this.date, required this.label});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import '../../screens/home/accountmanagement/users_screen/qrscreen/qr_screen.dar
 class GenerateQRButton extends StatefulWidget {
   final bool isPassSelected;
 
-  GenerateQRButton({Key? key, required this.isPassSelected}) : super(key: key);
+  const GenerateQRButton({super.key, required this.isPassSelected});
 
   @override
   _GenerateQRButtonState createState() => _GenerateQRButtonState();
@@ -21,23 +21,23 @@ class _GenerateQRButtonState extends State<GenerateQRButton> {
         child: ElevatedButton(
           onPressed: widget.isPassSelected
               ? () {
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                const QrScreen(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              ),
-            ).then((value) {
-              setState(() {});
-            });
-          }
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const QrScreen(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                    ),
+                  ).then((value) {
+                    setState(() {});
+                  });
+                }
               : null,
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(

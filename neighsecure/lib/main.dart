@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:neighsecure/screens/introduction/welcome_screen/welcome_screen.dart';
 
 void main() {
-
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: App()));
 }
@@ -15,7 +14,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (MediaQuery.of(context).size.width < 600) {
         // If the screen width is less than 600, set the orientation to portrait
@@ -32,7 +30,6 @@ class App extends StatelessWidget {
       }
     });
 
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NeighSecure',
@@ -41,10 +38,14 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 46, 93, 168),
         ).copyWith(
-          primary: const Color(0xFF001E2C), //Button color
-          secondary: const Color(0xFFD7E2FF), //Secondary color
-          onPrimary: const Color(0xFFFEFBFF), //OnPrimary color
-          onError: const Color(0xFFBA1A1A), //onError color
+          primary: const Color(0xFF001E2C),
+          //Button color
+          secondary: const Color(0xFFD7E2FF),
+          //Secondary color
+          onPrimary: const Color(0xFFFEFBFF),
+          //OnPrimary color
+          onError: const Color(0xFFBA1A1A),
+          //onError color
           surface: const Color(0xFFD7E2FF), //onErrorContainer color
         ),
         textTheme: GoogleFonts.robotoTextTheme(

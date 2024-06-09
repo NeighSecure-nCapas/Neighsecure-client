@@ -10,8 +10,8 @@ class User {
   final List<Role> roles;
   final String dui;
   final bool isActive;
-  final List<Permission> permissions;
   final List<Token> tokens;
+  final String? homeId;
 
   User({
     required this.id,
@@ -21,8 +21,8 @@ class User {
     required this.roles,
     required this.dui,
     required this.isActive,
-    required this.permissions,
     required this.tokens,
+    this.homeId,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -34,8 +34,8 @@ class User {
       roles: (json['roles'] as List).map((i) => Role.fromJson(i)).toList(),
       dui: json['dui'],
       isActive: json['isActive'],
-      permissions: (json['permissions'] as List).map((i) => Permission.fromJson(i)).toList(),
       tokens: (json['tokens'] as List).map((i) => Token.fromJson(i)).toList(),
+      homeId: json['home'],
     );
   }
 
@@ -48,8 +48,33 @@ class User {
       'roles': roles.map((role) => role.toJson()).toList(),
       'dui': dui,
       'isActive': isActive,
-      'permissions': permissions.map((permission) => permission.toJson()).toList(),
       'tokens': tokens.map((token) => token.toJson()).toList(),
+      'home': homeId,
     };
+  }
+
+  User copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? phone,
+    List<Role>? roles,
+    String? dui,
+    bool? isActive,
+    List<Permission>? permissions,
+    List<Token>? tokens,
+    String? homeId,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      roles: roles ?? this.roles,
+      dui: dui ?? this.dui,
+      isActive: isActive ?? this.isActive,
+      tokens: tokens ?? this.tokens,
+      homeId: homeId ?? this.homeId,
+    );
   }
 }

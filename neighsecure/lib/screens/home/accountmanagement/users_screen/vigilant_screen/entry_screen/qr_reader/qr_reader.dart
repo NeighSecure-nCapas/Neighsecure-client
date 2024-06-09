@@ -42,7 +42,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     });
 
     controller.scannedDataStream.listen((scanData) async {
-      if(isProcessing){
+      if (isProcessing) {
         return;
       }
 
@@ -50,11 +50,12 @@ class _QRViewExampleState extends State<QRViewExample> {
         result = scanData;
       });
 
-      if (result != null ) {
+      if (result != null) {
         isProcessing = true;
         controller.pauseCamera();
 
         String? url = result!.code;
+
         showModalBottomSheet(
           context: context,
           builder: (context) => Container(
@@ -90,10 +91,10 @@ class _QRViewExampleState extends State<QRViewExample> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if(await launchUrl(url! as Uri)){
-                        await launchUrl(url as Uri);
-                      }else{
-                        log('Could not launch $url');
+                      if (await canLaunchUrl(Uri.parse(url!))) {
+                        await launchUrl(Uri.parse(url));
+                      } else {
+                        throw 'Could not launch $url';
                       }
                       Navigator.pop(context);
                       Navigator.pop(context);
@@ -131,6 +132,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       }
     });
   }
+
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
