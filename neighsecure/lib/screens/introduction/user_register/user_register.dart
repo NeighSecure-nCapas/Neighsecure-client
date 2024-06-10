@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/screens/home/accountmanagement/account_management.dart';
 
 import '../../../components/buttons/custom_register_button.dart';
 import '../../../components/inputs/dui_input_field.dart';
+import '../../../components/inputs/phone_input_field.dart';
 
 class UserRegister extends ConsumerStatefulWidget {
   const UserRegister({super.key});
@@ -16,6 +18,8 @@ class _UserRegisterState extends ConsumerState<UserRegister> {
   final _isLoading = false;
 
   var _dui = '';
+
+  var _phoneNumber = '';
 
   final _formKey = GlobalKey<FormState>();
 
@@ -109,6 +113,17 @@ class _UserRegisterState extends ConsumerState<UserRegister> {
                       _dui = value!;
                     },
                   ),
+                  const SizedBox(height: 24),
+                  PhoneNumberInputField(
+                    onChanged: (value) {
+                      setState(() {
+                        _phoneNumber = value!;
+                      });
+                    },
+                    onSaved: (value) {
+                      _phoneNumber = value!;
+                    },
+                  ),
                 ],
               ),
             ),
@@ -117,7 +132,11 @@ class _UserRegisterState extends ConsumerState<UserRegister> {
       )),
       bottomNavigationBar: CustomSubmitButton(
         onPressed: () {
-          if (_dui.isNotEmpty) {
+          if (_dui.isNotEmpty && _phoneNumber.isNotEmpty) {
+            if (kDebugMode) {
+              print('DUI: $_dui');
+              print('Phone Number: $_phoneNumber');
+            }
             _submit();
           }
         },
