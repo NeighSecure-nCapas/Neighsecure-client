@@ -1,5 +1,4 @@
 import 'package:neighsecure/models/dummy/role_dummy_data.dart';
-import 'package:neighsecure/models/dummy/token_dummy_data.dart';
 
 import '../entities/user.dart';
 
@@ -13,10 +12,6 @@ List<User> dummyUsers = [
       dummyRoles[0],
     ],
     dui: 'dummy-dui-1',
-    isActive: true,
-    tokens: [
-      dummyTokens[0],
-    ],
     homeId: '1',
   ),
   User(
@@ -29,9 +24,6 @@ List<User> dummyUsers = [
     ],
     // Add dummy Role objects as needed
     dui: 'dummy-dui-2',
-    isActive: false,
-    // Add dummy Permission objects as needed
-    tokens: [dummyTokens[1]],
     homeId: '1',
   ),
   User(
@@ -44,9 +36,7 @@ List<User> dummyUsers = [
     ],
     // Add dummy Role objects as needed
     dui: 'dummy-dui-3',
-    isActive: true,
-    // Add dummy Permission objects as needed
-    tokens: [dummyTokens[2]], // Add dummy Token objects as needed
+    // Add dummy Token objects as needed
   ),
   User(
     id: '4',
@@ -57,8 +47,6 @@ List<User> dummyUsers = [
       dummyRoles[2],
     ],
     dui: 'dummy-dui-4',
-    isActive: true,
-    tokens: [dummyTokens[3]],
     homeId: '1',
   ),
   User(
@@ -70,8 +58,6 @@ List<User> dummyUsers = [
       dummyRoles[1],
     ],
     dui: 'dummy-dui-5',
-    isActive: false,
-    tokens: [dummyTokens[4]],
   ),
   User(
     id: '6',
@@ -82,8 +68,6 @@ List<User> dummyUsers = [
       dummyRoles[1],
     ],
     dui: 'dummy-dui-6',
-    isActive: true,
-    tokens: [dummyTokens[5]],
   ),
   User(
     id: '7',
@@ -94,8 +78,6 @@ List<User> dummyUsers = [
       dummyRoles[1],
     ],
     dui: 'dummy-dui-7',
-    isActive: false,
-    tokens: [dummyTokens[6]],
   ),
   User(
     id: '8',
@@ -106,8 +88,6 @@ List<User> dummyUsers = [
       dummyRoles[1],
     ],
     dui: 'dummy-dui-8',
-    isActive: true,
-    tokens: [dummyTokens[7]],
   ),
   User(
     id: '9',
@@ -118,8 +98,6 @@ List<User> dummyUsers = [
       dummyRoles[2],
     ],
     dui: 'dummy-dui-9',
-    isActive: true,
-    tokens: [dummyTokens[8]],
     homeId: '1',
   ),
 ];

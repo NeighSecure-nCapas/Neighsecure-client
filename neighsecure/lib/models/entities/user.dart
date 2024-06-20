@@ -6,22 +6,18 @@ class User {
   final String id;
   final String name;
   final String email;
-  final String phone;
+  final String? phone;
   final List<Role> roles;
-  final String dui;
-  final bool isActive;
-  final List<Token> tokens;
+  final String? dui;
   final String? homeId;
 
   User({
     required this.id,
     required this.name,
     required this.email,
-    required this.phone,
+    this.phone,
     required this.roles,
-    required this.dui,
-    required this.isActive,
-    required this.tokens,
+    this.dui,
     this.homeId,
   });
 
@@ -33,23 +29,19 @@ class User {
       phone: json['phone'],
       roles: (json['roles'] as List).map((i) => Role.fromJson(i)).toList(),
       dui: json['dui'],
-      isActive: json['isActive'],
-      tokens: (json['tokens'] as List).map((i) => Token.fromJson(i)).toList(),
       homeId: json['home'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
+      'userId': id,
+      'username': name,
       'email': email,
-      'phone': phone,
+      'phoneNumer': phone ?? '',
       'roles': roles.map((role) => role.toJson()).toList(),
-      'dui': dui,
-      'isActive': isActive,
-      'tokens': tokens.map((token) => token.toJson()).toList(),
-      'home': homeId,
+      'dui': dui ?? '',
+      'homeId': homeId ?? '',
     };
   }
 
@@ -72,8 +64,6 @@ class User {
       phone: phone ?? this.phone,
       roles: roles ?? this.roles,
       dui: dui ?? this.dui,
-      isActive: isActive ?? this.isActive,
-      tokens: tokens ?? this.tokens,
       homeId: homeId ?? this.homeId,
     );
   }
