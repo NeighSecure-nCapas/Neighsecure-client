@@ -6,8 +6,8 @@ import 'package:neighsecure/models/entities/user.dart';
 import '../../../../../../components/cards/users_list_card.dart';
 import '../../../../../../components/floatingbuttons/invitation_button.dart';
 import '../../../../../../models/entities/home.dart';
-import '../../../../../../providers/testing_home_information_notifier.dart';
-import '../../../../../../providers/testing_user_information_notifier.dart';
+import '../../../../../../providers/dummyProviders/testing_home_information_notifier.dart';
+import '../../../../../../providers/dummyProviders/testing_user_information_notifier.dart';
 import 'invitationscreen/invitation_screen.dart';
 
 class HouseManagement extends ConsumerStatefulWidget {
@@ -36,7 +36,9 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
   }
 
   void updateUserRole(User user) {
-    ref.watch(userInformationProvider.notifier).updateUserRole(user.email);
+    ref
+        .watch(userInformationProvider.notifier)
+        .updateUserRole(user.email as String);
   }
 
   void showDeleteUserDialog(BuildContext context, User user) {
@@ -121,14 +123,14 @@ class _HouseManagementState extends ConsumerState<HouseManagement> {
     if (kDebugMode) {
       for (var user in usersInformation) {
         print(
-            'Name: ${user.name}, Home ID: ${user.homeId}, Role: ${user.roles.first.role}');
+            'Name: ${user.name}, Home ID: ${user.homeId}, Role: ${user.roles?.first.role}');
       }
     }
 
     if (kDebugMode) {
       for (var user in allusersInformation) {
         print(
-            'Name: ${user.name}, Home ID: ${user.homeId}, Role: ${user.roles.first.role}');
+            'Name: ${user.name}, Home ID: ${user.homeId}, Role: ${user.roles?.first.role}');
       }
     }
 

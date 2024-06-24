@@ -109,7 +109,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.userInformation.name,
+                              widget.userInformation.name as String,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,

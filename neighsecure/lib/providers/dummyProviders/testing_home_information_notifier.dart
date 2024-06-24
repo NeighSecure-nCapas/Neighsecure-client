@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/dummy/home_dummy_data.dart';
 
-import '../models/dummy/user_dummy_data.dart';
-import '../models/entities/home.dart';
-import '../models/entities/role.dart';
-import '../models/entities/user.dart';
+import '../../models/dummy/user_dummy_data.dart';
+import '../../models/entities/home.dart';
+import '../../models/entities/role.dart';
+import '../../models/entities/user.dart';
 
 class TestingHomeInformationNotifier extends StateNotifier<List<Home>> {
   final StateNotifierProviderRef<TestingHomeInformationNotifier, List<Home>>
@@ -64,8 +64,8 @@ class TestingHomeInformationNotifier extends StateNotifier<List<Home>> {
       }
       Role updatedRole;
 
-      if (user.roles.isNotEmpty) {
-        String oldRole = user.roles.first.role.toString();
+      if (user.roles!.isNotEmpty) {
+        String oldRole = user.roles!.first.role.toString();
         String newRole;
         String newRoleId;
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/screens/introduction/onboarding_screen/onboarding_screen_test.dart';
 
 import '../../../components/buttons/custom_tablet_button.dart';
-import '../onboarding_screen/onboarding_screen.dart';
 
 class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});

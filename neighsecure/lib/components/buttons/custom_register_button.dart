@@ -20,7 +20,11 @@ class CustomSubmitButton extends StatelessWidget {
       child: SizedBox(
         width: isTablet ? 600 : double.infinity,
         child: ElevatedButton(
-          onPressed: isDuiNotEmpty ? onPressed : null,
+          onPressed: () {
+            if (isDuiNotEmpty) {
+              onPressed();
+            }
+          },
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
               isDuiNotEmpty ? const Color(0xFF001E2C) : Colors.grey,

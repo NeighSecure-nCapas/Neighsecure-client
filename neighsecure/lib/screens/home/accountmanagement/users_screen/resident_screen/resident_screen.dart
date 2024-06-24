@@ -5,7 +5,9 @@ import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident
 
 import '../../../../../components/buttons/custom_elevated_button.dart';
 import '../../../../../components/cards/permission_management_card.dart';
+import '../../../../../controllers/permission_controller.dart';
 import '../../../../../models/entities/user.dart';
+import '../../../../../repositories/permission_repository/permission_repository.dart';
 import '../qrscreen/qr_screen.dart';
 import 'house_management/house_management.dart';
 
@@ -19,12 +21,20 @@ class ResidentScreen extends ConsumerStatefulWidget {
 }
 
 class _ResidentScreenState extends ConsumerState<ResidentScreen> {
+  final PermissionController _permissionController = PermissionController();
+
+  final PermissionRepository _permissionRepository = PermissionRepository();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void submitQR() {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const QrScreen(),
+        pageBuilder: (context, animation, secondaryAnimation) => QrScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
@@ -107,7 +117,7 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.userInformation.name,
+                              widget.userInformation.name as String,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -118,7 +128,7 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              widget.userInformation.roles
+                              widget.userInformation.roles!
                                   .map((role) => role.role)
                                   .join(', '),
                               style: const TextStyle(
@@ -161,8 +171,8 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
                     ],
                   )),
               const SizedBox(height: 30),
-              if (widget.userInformation.roles
-                  .any((role) => role.role == 'encargado'))
+              if (widget.userInformation.roles!
+                  .any((role) => role.role == 'Encargado'))
                 GestureDetector(
                   onTap: () {
                     submitHouseManagement(widget.userInformation);
@@ -181,7 +191,7 @@ class _ResidentScreenState extends ConsumerState<ResidentScreen> {
         ),
       ),
       bottomNavigationBar: CustomElevatedButton(
-        onPressed: submitQR,
+        onPressed: () => submitQR(),
         text: 'Generar QR',
       ),
     ));

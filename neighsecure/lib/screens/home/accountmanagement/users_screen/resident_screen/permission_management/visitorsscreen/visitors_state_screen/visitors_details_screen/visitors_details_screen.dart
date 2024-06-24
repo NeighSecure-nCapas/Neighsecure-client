@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../../../../models/entities/permission.dart';
 import '../../../../../../../../../models/entities/user.dart';
-import '../../../../../../../../../providers/testing_permission_information_notifier.dart';
-import '../../../../../../../../../providers/testing_user_information_notifier.dart';
+import '../../../../../../../../../providers/dummyProviders/testing_permission_information_notifier.dart';
+import '../../../../../../../../../providers/dummyProviders/testing_user_information_notifier.dart';
 
 class VisitorsDetailsScreen extends ConsumerStatefulWidget {
   VisitorsDetailsScreen(
@@ -188,7 +188,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.userInformation.user.name,
+                            widget.userInformation.user.name as String,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -262,7 +262,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              widget.userInformationState.roles
+              widget.userInformationState.roles!
                       .any((userRole) => userRole.role == 'encargado')
                   ? (widget.userInformation.status == true
                       ? _submit(widget.userInformation.user)
@@ -290,11 +290,11 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              title: Text('Error'),
-                              content: Text('Esperando aprobacion'),
+                              title: const Text('Error'),
+                              content: const Text('Esperando aprobacion'),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -323,7 +323,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               ),
             ),
             child: Text(
-              widget.userInformationState.roles
+              widget.userInformationState.roles!
                       .any((userRole) => userRole.role == 'encargado')
                   ? (widget.userInformation.status == true
                       ? 'Eliminar'

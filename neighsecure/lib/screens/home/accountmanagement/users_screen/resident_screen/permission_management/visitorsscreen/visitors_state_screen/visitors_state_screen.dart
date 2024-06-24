@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/entities/permission.dart';
-import 'package:neighsecure/providers/testnameprovider.dart';
+import 'package:neighsecure/providers/dummyProviders/testnameprovider.dart';
 
 import '../../../../../../../../models/entities/user.dart';
-import '../../../../../../../../providers/testing_permission_information_notifier.dart';
+import '../../../../../../../../providers/dummyProviders/testing_permission_information_notifier.dart';
 import '../visitors_screen.dart';
 
 class VisitorsStateScreen extends ConsumerStatefulWidget {

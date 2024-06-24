@@ -9,9 +9,9 @@ import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident
 
 import '../../../../../../components/buttons/custom_floating_action_button.dart';
 import '../../../../../../models/entities/home.dart';
-import '../../../../../../providers/testing_home_information_notifier.dart';
-import '../../../../../../providers/testing_permission_information_notifier.dart';
-import '../../../../../../providers/testnameprovider.dart';
+import '../../../../../../providers/dummyProviders/testing_home_information_notifier.dart';
+import '../../../../../../providers/dummyProviders/testing_permission_information_notifier.dart';
+import '../../../../../../providers/dummyProviders/testnameprovider.dart';
 
 class PermissionManagement extends ConsumerStatefulWidget {
   const PermissionManagement({super.key, required this.userInformation});
@@ -116,9 +116,9 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.userInformation.roles.any((role) => role.role == 'encargado')) {
+    if (widget.userInformation.roles!.any((role) => role.role == 'encargado')) {
       home = getHomeInCharge(widget.userInformation);
-    } else if (widget.userInformation.roles
+    } else if (widget.userInformation.roles!
         .any((role) => role.role == 'residente')) {
       home = getHomeResident(widget.userInformation);
     }
@@ -126,17 +126,17 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
     final permissionsInformation = ref
         .watch(permissionInformationProvider)
         .where((permission) {
-          if (widget.userInformation.roles
+          if (widget.userInformation.roles!
               .any((role) => role.role == 'encargado')) {
             return permission.home.id == home.id;
-          } else if (widget.userInformation.roles
+          } else if (widget.userInformation.roles!
               .any((role) => role.role == 'residente')) {
             return permission.home.id == home.id;
           }
           return false;
         })
         .where((permission) =>
-            permission.user.roles.any((role) => role.role == 'visitante'))
+            permission.user.roles!.any((role) => role.role == 'visitante'))
         .toList();
 
     final usersWithUnapprovedPermissions = permissionsInformation

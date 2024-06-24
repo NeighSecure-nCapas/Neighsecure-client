@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/dummy/permission_dummy_data.dart';
 import 'package:neighsecure/models/entities/permission.dart';
 
-import '../models/entities/user.dart';
+import '../../models/entities/user.dart';
 
 class PermissionInformationNotifier extends StateNotifier<List<Permission>> {
   final StateNotifierProviderRef<PermissionInformationNotifier,

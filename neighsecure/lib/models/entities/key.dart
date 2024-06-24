@@ -13,7 +13,7 @@ class Key {
 
   factory Key.fromJson(Map<String, dynamic> json) {
     return Key(
-      id: json['id'],
+      id: json['keyId'],
       generationDate: DateTime.parse(json['generationDate']),
       generationTime: DateTime.parse(json['generationTime']),
       generationDay: json['generationDay'],
@@ -22,7 +22,7 @@ class Key {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'keyId': id,
       'generationDate': generationDate.toIso8601String(),
       'generationTime': generationTime.toIso8601String(),
       'generationDay': generationDay,

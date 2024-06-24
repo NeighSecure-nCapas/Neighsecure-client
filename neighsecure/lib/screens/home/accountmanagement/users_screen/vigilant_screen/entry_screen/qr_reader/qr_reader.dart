@@ -1,9 +1,15 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:neighsecure/controllers/terminal_controller.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../../../../models/entities/terminal.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({super.key});
@@ -16,6 +22,8 @@ class _QRViewExampleState extends State<QRViewExample> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  final TerminalController _controller = TerminalController();
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -34,14 +42,29 @@ class _QRViewExampleState extends State<QRViewExample> {
     super.dispose();
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) async {
     bool isProcessing = false;
+
+    DateTime now = DateTime.now();
+    DateFormat format = DateFormat("dd/MM/yyyy HH:mm");
+    String formattedDate = format.format(now);
+    String? terminalId;
 
     setState(() {
       this.controller = controller;
     });
 
+    try {
+      terminalId = await getSelectedTerminalId();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Exception occurred while getting user role: $e');
+      }
+      return;
+    }
+
     controller.scannedDataStream.listen((scanData) async {
+      _controller.isLoading.value = true;
       if (isProcessing) {
         return;
       }
@@ -54,81 +77,95 @@ class _QRViewExampleState extends State<QRViewExample> {
         isProcessing = true;
         controller.pauseCamera();
 
-        String? url = result!.code;
+        String? qrCode = result!.code;
 
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+        List<String> parts = qrCode!.split('/');
+        String keyId = parts[0];
+        String role = parts[1];
+
+        if (terminalId != null) {
+          await _controller.entry(
+            formattedDate,
+            '',
+            terminalId,
+            keyId,
+            role,
+          );
+
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 20),
+                  const Text('Listo!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black)),
+                  const SizedBox(height: 20),
+                  const Text(
+                      'El código QR se ha escaneado exitosamente. Acceso concedido. ¡Bienvenido/a!.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey)),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                          const Color(0xFF001E2C),
+                        ),
+                        padding: WidgetStateProperty.all(
+                          const EdgeInsets.symmetric(
+                            vertical: 18,
+                            horizontal: 28,
+                          ),
+                        ),
+                        shape: WidgetStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                      child: const Text(
+                        'Listo',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 20),
-                const Text('Listo!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black)),
-                const SizedBox(height: 20),
-                const Text(
-                    'El código QR se ha escaneado exitosamente. Acceso concedido. ¡Bienvenido/a!.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey)),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (await canLaunchUrl(Uri.parse(url!))) {
-                        await launchUrl(Uri.parse(url));
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        const Color(0xFF001E2C),
-                      ),
-                      padding: WidgetStateProperty.all(
-                        const EdgeInsets.symmetric(
-                          vertical: 18,
-                          horizontal: 28,
-                        ),
-                      ),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'Listo',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
+          );
+        } else {
+          if (kDebugMode) {
+            print('Token or terminalId is null');
+          }
+          _controller.isLoading.value = false;
+        }
       }
     });
   }
@@ -140,6 +177,16 @@ class _QRViewExampleState extends State<QRViewExample> {
         const SnackBar(content: Text('no Permission')),
       );
     }
+  }
+
+  Future<String?> getSelectedTerminalId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? terminalString = prefs.getString('selectedTerminal');
+    if (terminalString != null) {
+      Terminal selectedTerminal = Terminal.fromJson(jsonDecode(terminalString));
+      return selectedTerminal.id;
+    }
+    return null;
   }
 
   Widget _buildQrView(BuildContext context) {

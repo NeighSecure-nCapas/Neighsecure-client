@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../../models/entities/home.dart';
 import '../../../../../../../models/entities/user.dart';
-import '../../../../../../../providers/testing_home_information_notifier.dart';
-import '../../../../../../../providers/testing_user_information_notifier.dart';
+import '../../../../../../../providers/dummyProviders/testing_home_information_notifier.dart';
+import '../../../../../../../providers/dummyProviders/testing_user_information_notifier.dart';
 
 class InvitationScreen extends ConsumerStatefulWidget {
   const InvitationScreen(
@@ -82,7 +82,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
       } catch (e) {
         _showModalBottomSheet(
           'Error!',
-          'No ha sido posible enviadar la invitación al correo electrónico que has proporcionado. ${e}',
+          'No ha sido posible enviadar la invitación al correo electrónico que has proporcionado. $e',
         );
       }
     }

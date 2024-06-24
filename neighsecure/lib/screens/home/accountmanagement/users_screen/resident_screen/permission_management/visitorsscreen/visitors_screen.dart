@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/entities/permission.dart';
 import 'package:neighsecure/models/entities/user.dart';
-import 'package:neighsecure/providers/testnameprovider.dart';
+import 'package:neighsecure/providers/dummyProviders/testnameprovider.dart';
 
-import '../../../../../../../providers/testing_permission_information_notifier.dart';
+import '../../../../../../../providers/dummyProviders/testing_permission_information_notifier.dart';
 import 'visitors_state_screen/visitors_details_screen/visitors_details_screen.dart';
 
 class VisitorsScreen extends ConsumerStatefulWidget {
@@ -68,19 +68,20 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
         ? widget.usersInformation
             .where((permission) =>
                 permission.status == true &&
-                permission.user.roles.any((role) => role.role == 'visitante'))
+                permission.user.roles!.any((role) => role.role == 'visitante'))
             .toList()
         : widget.usersInformation
             .where((permission) =>
                 permission.status == false &&
-                permission.user.roles.any((role) => role.role == 'visitante'))
+                permission.user.roles!.any((role) => role.role == 'visitante'))
             .toList();
 
     return name.isEmpty
         ? filteredPermissionInformation
         : filteredPermissionInformation
-            .where((permission) =>
-                permission.user.name.toLowerCase().contains(name.toLowerCase()))
+            .where((permission) => permission.user.name!
+                .toLowerCase()
+                .contains(name.toLowerCase()))
             .toList();
   }
 
@@ -239,7 +240,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                filteredName[index].user.name,
+                                filteredName[index].user.name as String,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18,
@@ -250,7 +251,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               Text(
                                 filteredName[index]
                                     .user
-                                    .roles
+                                    .roles!
                                     .map((e) => e.role)
                                     .join(', '),
                                 style: const TextStyle(
@@ -280,7 +281,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                           children: [
                             GestureDetector(
                                 onTap: () {
-                                  widget.userInformation.roles.any(
+                                  widget.userInformation.roles!.any(
                                           (role) => role.role == 'encargado')
                                       ? filteredName[index].status == true
                                           ? showDialog(
@@ -452,17 +453,17 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                                           : null;
                                 },
                                 child: Icon(
-                                  widget.userInformation.roles.any(
-                                          (role) => role.role == 'encargado')
+                                  widget.userInformation.roles!.any(
+                                          (role) => role.role == 'Encargado')
                                       ? filteredName[index].status
                                           ? Icons.close
                                           : Icons.check
                                       : filteredName[index].status
                                           ? Icons.close
                                           : Icons.pending_actions,
-                                  color: widget.userInformation.roles.any(
+                                  color: widget.userInformation.roles!.any(
                                               (role) =>
-                                                  role.role == 'residente') &&
+                                                  role.role == 'Residente') &&
                                           !filteredName[index].status
                                       ? Colors.red
                                       : Colors.black,

@@ -7,7 +7,9 @@ class UsersList extends StatelessWidget {
   final Function showDeleteUserDialog;
 
   const UsersList(
-      {super.key, required this.usersInformation, required this.showDeleteUserDialog});
+      {super.key,
+      required this.usersInformation,
+      required this.showDeleteUserDialog});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class UsersList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        usersInformation[index].name,
+                        usersInformation[index].name as String,
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
@@ -58,7 +60,7 @@ class UsersList extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        usersInformation[index].roles.first.role,
+                        usersInformation[index].roles!.first.role as String,
                         style: const TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
