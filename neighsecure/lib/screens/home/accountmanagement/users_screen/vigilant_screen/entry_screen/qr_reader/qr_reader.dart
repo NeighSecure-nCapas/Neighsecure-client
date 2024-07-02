@@ -82,6 +82,9 @@ class _QRViewExampleState extends State<QRViewExample> {
         List<String> parts = qrCode!.split('/');
         String keyId = parts[0];
         String role = parts[1];
+        String generationDate = parts[2];
+        String generationDay = parts[3];
+        String generationTime = parts[4];
 
         if (terminalId != null) {
           await _controller.entry(

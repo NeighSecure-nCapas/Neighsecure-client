@@ -20,25 +20,40 @@ class AuthController {
   final storage = const FlutterSecureStorage();
   String? _authorizationCode;
   String? _accessToken;
-  bool _isBusy = false;
 
-  bool get isBusy => _isBusy;
   String? get authorizationCode => _authorizationCode;
 
   Future<void> getAccessTokenResponse(BuildContext context) async {
-    _isBusy = true;
-    final result = await _model.getAccessTokenResponse();
-    _isBusy = false;
-    if (result != null) {
-      _accessToken = result.accessToken;
-      if (kDebugMode) {
-        print('Access token: $_accessToken');
+    try {
+      isLoading.value = true;
+      final result = await _model.getAccessTokenResponse();
+
+      if (result != null) {
+        _accessToken = result.accessToken;
+        if (kDebugMode) {
+          print('Access token: $_accessToken');
+        }
+        _processAuthResponse(context, _accessToken!);
       }
-      _processAuthResponse(context, _accessToken!);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Exception occurred: $e');
+      }
+      // Aquí puedes manejar la excepción como prefieras
+      showAboutDialog(
+        context: context,
+        applicationName: 'Error',
+        children: [Text('Error al establecer la conexión con el servidor')],
+        applicationVersion: '1.0.0',
+        applicationIcon: const Icon(Icons.error),
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 
   Future<bool?> isUserValid() async {
+    isLoading.value = true;
     final token = await storage.read(key: 'token');
     User? localUser = await _repository.retrieveUserLocally();
 
@@ -55,19 +70,23 @@ class AuthController {
 
     if (token == null || localUser == null) {
       // If the token or localUser is null, return false.
+      isLoading.value = false;
       return false;
     } else if (localUser.dui == null ||
         localUser.dui!.isEmpty ||
         localUser.phone == null ||
         localUser.phone!.isEmpty) {
       // If the 'dui' or 'phone' field is null or empty, return null.
+      isLoading.value = false;
       return null;
     } else {
       // If none of the above conditions are met, return true.
+      isLoading.value = false;
       return true;
     }
   }
 
+  /*
   void _processAuthResponse(BuildContext context, String? accessToken) async {
     isLoading.value = true;
     if (kDebugMode) {
@@ -94,9 +113,9 @@ class AuthController {
 
         // Save the token in the secure storage.
         await storage.write(key: 'token', value: token);
-
         if (response.statusCode == 201 || response.statusCode == 200) {
           await getUserInfo(context, response.statusCode);
+          isLoading.value = false;
         } else if (response.statusCode == 500) {
           isLoading.value = false;
           throw Exception('There was an error fetching user info from Google');
@@ -118,6 +137,57 @@ class AuthController {
     }
   }
 
+   */
+
+  void _processAuthResponse(BuildContext context, String? accessToken) async {
+    isLoading.value = true;
+    var client = http.Client();
+
+    if (accessToken != null) {
+      try {
+        final response = await client.get(
+          Uri.http(
+              dotenv.env['SERVER_URL']!,
+              '/neighSecure/auth/google/redirect-mobile',
+              {'access_token': accessToken}),
+        );
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          var responseBody = jsonDecode(response.body);
+          if (!responseBody.containsKey('data')) {
+            throw Exception('Response does not contain user data');
+          }
+          var token = responseBody['data']['token'];
+          if (kDebugMode) {
+            print(token);
+          }
+          await storage.write(key: 'token', value: token);
+          await getUserInfo(context, response.statusCode);
+          isLoading.value = false;
+        } else if (response.statusCode == 401) {
+          isLoading.value = false;
+          throw Exception('No token provided');
+        } else if (response.statusCode == 404) {
+          isLoading.value = false;
+          throw Exception('User not found');
+        } else {
+          isLoading.value = false;
+          throw Exception('Failed to get user info');
+        }
+      } catch (e) {
+        isLoading.value = false;
+        if (kDebugMode) {
+          print('Exception occurred H: $e');
+        }
+      }
+    } else {
+      isLoading.value = false;
+      if (kDebugMode) {
+        print('Token is null');
+      }
+    }
+  }
+
   Future<void> getUserInfo(BuildContext context, int statusCode) async {
     isLoading.value = true;
     final token = await storage.read(key: 'token');
@@ -131,13 +201,17 @@ class AuthController {
 
         if (response.statusCode == 200) {
           var responseBody = jsonDecode(response.body);
+
+          if (!responseBody.containsKey('data')) {
+            throw Exception('Response does not contain user data');
+          }
+
           var user = responseBody['data'];
           if (kDebugMode) {
             print(user);
           }
           await _repository.saveUserLocally(user);
-
-          // Redirect based on user status.
+          isLoading.value = false;
           redirectToScreen(context, statusCode);
         } else if (response.statusCode == 401) {
           isLoading.value = false;
@@ -188,6 +262,7 @@ class AuthController {
             print(user);
           }
           await _repository.saveUserLocally(user);
+          isLoading.value = false;
         } else if (response.statusCode == 401) {
           isLoading.value = false;
           throw Exception('No token provided');
@@ -234,6 +309,7 @@ class AuthController {
       );
     } else if (statusCode == 200) {
       // If the user exists, redirect to the home screen.
+      isLoading.value = false;
       Navigator.push(
         context,
         PageRouteBuilder(

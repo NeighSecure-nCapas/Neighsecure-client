@@ -23,10 +23,10 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['userId'] ?? '',
-      name: json['username'] ?? '',
+      id: json['userId'] ?? json['id'] ?? '',
+      name: json['username'] ?? json['name'] ?? '',
       email: json['email'] ?? '',
-      phone: json['phoneNumber'] ?? '',
+      phone: json['phoneNumber'] ?? json['phone'] ?? '',
       roles: json['roles'] != null
           ? (json['roles'] as List).map((role) => Role.fromJson(role)).toList()
           : [],

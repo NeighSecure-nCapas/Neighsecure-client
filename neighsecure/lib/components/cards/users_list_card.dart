@@ -4,7 +4,7 @@ import '../../models/entities/user.dart';
 
 class UsersList extends StatelessWidget {
   final List<User> usersInformation;
-  final Function showDeleteUserDialog;
+  final Function? showDeleteUserDialog;
 
   const UsersList(
       {super.key,
@@ -59,8 +59,8 @@ class UsersList extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        usersInformation[index].roles!.first.role as String,
+                      const Text(
+                        'Residente',
                         style: const TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
@@ -76,7 +76,7 @@ class UsersList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () => showDeleteUserDialog(
+                      onTap: () => showDeleteUserDialog!(
                           context, usersInformation[index]),
                       child: const Icon(
                         Icons.close,

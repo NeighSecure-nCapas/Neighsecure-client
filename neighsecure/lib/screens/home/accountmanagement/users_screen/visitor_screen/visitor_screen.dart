@@ -1,37 +1,40 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/components/buttons/custom_visitor_button.dart';
+import 'package:neighsecure/controllers/auth_controller.dart';
 import 'package:neighsecure/controllers/permission_controller.dart';
 import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/repositories/permission_repository/permission_repository.dart';
 
 import '../../../../../components/cards/visitor_card.dart';
 import '../../../../../components/cards/visitor_card_dates.dart';
-import '../../../../../controllers/auth_controller.dart';
 import '../../../../../models/entities/permissions.dart';
 import '../../../../splashscreen/splash_screen.dart';
 
-class VisitorScreen extends ConsumerStatefulWidget {
+class VisitorScreen extends StatefulWidget {
   const VisitorScreen({super.key, required this.userInformation});
 
   final User userInformation;
 
   @override
-  ConsumerState<VisitorScreen> createState() => _VisitorScreenState();
+  State<VisitorScreen> createState() => _VisitorScreenState();
 }
 
-class _VisitorScreenState extends ConsumerState<VisitorScreen> {
+class _VisitorScreenState extends State<VisitorScreen> {
   int? selectPassIndex;
 
   bool isLoading = false;
 
   List<Permissions> permissions = [];
 
-  final AuthController _controller = AuthController();
-
   final PermissionController _permissionController = PermissionController();
 
   final PermissionRepository _permissionRepository = PermissionRepository();
+
+  StreamController? _streamController;
+
+  final AuthController _controller = AuthController();
 
   @override
   void initState() {
@@ -39,30 +42,22 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
     _loadPermissions();
   }
 
+  @override
+  void dispose() {
+    _streamController?.close();
+    super.dispose();
+  }
+
   Future<void> _loadPermissions() async {
     await _permissionController.getMyPermissions();
     permissions = (await _permissionRepository.retrievePermissions())!;
   }
 
-  Future<void> _fetchUserInfo() async {
-    await _controller.fetchUserInfo();
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
+  //ae3e3775-7cad-4208-8df6-e0f53055d30e
+  //a30711b9-e1df-4a20-8190-a89c37138f40
   @override
   Widget build(BuildContext context) {
-    /*
-    List<Permission> permissions = ref
-        .watch(permissionInformationProvider)
-        .where((permission) => permission.user == widget.userInformation)
-        .toList();
-
-     */
-
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       body: Center(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
@@ -70,14 +65,21 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Tus permisos',
                   textAlign: TextAlign.start,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
+                const SizedBox(width: 32),
+                IconButton(
+                    alignment: Alignment.topCenter,
+                    onPressed: () {
+                      _controller.fetchUserInfo();
+                    },
+                    icon: const Icon(Icons.refresh, size: 32))
               ],
             ),
             const SizedBox(height: 30),
@@ -129,7 +131,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
             Expanded(
                 child: FutureBuilder(
               future: _loadPermissions(),
-              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+              builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: SplashScreen(),
@@ -265,7 +267,7 @@ class _VisitorScreenState extends ConsumerState<VisitorScreen> {
           }
         },
       ),
-    ));
+    );
   }
 }
 

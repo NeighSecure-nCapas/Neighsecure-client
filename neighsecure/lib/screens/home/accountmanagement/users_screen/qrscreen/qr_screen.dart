@@ -30,15 +30,19 @@ class _QrScreenState extends ConsumerState<QrScreen> {
 
   final KeyRepository _repositoryKey = KeyRepository();
 
+  StreamController? _streamController;
+
   @override
   void initState() {
     super.initState();
+    _changeQr();
     _startTimer();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _streamController?.close();
     super.dispose();
   }
 
@@ -57,26 +61,10 @@ class _QrScreenState extends ConsumerState<QrScreen> {
 
   Future<String?> getUserRole() async {
     User? user = await _repositoryUser.retrieveUserLocally();
-    bool isIVisitante = false;
     String? roleRet;
 
-    if (user != null) {
-      for (var role in user.roles!) {
-        if (role.role == 'Visitante') {
-          isIVisitante = true;
-        }
-      }
-    }
-    if (isIVisitante) {
-      if (user?.roles!.contains('Residente') == true) {
-        roleRet = 'Residente';
-      } else if (user?.roles!.contains('Visitante') == true) {
-        roleRet = 'Visitante';
-      } else {
-        throw Exception('Role Visitante not found');
-      }
-    } else {
-      throw Exception('Role Visitante not found');
+    if (user != null && user.roles!.isNotEmpty) {
+      roleRet = user.roles!.first.role;
     }
 
     return roleRet;
@@ -124,6 +112,10 @@ class _QrScreenState extends ConsumerState<QrScreen> {
     */
 
     final randomString = await generateString();
+
+    if (kDebugMode) {
+      print(randomString);
+    }
 
     setState(() {
       _qr = randomString;

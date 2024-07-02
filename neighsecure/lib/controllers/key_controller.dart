@@ -13,9 +13,9 @@ class KeyController {
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final storage = const FlutterSecureStorage();
 
-  Future<bool> validatePermission(
-    String? permissionId,
-  ) async {
+  final KeyRepository _repository = KeyRepository();
+
+  Future<bool> validatePermission(String? permissionId) async {
     isLoading.value = true;
     var client = http.Client();
     final token = await storage.read(key: 'token');
@@ -69,10 +69,18 @@ class KeyController {
       }
 
       if (response.statusCode == 200) {
-        // If the server returns a 200 OK response, parse the JSON.
+        var responseBody = jsonDecode(response.body);
+
+        if (!responseBody.containsKey('data')) {
+          throw Exception('Response does not contain permission data');
+        }
+
+        var key = responseBody['data'];
+
         if (kDebugMode) {
           print('Permission validated');
         }
+        await _repository.saveKey(key);
         isLoading.value = false;
         return true;
       } else {

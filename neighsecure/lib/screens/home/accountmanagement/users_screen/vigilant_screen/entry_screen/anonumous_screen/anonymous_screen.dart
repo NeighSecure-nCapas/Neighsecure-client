@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:neighsecure/controllers/terminal_controller.dart';
@@ -13,14 +12,14 @@ import '../../../../../../../models/entities/terminal.dart';
 import '../../../../../../../models/entities/user.dart';
 import '../../../../../../../repositories/user_repository/user_repository.dart';
 
-class AnonymousScreen extends ConsumerStatefulWidget {
+class AnonymousScreen extends StatefulWidget {
   const AnonymousScreen({super.key});
 
   @override
-  ConsumerState<AnonymousScreen> createState() => _AnonymousScreenState();
+  State<AnonymousScreen> createState() => _AnonymousScreenState();
 }
 
-class _AnonymousScreenState extends ConsumerState<AnonymousScreen> {
+class _AnonymousScreenState extends State<AnonymousScreen> {
   String _description = '';
 
   final _formKey = GlobalKey<FormState>();

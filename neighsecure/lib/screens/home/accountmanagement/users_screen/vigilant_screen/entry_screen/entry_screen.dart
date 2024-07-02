@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/entities/user.dart';
 
 import '../../../../../../components/cards/anonymous_visit_card.dart';
@@ -7,16 +6,16 @@ import '../../../../../../components/cards/qr_reader_card.dart';
 import 'anonumous_screen/anonymous_screen.dart';
 import 'qr_reader/qr_reader.dart';
 
-class EntryScreen extends ConsumerStatefulWidget {
+class EntryScreen extends StatefulWidget {
   const EntryScreen({super.key, required this.userInformation});
 
   final User userInformation;
 
   @override
-  ConsumerState<EntryScreen> createState() => _EntryScreenState();
+  State<EntryScreen> createState() => _EntryScreenState();
 }
 
-class _EntryScreenState extends ConsumerState<EntryScreen> {
+class _EntryScreenState extends State<EntryScreen> {
   void _submitToAnonymous() {
     Navigator.push(
       context,

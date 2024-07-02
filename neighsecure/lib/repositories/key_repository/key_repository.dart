@@ -22,8 +22,11 @@ class KeyRepository {
     String? keyString = prefs.getString('key');
 
     if (keyString != null) {
-      return Key.fromJson(jsonDecode(keyString));
+      Map<String, dynamic> keyJson = jsonDecode(keyString);
+      Key key = Key.fromJson(keyJson);
+      return key;
+    } else {
+      return null;
     }
-    return null;
   }
 }

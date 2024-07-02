@@ -85,6 +85,8 @@ class Permissions {
       'status': status,
       'valid': isValid,
       'entries': entries.join(','),
+      'userAssociated': userAssociated.toJson(),
+      'userAuth': userAuth.toJson(),
     };
   }
 }

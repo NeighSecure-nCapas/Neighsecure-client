@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,22 +22,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (MediaQuery.of(context).size.width < 600) {
-        // If the screen width is less than 600, set the orientation to portrait
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ]);
-      } else {
-        // If the screen width is more than 600, set the orientation to landscape
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ]);
-      }
-    });
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NeighSecure',
@@ -70,8 +53,6 @@ class App extends StatelessWidget {
             return const AccountManagement();
           } else if (snapshot.data == null) {
             return const UserRegister();
-          } else if (snapshot.data == false) {
-            return const WelcomeScreen();
           } else {
             return const WelcomeScreen();
           }

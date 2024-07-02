@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/controllers/auth_controller.dart';
 import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/repositories/user_repository/user_repository.dart';
@@ -9,21 +10,74 @@ import 'package:neighsecure/screens/splashscreen/splash_screen.dart';
 
 import 'users_screen/vigilant_screen/vigilant_screen.dart';
 
-class AccountManagement extends ConsumerStatefulWidget {
+class AccountManagement extends StatefulWidget {
   const AccountManagement({super.key});
 
   @override
-  ConsumerState<AccountManagement> createState() => _AccountManagementState();
+  State<AccountManagement> createState() => _AccountManagementState();
 }
 
-class _AccountManagementState extends ConsumerState<AccountManagement> {
+class _AccountManagementState extends State<AccountManagement> {
   int? selectPassIndex;
 
   final UserRepository _repository = UserRepository();
-
   final AuthController _controller = AuthController();
 
-  User? _user;
+  Future<User?>? _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = _fetchUserInfo();
+  }
+
+  Future<User?> _fetchUserInfo() async {
+    await _controller.fetchUserInfo();
+    return _repository.retrieveUserLocally();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<User?>(
+      future: _userFuture,
+      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: SplashScreen(),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.data == null) {
+          return const Center(
+            child: Text('No user data available'),
+          );
+        } else {
+          return SafeArea(child: _buildMainContent(snapshot.data!));
+        }
+      },
+    );
+  }
+
+  Widget _buildMainContent(User user) {
+    switch (getRole(user)) {
+      case 'Residente':
+      case 'Encargado':
+        return ResidentScreen(userInformation: user);
+      case 'Visitante':
+        return VisitorScreen(userInformation: user);
+      case 'Vigilante':
+        return VigilantScreen(userInformation: user);
+      default:
+        return const Center(
+          child: Text('No tiene permisos para acceder a esta sección'),
+        );
+    }
+  }
 
   String getRole(User user) {
     List<String?> roles = user.roles!.map((role) => role.role).toList();
@@ -38,78 +92,6 @@ class _AccountManagementState extends ConsumerState<AccountManagement> {
       return 'Vigilante';
     } else {
       return 'Other';
-    }
-  }
-
-  Future<void> _loadUser() async {
-    _user = (await _repository.retrieveUserLocally())!;
-  }
-
-  Future<void> _fetchUserInfo() async {
-    await _controller.fetchUserInfo();
-
-    _user = (await _repository.retrieveUserLocally())!;
-
-    setState(() {
-      _user = _user;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserInfo();
-    _loadUser();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_user == null) {
-      return const Center(
-        child: SplashScreen(),
-      );
-    } else {
-      Widget maincontent;
-
-      Widget visit = VisitorScreen(userInformation: _user!);
-
-      Widget resident = ResidentScreen(userInformation: _user!);
-
-      Widget vigilant = VigilantScreen(userInformation: _user!);
-
-      switch (getRole(_user!)) {
-        case 'Residente':
-        case 'Encargado':
-          maincontent = resident;
-          break;
-        case 'Visitante':
-          maincontent = visit;
-          break;
-        case 'Vigilante':
-          maincontent = vigilant;
-          break;
-        default:
-          maincontent = const Center(
-            child: Text('No tiene permisos para acceder a esta sección'),
-          );
-          break;
-      }
-
-      return FutureBuilder(
-        future: _loadUser(),
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: SplashScreen(),
-            );
-          } else if (snapshot.hasError) {
-            return Text(
-                'Error: ${snapshot.error}'); // Show an error message if _loadUser completed with an error
-          } else {
-            return maincontent;
-          }
-        },
-      );
     }
   }
 }

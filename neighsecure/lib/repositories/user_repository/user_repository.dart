@@ -14,7 +14,8 @@ class UserRepository {
         userJson['phoneNumber'] == null ||
         userJson['roles'] == null ||
         userJson['dui'] == null ||
-        userJson['homeId'] == null) {
+        userJson['homeId'] == null ||
+        userJson['homeNumber'] == null) {
       if (kDebugMode) {
         print('Error: User data is missing required fields.');
         print(userJson);
@@ -28,6 +29,7 @@ class UserRepository {
     userJson['phoneNumber'] = userJson['phoneNumber'] ?? '';
     userJson['dui'] = userJson['dui'] ?? '';
     userJson['homeId'] = userJson['homeId'] ?? '';
+    userJson['homeNumber'] = userJson['homeNumber'] ?? '';
 
     // Convert the JSON object to a User object
     User user = User.fromJson(userJson);
