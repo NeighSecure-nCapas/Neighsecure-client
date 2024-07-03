@@ -142,7 +142,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                           Navigator.of(context).pop(); // Cerrar el diálogo
                           // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                                 content: Text('Usuario eliminado con éxito')),
                           );
                         }
@@ -223,7 +223,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                           Navigator.of(context).pop(); // Cerrar el diálogo
                           // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                                 content: Text('Invitación aceptada con éxito')),
                           );
                         }
@@ -304,7 +304,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                           Navigator.of(context).pop(); // Close the dialog
                           // Show success message in a new dialog or snackbar
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                                 content:
                                     Text('Invitación rechazada con éxito')),
                           );

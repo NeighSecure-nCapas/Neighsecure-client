@@ -36,6 +36,7 @@ class _VigilantScreenState extends State<VigilantScreen> {
     _fetchTerminals();
   }
 
+  @override
   void dispose() {
     _streamController?.close();
     super.dispose();

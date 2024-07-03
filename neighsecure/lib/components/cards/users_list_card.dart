@@ -61,7 +61,7 @@ class UsersList extends StatelessWidget {
                       const SizedBox(height: 8),
                       const Text(
                         'Residente',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
                           color: Colors.grey,
