@@ -62,7 +62,7 @@ class Permissions {
       homeNumber: json['homeNumber'].toString() ?? '',
       address: json['address'] ?? '',
       userId: json['userId'] ?? '',
-      status: json['status'] ?? false,
+      status: json['status'],
       isValid: json['valid'] ?? false,
       entries: List<String>.from((json['entries'] ?? '').split(',')),
       userAssociated: User.fromJson(json['userAssociated'] ?? {}),

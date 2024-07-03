@@ -186,7 +186,7 @@ class _HouseManagementState extends State<HouseManagement> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
                       onTap: () {
@@ -209,7 +209,7 @@ class _HouseManagementState extends State<HouseManagement> {
                     IconButton(
                         alignment: Alignment.topCenter,
                         onPressed: () {
-                          _loadHouseInformation();
+                          setState(() {});
                         },
                         icon: const Icon(Icons.refresh, size: 32))
                   ],

@@ -97,7 +97,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
     );
   }
 
-  void navigateToVisitorsState2Screen(BuildContext context, bool isRedeem,
+  void navigateToVisitorsState2Screen(BuildContext context, bool? isRedeem,
       List<Permissions> permissions, User user) {
     Navigator.push(
       context,
@@ -134,11 +134,11 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
     await _controller.getAllPermissionsByHome(widget.userInformation.homeId);
     permissionsInformation = (await _repository.retrievePermissionsToManage())!;
     usersWithUnapprovedPermissions = permissionsInformation
-        .where((permission) => !permission.isValid && !permission.status!)
+        .where((permission) => permission.status == null)
         .toList();
 
     usersWithApprovedPermissions = permissionsInformation
-        .where((permission) => permission.isValid && !permission.status!)
+        .where((permission) => permission.status == true)
         .toList();
 
     if (kDebugMode) {
@@ -211,7 +211,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               GestureDetector(
                                 onTap: () {
@@ -237,7 +237,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                               IconButton(
                                   alignment: Alignment.topCenter,
                                   onPressed: () {
-                                    _loadPermissionsInformation();
+                                    setState(() {});
                                   },
                                   icon: const Icon(Icons.refresh, size: 32))
                             ],
@@ -296,7 +296,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                                           .updateName('');
                                       navigateToVisitorsState2Screen(
                                           context,
-                                          false,
+                                          null,
                                           usersWithUnapprovedPermissions,
                                           widget.userInformation);
                                     },
@@ -323,7 +323,7 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
                                                 item.userAssociated.name ==
                                                 name)
                                             .toList(),
-                                    isRedeem: false,
+                                    isRedeem: null,
                                     onUserRemove: (removedPermission) {
                                       _controller.deletePermission(
                                           removedPermission.id);

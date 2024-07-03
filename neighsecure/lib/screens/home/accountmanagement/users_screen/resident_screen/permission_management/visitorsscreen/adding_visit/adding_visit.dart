@@ -63,14 +63,53 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
     Map<int, String> daysInSpanish = {
       1: 'Lunes',
       2: 'Martes',
-      3: 'Miércoles',
+      3: 'Miercoles',
       4: 'Jueves',
       5: 'Viernes',
-      6: 'Sábado',
+      6: 'Sabado',
       7: 'Domingo',
     };
 
     return daysOfWeek.map((day) => daysInSpanish[day]!).toList();
+  }
+
+  void _adjustTimeStart() {
+    if (_timeStart != null) {
+      int newMinute = _timeStart!.minute - 30;
+      int newHour = _timeStart!.hour;
+
+      if (newMinute < 0) {
+        newMinute += 60; // Ajusta los minutos sumando 60
+        newHour -= 1; // Decrementa la hora
+
+        if (newHour < 0) {
+          // Ajusta para el cambio de día hacia atrás
+          newHour = 23;
+        }
+      }
+
+      _timeStartRange = TimeOfDay(hour: newHour, minute: newMinute);
+    }
+  }
+
+  void _adjustTimeEndRange() {
+    if (_timeStart != null) {
+      TimeOfDay? timeEnd = _timeStart;
+      int newHour = timeEnd!.hour;
+      int newMinute = timeEnd.minute + 30;
+
+      if (newMinute >= 60) {
+        newMinute -= 60; // Resta 60 para obtener los minutos restantes
+        newHour += 1; // Incrementa la hora
+
+        if (newHour >= 24) {
+          // Ajusta para el cambio de día
+          newHour = 0;
+        }
+      }
+
+      _timeEndRange = TimeOfDay(hour: newHour, minute: newMinute);
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -407,15 +446,99 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
     );
   }
 
+  List<String> getDaysInRange(DateTime? startDate, DateTime? endDate) {
+    List<String> days = [];
+    DateTime tempDate = startDate!;
+
+    while (tempDate.isBefore(endDate!.add(const Duration(days: 1)))) {
+      switch (tempDate.weekday) {
+        case 1:
+          days.add('Lunes');
+          break;
+        case 2:
+          days.add('Martes');
+          break;
+        case 3:
+          days.add('Miercoles');
+          break;
+        case 4:
+          days.add('Jueves');
+          break;
+        case 5:
+          days.add('Viernes');
+          break;
+        case 6:
+          days.add('Sabado');
+          break;
+        case 7:
+          days.add('Domingo');
+          break;
+      }
+      tempDate = tempDate.add(const Duration(days: 1));
+    }
+
+    return days;
+  }
+
+  void showErrorModalTimeOfDate(BuildContext context, String errorMessage) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 48,
+            ),
+            const SizedBox(height: 20),
+            Text(errorMessage,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black)),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<bool> _submit() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
 
+    if (_timeStart != null && _timeEnd != null) {
+      final startTimeInMinutes = _timeStart!.hour * 60 + _timeStart!.minute;
+      final endTimeInMinutes = _timeEnd!.hour * 60 + _timeEnd!.minute;
+
+      if (startTimeInMinutes >= endTimeInMinutes) {
+        showErrorModalTimeOfDate(
+            context, 'La hora de inicio debe ser menor que la hora de fin.');
+        return false;
+      }
+    }
+
+    if (_dateStart != null && _dateEnd != null) {
+      if (_dateStart!.isAfter(_dateEnd!)) {
+        showErrorModalTimeOfDate(
+            context, 'La fecha de inicio debe ser menor que la fecha de fin.');
+        return false;
+      }
+    }
+
     String formattedDateStart =
-        _dateStart != null ? DateFormat('yyyy-MM-dd').format(_dateStart!) : '';
+        _dateStart != null ? DateFormat('dd/MM/yyyy').format(_dateStart!) : '';
 
     String formattedDateEnd =
-        _dateEnd != null ? DateFormat('yyyy-MM-dd').format(_dateEnd!) : '';
+        _dateEnd != null ? DateFormat('dd/MM/yyyy').format(_dateEnd!) : '';
 
     String formattedTimeStart =
         _timeStart != null ? '${_timeStart!.hour}:${_timeStart!.minute}' : '';
@@ -425,6 +548,15 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
 
     List<String> formattedDaysOfWeek =
         translateDaysToSpanish(_selectDaysOfWeek);
+
+    if (DatePickerMode.range == _datePickerMode ||
+        _datePickerMode == DatePickerMode.single) {
+      formattedDaysOfWeek = getDaysInRange(_dateStart, _dateEnd);
+    }
+
+    formattedTimeStart = formattedTimeStart.padLeft(5, '0');
+    formattedTimeEnd = formattedTimeEnd.padLeft(5, '0');
+    String days = formattedDaysOfWeek.join(',');
 
     if (isValid) {
       _formKey.currentState!.save();
@@ -437,11 +569,23 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
       String endDate = formattedDateEnd;
       String startTime = formattedTimeStart;
       String endTime = formattedTimeEnd;
-      List<String> daysOfWeek = formattedDaysOfWeek;
+      String daysOfWeek = days;
+
+      if (kDebugMode) {
+        print('Visitor: $visitor');
+        print('Granted by: $grantedBy');
+        print('Home ID: $homeId');
+        print('Type: $type');
+        print('Start Date: $startDate');
+        print('End Date: $endDate');
+        print('Start Time: $startTime');
+        print('End Time: $endTime');
+        print('Days of Week: $daysOfWeek');
+      }
 
       try {
-        bool success = await _controller.createPermission(visitor, grantedBy,
-            homeId, type, startDate, endDate, startTime, endTime, daysOfWeek);
+        bool success = await _controller.createPermission(type, startDate,
+            endDate, startTime, endTime, days, homeId, visitor, grantedBy);
 
         if (success) {
           Navigator.pop(context);
@@ -461,6 +605,9 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
 
   @override
   Widget build(BuildContext context) {
+    _adjustTimeStart();
+    _adjustTimeEndRange();
+
     return SafeArea(
         child: ValueListenableBuilder(
             valueListenable: _controller.isLoading,
@@ -581,6 +728,8 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                             _dateStart = null;
                                             _timeEndRange = null;
                                             _timeStartRange = null;
+                                            _datePickerMode =
+                                                DatePickerMode.single;
                                           });
                                         },
                                       ),
@@ -765,7 +914,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                     const SizedBox(height: 24),
                                                     const CustomText(
                                                         instruction:
-                                                            'Selecciona un rango de horas.',
+                                                            'Rango de horas.',
                                                         fontSize: 14,
                                                         color: Colors.grey),
                                                     const SizedBox(height: 24),
@@ -856,8 +1005,11 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                       IconButton(
                                                                     onPressed:
                                                                         () {
+                                                                      /*
                                                                       _selectTimeRangeStart(
                                                                           context);
+
+                                                                       */
                                                                     },
                                                                     icon:
                                                                         const Icon(
@@ -895,8 +1047,11 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                       IconButton(
                                                                     onPressed:
                                                                         () {
+                                                                      /*
                                                                       _selectTimeRangeEnd(
                                                                           context);
+
+                                                                       */
                                                                     },
                                                                     icon:
                                                                         const Icon(

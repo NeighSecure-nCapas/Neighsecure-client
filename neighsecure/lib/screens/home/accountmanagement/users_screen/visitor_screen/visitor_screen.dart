@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:neighsecure/components/buttons/custom_visitor_button.dart';
-import 'package:neighsecure/controllers/auth_controller.dart';
 import 'package:neighsecure/controllers/permission_controller.dart';
 import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/repositories/permission_repository/permission_repository.dart';
@@ -34,8 +33,6 @@ class _VisitorScreenState extends State<VisitorScreen> {
 
   StreamController? _streamController;
 
-  final AuthController _controller = AuthController();
-
   @override
   void initState() {
     super.initState();
@@ -51,6 +48,10 @@ class _VisitorScreenState extends State<VisitorScreen> {
   Future<void> _loadPermissions() async {
     await _permissionController.getMyPermissions();
     permissions = (await _permissionRepository.retrievePermissions())!;
+    permissions = permissions
+        .where((permission) =>
+            permission.status == true && permission.isValid == true)
+        .toList();
   }
 
   //ae3e3775-7cad-4208-8df6-e0f53055d30e
@@ -77,7 +78,7 @@ class _VisitorScreenState extends State<VisitorScreen> {
                 IconButton(
                     alignment: Alignment.topCenter,
                     onPressed: () {
-                      _controller.fetchUserInfo();
+                      setState(() {});
                     },
                     icon: const Icon(Icons.refresh, size: 32))
               ],

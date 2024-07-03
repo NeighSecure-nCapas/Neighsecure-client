@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/controllers/permission_controller.dart';
@@ -7,8 +8,6 @@ import 'package:neighsecure/repositories/permission_repository/permission_reposi
 
 import '../../../../../../../../../models/entities/permissions.dart';
 import '../../../../../../../../../models/entities/user.dart';
-import '../../../../../../../../../providers/dummyProviders/testing_permission_information_notifier.dart';
-import '../../../../../../../../../providers/dummyProviders/testing_user_information_notifier.dart';
 import '../../../../../../../../splashscreen/splash_screen.dart';
 
 class VisitorsDetailsScreen extends ConsumerStatefulWidget {
@@ -22,7 +21,7 @@ class VisitorsDetailsScreen extends ConsumerStatefulWidget {
 
   final User userInformationState;
 
-  bool isRedeem;
+  bool? isRedeem;
 
   @override
   ConsumerState<VisitorsDetailsScreen> createState() =>
@@ -85,111 +84,244 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
     permissionDetails = (await _repository.retrieveDetails())!;
   }
 
-  void _acceptVisit(User userInformation) {
+  void showDeleteUserDialog(BuildContext context, Permissions permission) {
+    bool isLoading = false; // Para rastrear el estado de carga
+
     showDialog(
       context: context,
+      barrierDismissible: false, // Evitar cerrar el diálogo al tocar fuera
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: const Text(
-            'Aceptar la solicitud de invitacion de usuario',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          content: const Text(
-              '¿Estás seguro de que deseas aceptar la invitacion de este usuario?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'Cancelar',
+        return StatefulBuilder(
+          // Usar StatefulBuilder para actualizar el contenido del diálogo
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: const Text(
+                'Eliminar usuario',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Aceptar',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF001E2C),
-                ),
-              ),
-              onPressed: () {
-                //Remove user from the provider
-                ref
-                    .read(permissionInformationProvider.notifier)
-                    .updateUserRedeem(userInformation);
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              content: isLoading
+                  ? const CircularProgressIndicator() // Mostrar indicador de carga mientras se procesa
+                  : const Text(
+                      '¿Estás seguro de que deseas eliminar a este usuario?'),
+              actions: <Widget>[
+                if (!isLoading) // Ocultar botón cancelar cuando se está cargando
+                  TextButton(
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                if (!isLoading) // Ocultar botón eliminar cuando se está cargando
+                  TextButton(
+                    child: const Text(
+                      'Eliminar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ),
+                    onPressed: () async {
+                      setState(
+                          () => isLoading = true); // Mostrar indicador de carga
+                      try {
+                        final result =
+                            await _controller.deletePermission(permission.id);
+                        if (result) {
+                          // Si la operación es exitosa, mostrar mensaje de éxito
+                          Navigator.of(context).pop(); // Cerrar el diálogo
+                          // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Usuario eliminado con éxito')),
+                          );
+                        }
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print('Caught error: $e');
+                        }
+                        Navigator.of(context)
+                            .pop(); // Cerrar el diálogo en caso de error
+                        // Opcionalmente, mostrar mensaje de error
+                      }
+                    },
+                  ),
+              ],
+            );
+          },
         );
       },
     );
   }
 
-  void _submit(User userInformation) {
-    FocusScope.of(context).unfocus();
+  void showAcceptUserInvitationDialog(
+      BuildContext context, Permissions permission) {
+    bool isLoading = false; // Para rastrear el estado de carga
 
     showDialog(
       context: context,
+      barrierDismissible: false, // Evitar cerrar el diálogo al tocar fuera
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: const Text(
-            'Eliminar usuario',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          content: const Text(
-              '¿Estás seguro de que deseas eliminar a este usuario?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'Cancelar',
+        return StatefulBuilder(
+          // Usar StatefulBuilder para actualizar el contenido del diálogo
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: const Text(
+                'Aceptar la solicitud de invitación de usuario',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Eliminar',
+              content: isLoading
+                  ? const CircularProgressIndicator() // Mostrar indicador de carga mientras se procesa
+                  : const Text(
+                      '¿Estás seguro de que deseas aceptar la invitación de este usuario?'),
+              actions: <Widget>[
+                if (!isLoading) // Ocultar botón cancelar cuando se está cargando
+                  TextButton(
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                if (!isLoading) // Ocultar botón aceptar cuando se está cargando
+                  TextButton(
+                    child: const Text(
+                      'Aceptar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.green,
+                      ),
+                    ),
+                    onPressed: () async {
+                      setState(
+                          () => isLoading = true); // Mostrar indicador de carga
+                      try {
+                        final result =
+                            await _controller.approvePermission(permission.id);
+                        if (result) {
+                          // Si la operación es exitosa, mostrar mensaje de éxito
+                          Navigator.of(context).pop(); // Cerrar el diálogo
+                          // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Invitación aceptada con éxito')),
+                          );
+                        }
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print('Caught error: $e');
+                        }
+                        Navigator.of(context)
+                            .pop(); // Cerrar el diálogo en caso de error
+                        // Opcionalmente, mostrar mensaje de error
+                      }
+                    },
+                  ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showRejectInvitationDialog(
+      BuildContext context, Permissions permission) {
+    bool isLoading = false; // To track the loading state
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dialog from closing on tap outside
+      builder: (context) {
+        return StatefulBuilder(
+          // Use StatefulBuilder to update dialog content
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: const Text(
+                'Rechazar la solicitud de invitación de usuario',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.red,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-              onPressed: () {
-                //Remove user from the provider
-                ref
-                    .read(userInformationProvider.notifier)
-                    .removeUser(userInformation);
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              content: isLoading
+                  ? const CircularProgressIndicator() // Show loading indicator while processing
+                  : const Text(
+                      '¿Estás seguro de que deseas rechazar la invitación de este usuario?'),
+              actions: <Widget>[
+                if (!isLoading) // Hide cancel button when loading
+                  TextButton(
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                if (!isLoading) // Hide reject button when loading
+                  TextButton(
+                    child: const Text(
+                      'Rechazar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ),
+                    onPressed: () async {
+                      setState(
+                          () => isLoading = true); // Show loading indicator
+                      try {
+                        final result =
+                            await _controller.rejectPermission(permission.id);
+                        if (result) {
+                          // If operation is successful, show success message
+                          Navigator.of(context).pop(); // Close the dialog
+                          // Show success message in a new dialog or snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text('Invitación rechazada con éxito')),
+                          );
+                        }
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print('Caught error: $e');
+                        }
+                        Navigator.of(context)
+                            .pop(); // Close the dialog on error
+                        // Optionally, show error message
+                      }
+                    },
+                  ),
+              ],
+            );
+          },
         );
       },
     );
@@ -372,89 +504,128 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               bottomNavigationBar: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      widget.userInformationState.roles!
-                              .any((userRole) => userRole.role == 'Encargado')
-                          ? (widget.permissionInformation.status == true
-                              ? _submit(
-                                  widget.permissionInformation.userAssociated)
-                              : _acceptVisit(
-                                  widget.permissionInformation.userAssociated))
-                          : (widget.permissionInformation.status == true
-                              ? showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content: const Text(
-                                          'Solo un encargado puede eliminar'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                )
-                              : showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content:
-                                          const Text('Esperando aprobacion'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ));
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        widget.permissionInformation.status == true
-                            ? const Color(0xFFBA1A1A)
-                            : const Color(0xFF001E2C),
-                      ),
-                      padding: WidgetStateProperty.all(
-                        const EdgeInsets.symmetric(
-                          vertical: 18,
-                          horizontal: 28,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (widget.userInformationState.roles!
+                            .any((role) => role.role == 'Encargado') &&
+                        widget.permissionInformation.status == null) ...[
+                      ElevatedButton(
+                        onPressed: () {
+                          // Lógica para aceptar el permiso
+                          showAcceptUserInvitationDialog(
+                              context, widget.permissionInformation);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStateProperty.all(const Color(0xFF001E2C)),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                              vertical: 18,
+                              horizontal: 48,
+                            ),
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         ),
+                        child: const Text('Aceptar',
+                            style: TextStyle(color: Colors.white)),
                       ),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      const SizedBox(height: 12), // Espacio entre botones
+                      ElevatedButton(
+                        onPressed: () {
+                          // Lógica para rechazar el permiso
+                          showRejectInvitationDialog(
+                              context, widget.permissionInformation);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            Colors.grey,
+                          ),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                              vertical: 18,
+                              horizontal: 48,
+                            ),
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         ),
+                        child: const Text('Rechazar',
+                            style: TextStyle(color: Colors.white)),
                       ),
-                    ),
-                    child: Text(
-                      widget.userInformationState.roles!
-                              .any((userRole) => userRole.role == 'Encargado')
-                          ? (widget.permissionInformation.status == true
-                              ? 'Eliminar'
-                              : 'Aceptar visita')
-                          : (widget.permissionInformation.status == true
-                              ? 'Solo un encargado puede eliminar'
-                              : 'Esperando aprobacion'),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white,
+                    ] else if (widget.userInformationState.roles!
+                            .any((role) => role.role == 'Encargado') &&
+                        widget.permissionInformation.status == true) ...[
+                      ElevatedButton(
+                        onPressed: () {
+                          // Lógica para eliminar el permiso
+                          showDeleteUserDialog(
+                              context, widget.permissionInformation);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            Colors.red,
+                          ),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                              vertical: 18,
+                              horizontal: 48,
+                            ),
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                        child: const Text('Eliminar',
+                            style: TextStyle(color: Colors.white)),
                       ),
-                    ),
-                  ),
+                    ] else if (widget.permissionInformation.status == true) ...[
+                      ElevatedButton(
+                        onPressed: () {
+                          // Lógica para eliminar el permiso si es necesario
+                          showDeleteUserDialog(
+                              context, widget.permissionInformation);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            Colors.red,
+                          ),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                              vertical: 18,
+                              horizontal: 48,
+                            ),
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                        child: const Text('Eliminar',
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                    ] else if (widget.userInformationState.roles!
+                            .any((role) => role.role == 'Residente') &&
+                        widget.permissionInformation.status == null) ...[
+                      // Icono de "Pendiente por aprobar" para usuarios Residente
+                      const Icon(
+                        Icons.hourglass_empty,
+                        color: Colors.orange,
+                        size: 24,
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ));

@@ -10,11 +10,11 @@ import '../visitors_screen.dart';
 class VisitorsStateScreen extends ConsumerStatefulWidget {
   VisitorsStateScreen(
       {super.key,
-      required this.isRedeem,
+      this.isRedeem,
       required this.permissionsInformation,
       required this.userInformation});
 
-  bool isRedeem;
+  bool? isRedeem;
 
   final User userInformation;
 

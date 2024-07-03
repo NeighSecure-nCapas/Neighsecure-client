@@ -182,15 +182,15 @@ class PermissionController {
   }
 
   Future<bool> createPermission(
-    String visitor,
-    String grantedBy,
-    String homeId,
     String type,
     String startDate,
     String endDate,
     String startTime,
     String endTime,
-    List<String> days,
+    String days,
+    String homeId,
+    String visitor,
+    String grantedBy,
   ) async {
     isLoading.value = true;
     final client = http.Client();
@@ -202,22 +202,26 @@ class PermissionController {
             dotenv.env['SERVER_URL']!, '/neighSecure/resident/newPermission'),
         headers: {
           'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          'visitor': visitor,
-          'grantedBy': grantedBy,
-          'homeId': homeId,
           'type': type,
           'startDate': startDate,
           'endDate': endDate,
           'startTime': startTime,
           'endTime': endTime,
           'days': days,
+          'homeId': homeId,
+          'visitor': visitor,
+          'grantedBy': grantedBy,
         }),
       );
 
+      if (kDebugMode) {
+        print(response.statusCode);
+      }
+
       if (response.statusCode == 201) {
-        var responseBody = jsonDecode(response.body);
         return true;
       } else if (response.statusCode == 400) {
         throw Exception(
