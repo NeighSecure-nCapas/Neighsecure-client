@@ -1,12 +1,20 @@
 import 'dart:async';
-import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/repositories/key_repository/key_repository.dart';
+import 'package:neighsecure/repositories/user_repository/user_repository.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../../../../models/entities/key.dart' as mykey;
+import '../../../../../models/entities/permissions.dart';
+import '../../../../../models/entities/user.dart';
+
 class QrScreen extends ConsumerStatefulWidget {
-  const QrScreen({super.key});
+  QrScreen({super.key, this.permission});
+
+  Permissions? permission;
 
   @override
   ConsumerState<QrScreen> createState() => _QrScreenState();
@@ -14,22 +22,67 @@ class QrScreen extends ConsumerStatefulWidget {
 
 class _QrScreenState extends ConsumerState<QrScreen> {
   final _isLoading = false;
-
   var _qr = '';
-
   int _remainingTime = 10;
   Timer? _timer;
+
+  final UserRepository _repositoryUser = UserRepository();
+
+  final KeyRepository _repositoryKey = KeyRepository();
+
+  StreamController? _streamController;
 
   @override
   void initState() {
     super.initState();
+    _changeQr();
     _startTimer();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _streamController?.close();
     super.dispose();
+  }
+
+  Future<mykey.Key?> getKeyInfo() async {
+    mykey.Key? key = await _repositoryKey.retrieveKeyLocally();
+    mykey.Key? keyInfo;
+
+    if (key != null) {
+      keyInfo = key; // Replace 'keyId' with the actual property name
+    } else {
+      throw Exception('Key not found');
+    }
+
+    return keyInfo;
+  }
+
+  Future<String?> getUserRole() async {
+    User? user = await _repositoryUser.retrieveUserLocally();
+    String? roleRet;
+
+    if (user != null && user.roles!.isNotEmpty) {
+      roleRet = user.roles!.first.role;
+    }
+
+    return roleRet;
+  }
+
+  Future<String> generateString() async {
+    mykey.Key? key = await getKeyInfo();
+    String? role = await getUserRole();
+
+    if (kDebugMode) {
+      print(key?.id);
+      print(key?.generationDate);
+      print(key?.generationDay);
+      print(key?.generationTime);
+      print(role);
+    }
+
+    return '${key?.id}/$role/${key?.generationDate}/${key?.generationDay}/${key?.generationTime}';
   }
 
   void _startTimer() {
@@ -46,7 +99,8 @@ class _QrScreenState extends ConsumerState<QrScreen> {
     });
   }
 
-  void _changeQr() {
+  void _changeQr() async {
+    /*
     const allowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const length = 10;
 
@@ -55,6 +109,13 @@ class _QrScreenState extends ConsumerState<QrScreen> {
     final randomString = List.generate(length, (index) {
       return allowedChars[random.nextInt(allowedChars.length)];
     }).join();
+    */
+
+    final randomString = await generateString();
+
+    if (kDebugMode) {
+      print(randomString);
+    }
 
     setState(() {
       _qr = randomString;

@@ -5,7 +5,8 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return const SafeArea(
+        child: Scaffold(
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -18,6 +19,6 @@ class SplashScreen extends StatelessWidget {
           Text('Loading...'),
         ],
       )),
-    );
+    ));
   }
 }

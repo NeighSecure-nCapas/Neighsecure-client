@@ -1,71 +1,97 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/controllers/auth_controller.dart';
 import 'package:neighsecure/models/entities/user.dart';
+import 'package:neighsecure/repositories/user_repository/user_repository.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident_screen/resident_screen.dart';
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/visitor_screen/visitor_screen.dart';
+import 'package:neighsecure/screens/splashscreen/splash_screen.dart';
 
-import '../../../providers/testing_user_information_notifier.dart';
 import 'users_screen/vigilant_screen/vigilant_screen.dart';
 
-class AccountManagement extends ConsumerStatefulWidget {
+class AccountManagement extends StatefulWidget {
   const AccountManagement({super.key});
 
   @override
-  ConsumerState<AccountManagement> createState() => _AccountManagementState();
+  State<AccountManagement> createState() => _AccountManagementState();
 }
 
-class _AccountManagementState extends ConsumerState<AccountManagement> {
+class _AccountManagementState extends State<AccountManagement> {
   int? selectPassIndex;
 
-  String getRole(User user) {
-    if (user.roles.any((userRole) => userRole.role == 'encargado')) {
-      return 'encargado';
-    } else if (user.roles.any((userRole) => userRole.role == 'residente')) {
-      return 'residente';
-    } else if (user.roles.any((userRole) => userRole.role == 'visitante')) {
-      return 'visitante';
-    } else if (user.roles.any((userRole) => userRole.role == 'vigilante')) {
-      return 'vigilante';
-    } else {
-      return 'other';
-    }
+  final UserRepository _repository = UserRepository();
+  final AuthController _controller = AuthController();
+
+  Future<User?>? _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = _fetchUserInfo();
+  }
+
+  Future<User?> _fetchUserInfo() async {
+    await _controller.fetchUserInfo();
+    return _repository.retrieveUserLocally();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    const rol = 'vigilante';
+    return FutureBuilder<User?>(
+      future: _userFuture,
+      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: SplashScreen(),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.data == null) {
+          return const Center(
+            child: Text('No user data available'),
+          );
+        } else {
+          return SafeArea(child: _buildMainContent(snapshot.data!));
+        }
+      },
+    );
+  }
 
-    User userInformation = ref.watch(userInformationProvider).firstWhere(
-        (user) => user.roles.any((role) => role.role == rol), orElse: () {
-      throw Exception('User with role visitante not found');
-    });
-
-    Widget? maincontent;
-
-    Widget visit = VisitorScreen(userInformation: userInformation);
-
-    Widget resident = ResidentScreen(userInformation: userInformation);
-
-    Widget vigilant = VigilantScreen(userInformation: userInformation);
-
-    switch (getRole(userInformation)) {
-      case 'residente':
-      case 'encargado':
-        maincontent = resident;
-        break;
-      case 'visitante':
-        maincontent = visit;
-        break;
-      case 'vigilante':
-        maincontent = vigilant;
-        break;
+  Widget _buildMainContent(User user) {
+    switch (getRole(user)) {
+      case 'Residente':
+      case 'Encargado':
+        return ResidentScreen(userInformation: user);
+      case 'Visitante':
+        return VisitorScreen(userInformation: user);
+      case 'Vigilante':
+        return VigilantScreen(userInformation: user);
       default:
-        maincontent = const Center(
+        return const Center(
           child: Text('No tiene permisos para acceder a esta sección'),
         );
-        break;
     }
+  }
 
-    return maincontent;
+  String getRole(User user) {
+    List<String?> roles = user.roles!.map((role) => role.role).toList();
+
+    if (roles.contains('Encargado')) {
+      return 'Encargado';
+    } else if (roles.contains('Residente')) {
+      return 'Residente';
+    } else if (roles.contains('Visitante')) {
+      return 'Visitante';
+    } else if (roles.contains('Vigilante')) {
+      return 'Vigilante';
+    } else {
+      return 'Other';
+    }
   }
 }

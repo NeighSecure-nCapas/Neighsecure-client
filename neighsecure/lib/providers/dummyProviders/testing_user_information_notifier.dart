@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/models/entities/user.dart';
 
-import '../models/dummy/user_dummy_data.dart';
-import '../models/entities/home.dart';
-import '../models/entities/role.dart';
+import '../../models/dummy/user_dummy_data.dart';
+import '../../models/entities/home.dart';
+import '../../models/entities/role.dart';
 
 class UserInformationNotifier extends StateNotifier<List<User>> {
   final StateNotifierProviderRef<UserInformationNotifier, List<User>> ref;
@@ -39,8 +39,8 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
 
       Role updatedRole; // Define updatedRole here
 
-      if (state[index].roles.isNotEmpty) {
-        String oldRole = state[index].roles.first.role.toString();
+      if (state[index].roles!.isNotEmpty) {
+        String? oldRole = state[index].roles?.first.role.toString();
         String newRole;
 
         if (oldRole == 'visitante') {
@@ -53,7 +53,7 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
 
         // Assign a new role to updatedRole
         updatedRole = Role(
-          id: state[index].roles.first.id, // assuming Role has an id property
+          id: state[index].roles!.first.id, // assuming Role has an id property
           role: newRole,
         );
       } else {
@@ -65,7 +65,7 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
 
       if (kDebugMode) {
         print(
-            'After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.roles.first.role}');
+            'After update: $updatedUser, ${updatedUser.hashCode}, ${updatedUser.roles!.first.role}');
       }
 
       // Directly update the state with the updated list of users
@@ -89,8 +89,8 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
 
       Role updatedRole;
 
-      if (state[index].roles.isNotEmpty) {
-        String oldRole = state[index].roles.first.role.toString();
+      if (state[index].roles!.isNotEmpty) {
+        String oldRole = state[index].roles!.first.role.toString();
         String newRole;
         String newRoleId;
 
@@ -121,7 +121,7 @@ class UserInformationNotifier extends StateNotifier<List<User>> {
 
       if (kDebugMode) {
         print(
-            'U After update: ${updatedUser.name.toString()}, ${updatedUser.hashCode.toString()}, ${updatedUser.roles.first.role.toString()}, ${updatedUser.homeId.toString()}');
+            'U After update: ${updatedUser.name.toString()}, ${updatedUser.hashCode.toString()}, ${updatedUser.roles!.first.role.toString()}, ${updatedUser.homeId.toString()}');
       }
 
       // Directly update the state with the updated list of users

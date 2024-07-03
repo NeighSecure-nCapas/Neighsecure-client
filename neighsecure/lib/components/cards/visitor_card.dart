@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:neighsecure/models/entities/permission.dart';
+
+import '../../models/entities/permissions.dart';
 
 class VisitCard extends StatelessWidget {
-  final Permission pass;
+  final Permissions pass;
   final bool isSelected;
 
   const VisitCard({super.key, required this.pass, required this.isSelected});
@@ -35,7 +36,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Estado: ${pass.status ? 'Vigente' : 'Caducado'}',
+                'Estado: ${pass.isValid ? 'Vigente' : 'Caducado'}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -44,7 +45,7 @@ class VisitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Dias: ${pass.days}',
+                'Dias: ${pass.days.join(', ')}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,

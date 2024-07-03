@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:neighsecure/screens/home/accountmanagement/account_management.dart';
+import 'package:neighsecure/screens/introduction/user_register/user_register.dart';
 import 'package:neighsecure/screens/introduction/welcome_screen/welcome_screen.dart';
+import 'package:neighsecure/screens/splashscreen/splash_screen.dart';
 
-void main() {
+import 'controllers/auth_controller.dart';
+
+void main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: App()));
+  runApp(ProviderScope(child: App()));
 }
 
 class App extends StatelessWidget {
-  const App({super.key});
+  App({super.key});
+
+  final AuthController _controller = AuthController();
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (MediaQuery.of(context).size.width < 600) {
-        // If the screen width is less than 600, set the orientation to portrait
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ]);
-      } else {
-        // If the screen width is more than 600, set the orientation to landscape
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ]);
-      }
-    });
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NeighSecure',
@@ -52,7 +44,20 @@ class App extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: const WelcomeScreen(),
+      home: FutureBuilder<bool?>(
+        future: _controller.isUserValid(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SplashScreen();
+          } else if (snapshot.data == true) {
+            return const AccountManagement();
+          } else if (snapshot.data == null) {
+            return const UserRegister();
+          } else {
+            return const WelcomeScreen();
+          }
+        },
+      ),
     );
   }
 }

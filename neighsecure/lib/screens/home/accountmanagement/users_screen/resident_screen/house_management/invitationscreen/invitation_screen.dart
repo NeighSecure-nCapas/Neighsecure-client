@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neighsecure/controllers/house_controller.dart';
 
-import '../../../../../../../models/entities/home.dart';
 import '../../../../../../../models/entities/user.dart';
-import '../../../../../../../providers/testing_home_information_notifier.dart';
-import '../../../../../../../providers/testing_user_information_notifier.dart';
 
-class InvitationScreen extends ConsumerStatefulWidget {
+class InvitationScreen extends StatefulWidget {
   const InvitationScreen(
       {super.key,
       required this.totalUsers,
       required this.currentUserCount,
-      required this.userHome,
       required this.userInformation});
 
   final int totalUsers;
   final int currentUserCount;
   final User userInformation;
-  final Home userHome;
 
   @override
-  ConsumerState<InvitationScreen> createState() => _InvitationScreenState();
+  State<InvitationScreen> createState() => _InvitationScreenState();
 }
 
-class _InvitationScreenState extends ConsumerState<InvitationScreen> {
+class _InvitationScreenState extends State<InvitationScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String _email = '';
+
+  String homeId = '';
+
+  final TextEditingController _emailController = TextEditingController();
+
+  final HouseController _controller = HouseController();
+
+  /*
 
   Future<void> updateAllInformation(User user, Home home) async {
     await ref
@@ -34,7 +37,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
         .addUserAndUpdateRoleAndHome(user, home, home.id);
   }
 
-  /*
   Future<void> updateUserRoleAndHome(String email, Home home) async {
     await ref
         .read(userInformationProvider.notifier)
@@ -55,7 +57,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
 
   void _submit() async {
     final isValid = _formKey.currentState!.validate();
-    FocusScope.of(context).unfocus();
 
     if (widget.currentUserCount >= widget.totalUsers) {
       _showModalBottomSheet(
@@ -68,21 +69,37 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
     if (isValid) {
       _formKey.currentState!.save();
 
-      try {
-        User user = ref
-            .read(userInformationProvider)
-            .firstWhere((user) => user.email == _email);
+      _email = _emailController.text;
 
-        await updateAllInformation(user, widget.userHome);
+      if (widget.userInformation.homeId == null) {
+        _showModalBottomSheet(
+          'Error!',
+          'No se ha podido obtener la información de tu hogar. Por favor contacta a soporte.',
+        );
+        return;
+      }
+
+      homeId = widget.userInformation.homeId!;
+
+      try {
+        final succes = await _controller.addMember(homeId, _email);
+
+        if (!succes) {
+          _showModalBottomSheet(
+            'Error!',
+            'No ha sido posible enviar la invitación al correo electrónico que has proporcionado. Por favor intenta de nuevo.',
+          );
+          return;
+        }
 
         _showModalBottomSheet(
           'Listo!',
-          'Hemos enviado una invitación al correo electrónico que has proporcionado. Por favor indica a la persona correspondiente que revise su bandeja de entrada asi como su carpeta de Spam.',
+          'Por favor indica a la persona correspondiente que revise su aplicacion de NeighSecure para ver sus nuevas funciones',
         );
       } catch (e) {
         _showModalBottomSheet(
           'Error!',
-          'No ha sido posible enviadar la invitación al correo electrónico que has proporcionado. ${e}',
+          'No ha sido posible enviadar la invitación al correo electrónico que has proporcionado. $e',
         );
       }
     }
@@ -224,6 +241,7 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   TextFormField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Correo electrónico',
                       fillColor: Colors.grey[200], // background color
@@ -256,9 +274,6 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
                       }
                       return null;
                     },
-                    onSaved: (value) {
-                      _email = value!;
-                    },
                   ),
                 ],
               ),
@@ -268,37 +283,50 @@ class _InvitationScreenState extends ConsumerState<InvitationScreen> {
       )),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              _submit();
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
-                const Color(0xFF001E2C),
-              ),
-              padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(
-                  vertical: 18,
-                  horizontal: 28,
-                ),
-              ),
-              shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            child: const Text(
-              'Listo',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: Colors.white,
-              ),
-            ),
-          ),
+        child: ValueListenableBuilder<bool>(
+          valueListenable: _controller.isLoading,
+          builder: (context, isLoading, child) {
+            return isLoading
+                ? const SizedBox(
+                    width: 64,
+                    child: LinearProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFF001E2C)),
+                    ),
+                  )
+                : SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _submit();
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                          const Color(0xFF001E2C),
+                        ),
+                        padding: WidgetStateProperty.all(
+                          const EdgeInsets.symmetric(
+                            vertical: 18,
+                            horizontal: 28,
+                          ),
+                        ),
+                        shape: WidgetStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                      child: const Text(
+                        'Listo',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  );
+          },
         ),
       ),
     ));

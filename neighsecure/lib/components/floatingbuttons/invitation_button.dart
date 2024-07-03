@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class InvitationButton extends StatelessWidget {
-  final VoidCallback onSubmit;
+  final VoidCallback? onSubmit;
 
   const InvitationButton({super.key, required this.onSubmit});
 

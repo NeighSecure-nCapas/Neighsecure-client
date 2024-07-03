@@ -9,14 +9,14 @@ class Terminal {
 
   factory Terminal.fromJson(Map<String, dynamic> json) {
     return Terminal(
-      id: json['id'],
-      entryType: json['entryType'],
+      id: json['terminalId'] ?? '',
+      entryType: json['entryType'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'terminalId': id,
       'entryType': entryType,
     };
   }

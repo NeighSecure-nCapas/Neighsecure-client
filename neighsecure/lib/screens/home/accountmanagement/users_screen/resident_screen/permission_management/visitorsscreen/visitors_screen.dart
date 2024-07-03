@@ -1,19 +1,20 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neighsecure/models/entities/permission.dart';
+import 'package:neighsecure/controllers/permission_controller.dart';
 import 'package:neighsecure/models/entities/user.dart';
-import 'package:neighsecure/providers/testnameprovider.dart';
+import 'package:neighsecure/providers/dummyProviders/testnameprovider.dart';
 
-import '../../../../../../../providers/testing_permission_information_notifier.dart';
+import '../../../../../../../models/entities/permissions.dart';
 import 'visitors_state_screen/visitors_details_screen/visitors_details_screen.dart';
 
 class VisitorsScreen extends ConsumerStatefulWidget {
   VisitorsScreen({
     super.key,
     required this.userInformation,
-    required this.usersInformation,
+    required this.permissionsInformation,
     required this.isRedeem,
     this.displayeElements,
     this.onUserRemove,
@@ -23,11 +24,11 @@ class VisitorsScreen extends ConsumerStatefulWidget {
 
   final User userInformation;
 
-  final List<Permission> usersInformation;
+  final List<Permissions> permissionsInformation;
 
-  final Function(Permission)? onUserRemove;
+  final Function(Permissions)? onUserRemove;
 
-  bool isRedeem;
+  bool? isRedeem;
 
   @override
   ConsumerState<VisitorsScreen> createState() => _VisitorsScreenState();
@@ -37,6 +38,8 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
   var defaultDisplayElements = 3;
 
   List<User> filtereduserInformation = [];
+
+  final PermissionController _controller = PermissionController();
 
   /*
   List<User> filterUserInformatio(String name) {
@@ -63,90 +66,276 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
   }
   */
 
-  List<Permission> filterPermissionInformation(String name) {
-    final filteredPermissionInformation = widget.isRedeem
-        ? widget.usersInformation
-            .where((permission) =>
-                permission.status == true &&
-                permission.user.roles.any((role) => role.role == 'visitante'))
+  List<Permissions> filterPermissionInformation(String name) {
+    final filteredPermissionInformation = widget.isRedeem == null
+        ? widget.permissionsInformation
+            .where((permission) => permission.status == null)
             .toList()
-        : widget.usersInformation
-            .where((permission) =>
-                permission.status == false &&
-                permission.user.roles.any((role) => role.role == 'visitante'))
+        : widget.permissionsInformation
+            .where((permission) => permission.status == true)
             .toList();
 
     return name.isEmpty
         ? filteredPermissionInformation
         : filteredPermissionInformation
-            .where((permission) =>
-                permission.user.name.toLowerCase().contains(name.toLowerCase()))
+            .where((permission) => permission.userAssociated.name!
+                .toLowerCase()
+                .contains(name.toLowerCase()))
             .toList();
   }
 
-  void showAcceptUserInvitationDialog(BuildContext context, User user) {
+  void showDeleteUserDialog(BuildContext context, Permissions permission) {
+    bool isLoading = false; // Para rastrear el estado de carga
+
     showDialog(
       context: context,
+      barrierDismissible: false, // Evitar cerrar el diálogo al tocar fuera
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: const Text(
-            'Aceptar la solicitud de invitacion de usuario',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          content: const Text(
-              '¿Estás seguro de que deseas aceptar la invitacion de este usuario?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'Cancelar',
+        return StatefulBuilder(
+          // Usar StatefulBuilder para actualizar el contenido del diálogo
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: const Text(
+                'Eliminar usuario',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Aceptar',
+              content: isLoading
+                  ? const CircularProgressIndicator() // Mostrar indicador de carga mientras se procesa
+                  : const Text(
+                      '¿Estás seguro de que deseas eliminar a este usuario?'),
+              actions: <Widget>[
+                if (!isLoading) // Ocultar botón cancelar cuando se está cargando
+                  TextButton(
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                if (!isLoading) // Ocultar botón eliminar cuando se está cargando
+                  TextButton(
+                    child: const Text(
+                      'Eliminar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ),
+                    onPressed: () async {
+                      setState(
+                          () => isLoading = true); // Mostrar indicador de carga
+                      try {
+                        final result =
+                            await _controller.deletePermission(permission.id);
+                        if (result) {
+                          // Si la operación es exitosa, mostrar mensaje de éxito
+                          Navigator.of(context).pop(); // Cerrar el diálogo
+                          // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Usuario eliminado con éxito')),
+                          );
+                        }
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print('Caught error: $e');
+                        }
+                        Navigator.of(context)
+                            .pop(); // Cerrar el diálogo en caso de error
+                        // Opcionalmente, mostrar mensaje de error
+                      }
+                    },
+                  ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showAcceptUserInvitationDialog(
+      BuildContext context, Permissions permission) {
+    bool isLoading = false; // Para rastrear el estado de carga
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Evitar cerrar el diálogo al tocar fuera
+      builder: (context) {
+        return StatefulBuilder(
+          // Usar StatefulBuilder para actualizar el contenido del diálogo
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: const Text(
+                'Aceptar la solicitud de invitación de usuario',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.green,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-              onPressed: () {
-                //Remove user from the provider
-                //updateUserRedeem
-                ref
-                    .read(permissionInformationProvider.notifier)
-                    .updateUserRedeem(user);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              content: isLoading
+                  ? const CircularProgressIndicator() // Mostrar indicador de carga mientras se procesa
+                  : const Text(
+                      '¿Estás seguro de que deseas aceptar la invitación de este usuario?'),
+              actions: <Widget>[
+                if (!isLoading) // Ocultar botón cancelar cuando se está cargando
+                  TextButton(
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                if (!isLoading) // Ocultar botón aceptar cuando se está cargando
+                  TextButton(
+                    child: const Text(
+                      'Aceptar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.green,
+                      ),
+                    ),
+                    onPressed: () async {
+                      setState(
+                          () => isLoading = true); // Mostrar indicador de carga
+                      try {
+                        final result =
+                            await _controller.approvePermission(permission.id);
+                        if (result) {
+                          // Si la operación es exitosa, mostrar mensaje de éxito
+                          Navigator.of(context).pop(); // Cerrar el diálogo
+                          // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Invitación aceptada con éxito')),
+                          );
+                        }
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print('Caught error: $e');
+                        }
+                        Navigator.of(context)
+                            .pop(); // Cerrar el diálogo en caso de error
+                        // Opcionalmente, mostrar mensaje de error
+                      }
+                    },
+                  ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showRejectInvitationDialog(
+      BuildContext context, Permissions permission) {
+    bool isLoading = false; // To track the loading state
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dialog from closing on tap outside
+      builder: (context) {
+        return StatefulBuilder(
+          // Use StatefulBuilder to update dialog content
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: const Text(
+                'Rechazar la solicitud de invitación de usuario',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              content: isLoading
+                  ? const CircularProgressIndicator() // Show loading indicator while processing
+                  : const Text(
+                      '¿Estás seguro de que deseas rechazar la invitación de este usuario?'),
+              actions: <Widget>[
+                if (!isLoading) // Hide cancel button when loading
+                  TextButton(
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                if (!isLoading) // Hide reject button when loading
+                  TextButton(
+                    child: const Text(
+                      'Rechazar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ),
+                    onPressed: () async {
+                      setState(
+                          () => isLoading = true); // Show loading indicator
+                      try {
+                        final result =
+                            await _controller.rejectPermission(permission.id);
+                        if (result) {
+                          // If operation is successful, show success message
+                          Navigator.of(context).pop(); // Close the dialog
+                          // Show success message in a new dialog or snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text('Invitación rechazada con éxito')),
+                          );
+                        }
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print('Caught error: $e');
+                        }
+                        Navigator.of(context)
+                            .pop(); // Close the dialog on error
+                        // Optionally, show error message
+                      }
+                    },
+                  ),
+              ],
+            );
+          },
         );
       },
     );
   }
 
   void navigateToVisitorsDetailsScreen(BuildContext context,
-      Permission permission, bool isRedeem, User userInformation) {
+      Permissions permission, bool? isRedeem, User userInformation) {
     Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             VisitorsDetailsScreen(
           userInformationState: userInformation,
-          userInformation: permission,
+          permissionInformation: permission,
           isRedeem: isRedeem,
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -164,9 +353,10 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
     return Consumer(
       builder: (context, watch, child) {
         final name = ref.watch(nameProvider);
-        final filteredName = filterPermissionInformation(name);
 
-        if (filteredName.isEmpty) {
+        final filteredPermission = filterPermissionInformation(name);
+
+        if (filteredPermission.isEmpty) {
           return const Column(
             children: [
               Center(
@@ -184,13 +374,15 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
           );
         }
 
-        var defaultdisplayed = min(defaultDisplayElements, filteredName.length);
+        var defaultdisplayed =
+            min(defaultDisplayElements, filteredPermission.length);
 
         if (widget.displayeElements != null) {
           if (widget.displayeElements! >= defaultDisplayElements) {
             defaultdisplayed = widget.displayeElements!;
           } else {
-            defaultdisplayed = min(defaultDisplayElements, filteredName.length);
+            defaultdisplayed =
+                min(defaultDisplayElements, filteredPermission.length);
           }
         }
 
@@ -199,12 +391,15 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
           shrinkWrap: true,
           itemCount: defaultdisplayed,
           itemBuilder: (context, index) {
-            if (index < filteredName.length) {
+            if (index < filteredPermission.length) {
               return GestureDetector(
                 onTap: () {
                   ref.read(nameProvider.notifier).updateName('');
-                  navigateToVisitorsDetailsScreen(context, filteredName[index],
-                      widget.isRedeem, widget.userInformation);
+                  navigateToVisitorsDetailsScreen(
+                      context,
+                      filteredPermission[index],
+                      widget.isRedeem,
+                      widget.userInformation);
                 },
                 child: Card(
                   elevation: 0.0,
@@ -239,7 +434,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                filteredName[index].user.name,
+                                filteredPermission[index].userAssociated.name!,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18,
@@ -248,22 +443,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                filteredName[index]
-                                    .user
-                                    .roles
-                                    .map((e) => e.role)
-                                    .join(', '),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                widget.isRedeem
-                                    ? filteredName[index].invetedBy
-                                    : filteredName[index].invetedBy,
+                                filteredPermission[index].userAuth.email!,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
@@ -278,198 +458,83 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            GestureDetector(
-                                onTap: () {
-                                  widget.userInformation.roles.any(
-                                          (role) => role.role == 'encargado')
-                                      ? filteredName[index].status == true
-                                          ? showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  backgroundColor: Theme.of(
-                                                          context)
-                                                      .scaffoldBackgroundColor,
-                                                  title: const Text(
-                                                    'Eliminar usuario',
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  content: const Text(
-                                                      '¿Estás seguro de que deseas eliminar a este usuario?'),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      child: const Text(
-                                                        'Cancelar',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                    TextButton(
-                                                      child: const Text(
-                                                        'Eliminar',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: Colors.red,
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          if (widget
-                                                                  .displayeElements !=
-                                                              null) {
-                                                            ref
-                                                                .read(permissionInformationProvider
-                                                                    .notifier)
-                                                                .removePermission(
-                                                                    filteredName[
-                                                                        index]);
-                                                            widget.onUserRemove!(
-                                                                filteredName[
-                                                                    index]);
-                                                            widget.displayeElements =
-                                                                widget.displayeElements! -
-                                                                    1;
-                                                          } else {
-                                                            ref
-                                                                .read(permissionInformationProvider
-                                                                    .notifier)
-                                                                .removePermission(
-                                                                    filteredName[
-                                                                        index]);
-                                                            widget.onUserRemove!(
-                                                                filteredName[
-                                                                    index]);
-                                                          }
-                                                        });
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            )
-                                          : showAcceptUserInvitationDialog(
-                                              context, filteredName[index].user)
-                                      : filteredName[index].status == true
-                                          ? showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  backgroundColor: Theme.of(
-                                                          context)
-                                                      .scaffoldBackgroundColor,
-                                                  title: const Text(
-                                                    'Eliminar usuario',
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  content: const Text(
-                                                      '¿Estás seguro de que deseas eliminar a este usuario?'),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      child: const Text(
-                                                        'Cancelar',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                    TextButton(
-                                                      child: const Text(
-                                                        'Eliminar',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: Colors.red,
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          if (widget
-                                                                  .displayeElements !=
-                                                              null) {
-                                                            ref
-                                                                .read(permissionInformationProvider
-                                                                    .notifier)
-                                                                .removePermission(
-                                                                    filteredName[
-                                                                        index]);
-                                                            widget.onUserRemove!(
-                                                                filteredName[
-                                                                    index]);
-                                                            widget.displayeElements =
-                                                                widget.displayeElements! -
-                                                                    1;
-                                                          } else {
-                                                            ref
-                                                                .read(permissionInformationProvider
-                                                                    .notifier)
-                                                                .removePermission(
-                                                                    filteredName[
-                                                                        index]);
-                                                            widget.onUserRemove!(
-                                                                filteredName[
-                                                                    index]);
-                                                          }
-                                                        });
-
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            )
-                                          : null;
-                                },
-                                child: Icon(
-                                  widget.userInformation.roles.any(
-                                          (role) => role.role == 'encargado')
-                                      ? filteredName[index].status
-                                          ? Icons.close
-                                          : Icons.check
-                                      : filteredName[index].status
-                                          ? Icons.close
-                                          : Icons.pending_actions,
-                                  color: widget.userInformation.roles.any(
-                                              (role) =>
-                                                  role.role == 'residente') &&
-                                          !filteredName[index].status
-                                      ? Colors.red
-                                      : Colors.black,
-                                  size: 24,
-                                ))
+                            Row(
+                              children: [
+                                if (widget.userInformation.roles!.any(
+                                        (role) => role.role == 'Encargado') &&
+                                    filteredPermission[index].status ==
+                                        null) ...[
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Lógica para aceptar el permiso
+                                      showAcceptUserInvitationDialog(
+                                          context, filteredPermission[index]);
+                                    },
+                                    child: const Icon(
+                                      Icons.check,
+                                      color: Colors.black,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                      width: 12), // Espacio entre iconos
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Lógica para rechazar el permiso
+                                      showRejectInvitationDialog(
+                                          context, filteredPermission[index]);
+                                    },
+                                    child: const Icon(
+                                      Icons.not_interested_rounded,
+                                      color: Colors.black,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ] else if (widget.userInformation.roles!.any(
+                                        (role) => role.role == 'Encargado') &&
+                                    filteredPermission[index].status ==
+                                        true) ...[
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Lógica para eliminar el permiso
+                                      showDeleteUserDialog(
+                                          context, filteredPermission[index]);
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.red,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ] else if (filteredPermission[index].status ==
+                                    true) ...[
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Lógica para eliminar el permiso si es necesario
+                                      showDeleteUserDialog(
+                                          context, filteredPermission[index]);
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.red,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ] else if (widget.userInformation.roles!.any(
+                                        (role) => role.role == 'Residente') &&
+                                    filteredPermission[index].status ==
+                                        null) ...[
+                                  // Icono de "Pendiente por aprobar" para usuarios Residente
+                                  const Icon(
+                                    Icons.hourglass_empty,
+                                    color: Colors.orange,
+                                    size: 24,
+                                  ),
+                                ],
+                              ],
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),

@@ -1,7 +1,7 @@
 class Key {
   final String id;
-  final DateTime generationDate;
-  final DateTime generationTime;
+  final String generationDate;
+  final String generationTime;
   final String generationDay;
 
   Key({
@@ -13,18 +13,18 @@ class Key {
 
   factory Key.fromJson(Map<String, dynamic> json) {
     return Key(
-      id: json['id'],
-      generationDate: DateTime.parse(json['generationDate']),
-      generationTime: DateTime.parse(json['generationTime']),
-      generationDay: json['generationDay'],
+      id: json['keyId'] ?? '',
+      generationDate: json['generationDate'] ?? '',
+      generationTime: json['generationTime'] ?? '',
+      generationDay: json['generationDay'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'generationDate': generationDate.toIso8601String(),
-      'generationTime': generationTime.toIso8601String(),
+      'keyId': id,
+      'generationDate': generationDate,
+      'generationTime': generationTime,
       'generationDay': generationDay,
     };
   }
