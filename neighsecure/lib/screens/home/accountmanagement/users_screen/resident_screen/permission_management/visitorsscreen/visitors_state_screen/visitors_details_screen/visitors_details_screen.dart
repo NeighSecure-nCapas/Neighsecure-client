@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/controllers/permission_controller.dart';
 import 'package:neighsecure/repositories/permission_repository/permission_repository.dart';
 
+import '../../../../../../../../../components/erroscomponetes/error_container.dart';
 import '../../../../../../../../../models/entities/permissions.dart';
 import '../../../../../../../../../models/entities/user.dart';
 import '../../../../../../../../splashscreen/splash_screen.dart';
@@ -339,8 +340,10 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               child: SplashScreen(),
             );
           } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Error al cargar la información'),
+            return ErrorRetryWidget(
+              onRetry: () {
+                setState(() {});
+              },
             );
           } else {
             return SafeArea(

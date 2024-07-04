@@ -12,6 +12,7 @@ import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident
 import 'package:neighsecure/screens/splashscreen/splash_screen.dart';
 
 import '../../../../../../components/buttons/custom_floating_action_button.dart';
+import '../../../../../../components/erroscomponetes/error_container.dart';
 import '../../../../../../models/entities/permissions.dart';
 import '../../../../../../providers/dummyProviders/testnameprovider.dart';
 
@@ -195,8 +196,10 @@ class _PermissionManagementState extends ConsumerState<PermissionManagement> {
               child: SplashScreen(),
             );
           } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Error al cargar la información'),
+            return ErrorRetryWidget(
+              onRetry: () {
+                setState(() {});
+              },
             );
           } else {
             return SafeArea(

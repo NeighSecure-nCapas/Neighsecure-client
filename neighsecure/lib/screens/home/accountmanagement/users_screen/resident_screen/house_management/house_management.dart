@@ -7,6 +7,7 @@ import 'package:neighsecure/models/entities/user.dart';
 import 'package:neighsecure/repositories/house_repository/house_repository.dart';
 
 import '../../../../../../components/cards/users_list_card.dart';
+import '../../../../../../components/erroscomponetes/error_container.dart';
 import '../../../../../../components/floatingbuttons/invitation_button.dart';
 import 'invitationscreen/invitation_screen.dart';
 
@@ -250,8 +251,11 @@ class _HouseManagementState extends State<HouseManagement> {
                         child: CircularProgressIndicator(),
                       );
                     } else if (snapshot.hasError) {
-                      return Text(
-                          'Error: ${snapshot.error}'); // Show an error message if _loadPermissions completed with an error
+                      return ErrorRetryWidget(
+                        onRetry: () {
+                          setState(() {});
+                        },
+                      ); // Show an error message if _loadPermissions completed with an error
                     } else if (usersInformation.isEmpty) {
                       return const Column(
                         mainAxisAlignment: MainAxisAlignment.center,

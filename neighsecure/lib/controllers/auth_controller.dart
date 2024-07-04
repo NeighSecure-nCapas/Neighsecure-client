@@ -43,12 +43,12 @@ class AuthController {
       showAboutDialog(
         context: context,
         applicationName: 'Error',
-        children: [const Text('Error al establecer la conexión con el servidor')],
+        children: [
+          const Text('Error al establecer la conexión con el servidor')
+        ],
         applicationVersion: '1.0.0',
         applicationIcon: const Icon(Icons.error),
       );
-    } finally {
-      isLoading.value = false;
     }
   }
 
