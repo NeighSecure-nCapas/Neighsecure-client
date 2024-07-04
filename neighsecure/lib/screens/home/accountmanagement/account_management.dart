@@ -8,6 +8,7 @@ import 'package:neighsecure/screens/home/accountmanagement/users_screen/resident
 import 'package:neighsecure/screens/home/accountmanagement/users_screen/visitor_screen/visitor_screen.dart';
 import 'package:neighsecure/screens/splashscreen/splash_screen.dart';
 
+import '../../../components/erroscomponetes/error_container.dart';
 import 'users_screen/vigilant_screen/vigilant_screen.dart';
 
 class AccountManagement extends StatefulWidget {
@@ -51,10 +52,16 @@ class _AccountManagementState extends State<AccountManagement> {
             child: SplashScreen(),
           );
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return ErrorRetryWidget(
+            onRetry: () {
+              setState(() {});
+            },
+          );
         } else if (snapshot.data == null) {
-          return const Center(
-            child: Text('No user data available'),
+          return ErrorRetryWidget(
+            onRetry: () {
+              setState(() {});
+            },
           );
         } else {
           return SafeArea(child: _buildMainContent(snapshot.data!));

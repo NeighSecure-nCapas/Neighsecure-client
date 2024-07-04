@@ -8,6 +8,7 @@ import 'package:neighsecure/repositories/permission_repository/permission_reposi
 
 import '../../../../../components/cards/visitor_card.dart';
 import '../../../../../components/cards/visitor_card_dates.dart';
+import '../../../../../components/erroscomponetes/error_container.dart';
 import '../../../../../models/entities/permissions.dart';
 import '../../../../splashscreen/splash_screen.dart';
 
@@ -138,8 +139,11 @@ class _VisitorScreenState extends State<VisitorScreen> {
                     child: SplashScreen(),
                   );
                 } else if (snapshot.hasError) {
-                  return Text(
-                      'Error: ${snapshot.error}'); // Show an error message if _loadPermissions completed with an error
+                  return ErrorRetryWidget(
+                    onRetry: () {
+                      setState(() {});
+                    },
+                  ); // Show an error message if _loadPermissions completed with an error
                 } else if (permissions.isEmpty) {
                   return const Column(
                     mainAxisAlignment: MainAxisAlignment.center,

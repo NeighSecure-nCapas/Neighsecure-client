@@ -515,6 +515,22 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
 
+    final currentDate = DateTime.now();
+    final dateNow =
+        DateTime(currentDate.year, currentDate.month, currentDate.day);
+
+    if (_dateStart != null && _dateStart!.isBefore(dateNow)) {
+      showErrorModalTimeOfDate(context,
+          'La fecha de inicio no puede ser anterior a la fecha actual.');
+      return false;
+    }
+
+    if (_dateEnd != null && _dateEnd!.isBefore(dateNow)) {
+      showErrorModalTimeOfDate(
+          context, 'La fecha de fin no puede ser anterior a la fecha actual.');
+      return false;
+    }
+
     if (_timeStart != null && _timeEnd != null) {
       final startTimeInMinutes = _timeStart!.hour * 60 + _timeStart!.minute;
       final endTimeInMinutes = _timeEnd!.hour * 60 + _timeEnd!.minute;
@@ -540,12 +556,13 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
     String formattedDateEnd =
         _dateEnd != null ? DateFormat('dd/MM/yyyy').format(_dateEnd!) : '';
 
-    String formattedTimeStart =
-        _timeStart != null ? '${_timeStart!.hour}:${_timeStart!.minute}' : '';
+    String formattedTimeStart = _timeStart != null
+        ? '${_timeStart!.hour.toString().padLeft(2, '0')}:${_timeStart!.minute.toString().padLeft(2, '0')}'
+        : '';
 
-    String formattedTimeEnd =
-        _timeEnd != null ? '${_timeEnd!.hour}:${_timeEnd!.minute}' : '';
-
+    String formattedTimeEnd = _timeEnd != null
+        ? '${_timeEnd!.hour.toString().padLeft(2, '0')}:${_timeEnd!.minute.toString().padLeft(2, '0')}'
+        : '';
     List<String> formattedDaysOfWeek =
         translateDaysToSpanish(_selectDaysOfWeek);
 
@@ -554,8 +571,6 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
       formattedDaysOfWeek = getDaysInRange(_dateStart, _dateEnd);
     }
 
-    formattedTimeStart = formattedTimeStart.padLeft(5, '0');
-    formattedTimeEnd = formattedTimeEnd.padLeft(5, '0');
     String days = formattedDaysOfWeek.join(',');
 
     if (isValid) {
