@@ -165,6 +165,7 @@ class _QRViewExampleState extends State<QRViewExample> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
+                  controller?.resumeCamera();
                   Navigator.pop(context);
                 },
                 style: ButtonStyle(

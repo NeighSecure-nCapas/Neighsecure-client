@@ -519,6 +519,11 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
     final dateNow =
         DateTime(currentDate.year, currentDate.month, currentDate.day);
 
+    if (_entryType == EntryType.single) {
+      _timeStart = _timeStartRange;
+      _timeEnd = _timeEndRange;
+    }
+
     if (_dateStart != null && _dateStart!.isBefore(dateNow)) {
       showErrorModalTimeOfDate(context,
           'La fecha de inicio no puede ser anterior a la fecha actual.');
