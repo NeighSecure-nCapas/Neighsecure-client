@@ -99,6 +99,7 @@ class _QrScreenState extends State<QrScreen> {
     return keyInfo;
   }
 
+  /*
   Future<String?> getUserRole() async {
     User? user = await _repositoryUser.retrieveUserLocally();
     String? roleRet;
@@ -110,9 +111,40 @@ class _QrScreenState extends State<QrScreen> {
     return roleRet;
   }
 
+  String getRole(User user) {
+    List<String?> roles = user.roles!.map((role) => role.role).toList();
+
+    if (roles.contains('Encargado')) {
+      return 'Encargado';
+    } else if (roles.contains('Residente')) {
+      return 'Residente';
+    } else if (roles.contains('Vigilante')) {
+      return 'Vigilante';
+    } else if (roles.contains('Visitante')) {
+      return 'Visitante';
+    } else {
+      return 'Other';
+    }
+  }
+   */
+  Future<String> getUserPrimaryRole() async {
+    User? user = await _repositoryUser.retrieveUserLocally();
+    if (user != null && user.roles!.isNotEmpty) {
+      List<String?> roles = user.roles!.map((role) => role.role).toList();
+      if (roles.contains('Residente')) {
+        return 'Residente';
+      } else if (roles.contains('Vigilante')) {
+        return 'Vigilante';
+      } else if (roles.contains('Visitante')) {
+        return 'Visitante';
+      }
+    }
+    return 'Other';
+  }
+
   Future<String> generateString() async {
     mykey.Key? key = await getKeyInfo();
-    String? role = await getUserRole();
+    String? role = await getUserPrimaryRole();
 
     // Función auxiliar para remover tildes
     String removeAccents(String text) {
@@ -134,6 +166,12 @@ class _QrScreenState extends State<QrScreen> {
       print(generationDayWithoutAccents);
       print(key?.generationTime);
       print(role);
+    }
+
+    if (key?.generationDate == null ||
+        key?.generationTime == null ||
+        generationDayWithoutAccents.isEmpty) {
+      return '${key?.id}/$role';
     }
 
     return '${key?.id}/$role/${key?.generationDate}/$generationDayWithoutAccents/${key?.generationTime}';
