@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neighsecure/controllers/key_controller.dart';
 import 'package:neighsecure/repositories/key_repository/key_repository.dart';
 import 'package:neighsecure/repositories/user_repository/user_repository.dart';
@@ -14,17 +13,16 @@ import '../../../../../models/entities/key.dart' as mykey;
 import '../../../../../models/entities/permissions.dart';
 import '../../../../../models/entities/user.dart';
 
-class QrScreen extends ConsumerStatefulWidget {
+class QrScreen extends StatefulWidget {
   QrScreen({super.key, this.permission});
 
   Permissions? permission;
 
   @override
-  ConsumerState<QrScreen> createState() => _QrScreenState();
+  State<QrScreen> createState() => _QrScreenState();
 }
 
-class _QrScreenState extends ConsumerState<QrScreen> {
-  final _isLoading = false;
+class _QrScreenState extends State<QrScreen> {
   var _qr = '';
   int _remainingTime = 180;
   Timer? _timer;
@@ -38,44 +36,54 @@ class _QrScreenState extends ConsumerState<QrScreen> {
   @override
   void initState() {
     super.initState();
-    _changeQr();
-    _startTimer();
+    _manageRemainingTime();
   }
 
   @override
   void dispose() {
-    updateRemainingTime().then((remainingTime) {
-      setState(() {
-        _remainingTime = remainingTime;
-      });
-      if (_remainingTime > 0) {
-        _startTimer();
-      }
-    });
+    _saveRemainingTime();
+    _timer?.cancel();
     super.dispose();
   }
 
-  Future<void> saveQrGenerationTime() async {
+  Future<void> _saveRemainingTime() async {
     final prefs = await SharedPreferences.getInstance();
-    final currentTime = DateTime.now().millisecondsSinceEpoch;
-    await prefs.setInt('qrGenerationTime', currentTime);
-    await prefs.setInt('remainingTime', 180); // 3 minutos en segundos
+    final permissionId = widget.permission?.id ?? 'default';
+    final remainingTimeKey = '${permissionId}_remainingTime';
+    final savedAtKey = '${permissionId}_savedAt';
+    await prefs.setInt(remainingTimeKey, _remainingTime);
+    await prefs.setInt(savedAtKey, DateTime.now().millisecondsSinceEpoch);
   }
 
-  Future<int> updateRemainingTime() async {
+  Future<void> _manageRemainingTime() async {
+    _keyController.isLoading.value = true;
     final prefs = await SharedPreferences.getInstance();
-    final qrGenerationTime = prefs.getInt('qrGenerationTime') ?? 0;
     final currentTime = DateTime.now().millisecondsSinceEpoch;
-    final elapsedTime =
-        (currentTime - qrGenerationTime) ~/ 1000; // Convertir a segundos
-    int remainingTime =
-        prefs.getInt('remainingTime') ?? 180; // 3 minutos por defecto
-    remainingTime -= elapsedTime;
-    if (remainingTime < 0) {
-      remainingTime = 0; // Asegurar que el tiempo restante no sea negativo
+
+    final permissionId = widget.permission?.id ?? 'default';
+    final savedAtKey = '${permissionId}_savedAt';
+    final remainingTimeKey = '${permissionId}_remainingTime';
+
+    final savedAt = prefs.getInt(savedAtKey);
+    final savedRemainingTime = prefs.getInt(remainingTimeKey);
+
+    if (savedAt != null && savedRemainingTime != null) {
+      final elapsedTime = (currentTime - savedAt) ~/ 1000;
+      _remainingTime = (savedRemainingTime - elapsedTime).clamp(0, 180);
+    } else {
+      final qrGenerationTime = prefs.getInt('qrGenerationTime') ?? currentTime;
+      final elapsedTime = (currentTime - qrGenerationTime) ~/ 1000;
+      _remainingTime = (180 - elapsedTime).clamp(0, 180);
     }
-    await prefs.setInt('remainingTime', remainingTime);
-    return remainingTime;
+
+    await prefs.setInt(remainingTimeKey, _remainingTime);
+    await prefs.setInt(savedAtKey, currentTime);
+
+    _keyController.isLoading.value = false;
+
+    if (_remainingTime > 0) {
+      _startTimer();
+    }
   }
 
   Future<mykey.Key?> getKeyInfo() async {
@@ -143,6 +151,8 @@ class _QrScreenState extends ConsumerState<QrScreen> {
     }).join();
     */
 
+    _keyController.isLoading.value = true;
+
     final randomString = await generateString();
 
     if (kDebugMode) {
@@ -155,6 +165,7 @@ class _QrScreenState extends ConsumerState<QrScreen> {
     });
 
     _startTimer();
+    _keyController.isLoading.value = false;
   }
 
   @override
@@ -273,14 +284,11 @@ class _QrScreenState extends ConsumerState<QrScreen> {
                     onPressed: _remainingTime > 0
                         ? null
                         : () async {
-                            // Assuming you have a method to get the current permission ID
                             String? permissionId = widget.permission?.id;
                             if (permissionId != null) {
                               bool isValid = await _keyController
                                   .validatePermission(permissionId);
                               if (isValid) {
-                                // Proceed with QR code regeneration
-                                await saveQrGenerationTime();
                                 _changeQr();
                               } else {
                                 Navigator.pop(context);
