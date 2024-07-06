@@ -161,7 +161,7 @@ class _QrScreenState extends State<QrScreen> {
 
     setState(() {
       _qr = randomString;
-      _remainingTime = 10;
+      _remainingTime = 180;
     });
 
     _startTimer();
@@ -247,7 +247,7 @@ class _QrScreenState extends State<QrScreen> {
                           'Tiempo restante',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 18,
+                            fontSize: 14,
                             color: Colors.black,
                           ),
                         ),
@@ -285,19 +285,20 @@ class _QrScreenState extends State<QrScreen> {
                         ? null
                         : () async {
                             String? permissionId = widget.permission?.id;
-                            if (permissionId != null) {
-                              bool isValid = await _keyController
-                                  .validatePermission(permissionId);
-                              if (isValid) {
-                                _changeQr();
-                              } else {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Permission is not valid or expired. Please validate again.')),
-                                );
-                              }
+
+                            permissionId ??= '';
+
+                            bool isValid = await _keyController
+                                .validatePermission(permissionId);
+                            if (isValid) {
+                              _changeQr();
+                            } else {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Permission is not valid or expired. Please validate again.')),
+                              );
                             }
                           },
                     style: ButtonStyle(

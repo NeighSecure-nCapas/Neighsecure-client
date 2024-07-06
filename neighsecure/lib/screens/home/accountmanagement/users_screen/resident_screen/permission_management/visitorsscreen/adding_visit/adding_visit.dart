@@ -1004,7 +1004,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                             context),
                                                                 style:
                                                                     const TextStyle(
-                                                                  fontSize: 14,
+                                                                  fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -1032,7 +1032,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                           .arrow_forward_ios,
                                                                       color: Colors
                                                                           .grey,
-                                                                      size: 24,
+                                                                      size: 18,
                                                                     ),
                                                                   )),
                                                               const SizedBox(
@@ -1046,7 +1046,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                             context),
                                                                 style:
                                                                     const TextStyle(
-                                                                  fontSize: 14,
+                                                                  fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -1074,7 +1074,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                           .arrow_forward_ios,
                                                                       color: Colors
                                                                           .grey,
-                                                                      size: 24,
+                                                                      size: 18,
                                                                     ),
                                                                   )),
                                                             ],
