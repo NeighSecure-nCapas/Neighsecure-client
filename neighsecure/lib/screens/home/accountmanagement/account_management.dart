@@ -93,10 +93,10 @@ class _AccountManagementState extends State<AccountManagement> {
       return 'Encargado';
     } else if (roles.contains('Residente')) {
       return 'Residente';
-    } else if (roles.contains('Visitante')) {
-      return 'Visitante';
     } else if (roles.contains('Vigilante')) {
       return 'Vigilante';
+    } else if (roles.contains('Visitante')) {
+      return 'Visitante';
     } else {
       return 'Other';
     }
