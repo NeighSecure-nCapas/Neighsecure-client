@@ -50,7 +50,7 @@ class KeyController {
 
     try {
       final response = await client.post(
-        Uri.http(
+        Uri.https(
             dotenv.env['SERVER_URL']!, '/neighSecure/visit/validatePermission'),
         headers: {
           'Authorization': 'Bearer $token',

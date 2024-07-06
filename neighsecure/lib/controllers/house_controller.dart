@@ -18,7 +18,7 @@ class HouseController {
     if (token != null) {
       try {
         final response = await client.get(
-          Uri.http(dotenv.env['SERVER_URL']!,
+          Uri.https(dotenv.env['SERVER_URL']!,
               '/neighSecure/homeboss/homeMembers/$homeId'),
           headers: {'Authorization': 'Bearer $token'},
         );
@@ -76,7 +76,7 @@ class HouseController {
     if (token != null) {
       try {
         final response = await client.patch(
-          Uri.http(
+          Uri.https(
               dotenv.env['SERVER_URL']!, '/neighSecure/homeboss/removeMember'),
           headers: {
             'Authorization': 'Bearer $token',
@@ -134,7 +134,7 @@ class HouseController {
     if (token != null) {
       try {
         final response = await client.post(
-          Uri.http(
+          Uri.https(
               dotenv.env['SERVER_URL']!, '/neighSecure/homeboss/addMember'),
           headers: {
             'Authorization': 'Bearer $token',
