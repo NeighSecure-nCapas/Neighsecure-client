@@ -49,6 +49,11 @@ class _QRViewExampleState extends State<QRViewExample> {
     DateFormat format = DateFormat("dd/MM/yyyy HH:mm");
     String formattedDate = format.format(now);
     String? terminalId;
+    String keyId = '';
+    String role = '';
+    String generationDate = '';
+    String generationDay = '';
+    String generationTime = '';
 
     setState(() {
       this.controller = controller;
@@ -80,11 +85,18 @@ class _QRViewExampleState extends State<QRViewExample> {
         String? qrCode = result!.code;
 
         List<String> parts = qrCode!.split('/');
-        String keyId = parts[0];
-        String role = parts[1];
-        String generationDate = parts[2];
-        String generationDay = parts[3];
-        String generationTime = parts[4];
+
+        if (parts.length == 5) {
+          keyId = parts[0];
+          role = parts[1];
+          generationDate = parts[2];
+          generationDay = parts[3];
+          generationTime = parts[4];
+        } else {
+          if (kDebugMode) {
+            print('El formato del QR no es válido.');
+          }
+        }
 
         if (terminalId != null) {
           bool entryResult = await _controller.entry(

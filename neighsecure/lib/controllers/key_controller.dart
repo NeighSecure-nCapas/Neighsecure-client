@@ -117,13 +117,13 @@ class KeyController {
       case 'Tuesday':
         return 'Martes';
       case 'Wednesday':
-        return 'Miércoles';
+        return 'Miercoles';
       case 'Thursday':
         return 'Jueves';
       case 'Friday':
         return 'Viernes';
       case 'Saturday':
-        return 'Sábado';
+        return 'Sabado';
       case 'Sunday':
         return 'Domingo';
       default:

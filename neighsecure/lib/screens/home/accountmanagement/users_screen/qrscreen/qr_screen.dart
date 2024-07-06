@@ -114,15 +114,29 @@ class _QrScreenState extends State<QrScreen> {
     mykey.Key? key = await getKeyInfo();
     String? role = await getUserRole();
 
+    // Función auxiliar para remover tildes
+    String removeAccents(String text) {
+      const accents = 'ÁÉÍÓÚáéíóú';
+      const withoutAccents = 'AEIOUaeiou';
+      for (int i = 0; i < accents.length; i++) {
+        text = text.replaceAll(accents[i], withoutAccents[i]);
+      }
+      return text;
+    }
+
+    // Aplicar la función removeAccents a los componentes que puedan tener tildes
+    String generationDayWithoutAccents =
+        removeAccents(key?.generationDay ?? '');
+
     if (kDebugMode) {
       print(key?.id);
       print(key?.generationDate);
-      print(key?.generationDay);
+      print(generationDayWithoutAccents);
       print(key?.generationTime);
       print(role);
     }
 
-    return '${key?.id}/$role/${key?.generationDate}/${key?.generationDay}/${key?.generationTime}';
+    return '${key?.id}/$role/${key?.generationDate}/$generationDayWithoutAccents/${key?.generationTime}';
   }
 
   void _startTimer() {
