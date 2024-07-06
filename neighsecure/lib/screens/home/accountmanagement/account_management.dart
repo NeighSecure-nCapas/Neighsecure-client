@@ -75,10 +75,10 @@ class _AccountManagementState extends State<AccountManagement> {
       case 'Residente':
       case 'Encargado':
         return ResidentScreen(userInformation: user);
-      case 'Visitante':
-        return VisitorScreen(userInformation: user);
       case 'Vigilante':
         return VigilantScreen(userInformation: user);
+      case 'Visitante':
+        return VisitorScreen(userInformation: user);
       default:
         return const Center(
           child: Text('No tiene permisos para acceder a esta sección'),
