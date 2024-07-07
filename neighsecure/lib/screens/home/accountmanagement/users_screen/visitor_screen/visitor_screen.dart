@@ -42,6 +42,7 @@ class _VisitorScreenState extends State<VisitorScreen> {
 
   @override
   void dispose() {
+    selectPassIndex = null;
     _streamController?.close();
     super.dispose();
   }

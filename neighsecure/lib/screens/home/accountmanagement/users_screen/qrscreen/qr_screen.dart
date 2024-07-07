@@ -227,6 +227,8 @@ class _QrScreenState extends State<QrScreen> {
     }).join();
     */
 
+    _timer?.cancel();
+
     _keyController.isLoading.value = true;
 
     final randomString = await _generateString();
@@ -329,7 +331,7 @@ class _QrScreenState extends State<QrScreen> {
                             ))
                           ],
                         )),
-                    const SizedBox(height: 96),
+                    const SizedBox(height: 52),
                     QrImageView(
                       data: _qr,
                       version: QrVersions.auto,
