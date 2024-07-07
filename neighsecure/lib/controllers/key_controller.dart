@@ -50,7 +50,7 @@ class KeyController {
 
     try {
       final response = await client.post(
-        Uri.http(
+        Uri.https(
             dotenv.env['SERVER_URL']!, '/neighSecure/visit/validatePermission'),
         headers: {
           'Authorization': 'Bearer $token',
@@ -117,13 +117,13 @@ class KeyController {
       case 'Tuesday':
         return 'Martes';
       case 'Wednesday':
-        return 'Miércoles';
+        return 'Miercoles';
       case 'Thursday':
         return 'Jueves';
       case 'Friday':
         return 'Viernes';
       case 'Saturday':
-        return 'Sábado';
+        return 'Sabado';
       case 'Sunday':
         return 'Domingo';
       default:

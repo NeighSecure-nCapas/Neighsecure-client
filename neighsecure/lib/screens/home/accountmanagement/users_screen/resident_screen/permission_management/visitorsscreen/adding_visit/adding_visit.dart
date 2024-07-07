@@ -519,6 +519,11 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
     final dateNow =
         DateTime(currentDate.year, currentDate.month, currentDate.day);
 
+    if (_entryType == EntryType.single) {
+      _timeStart = _timeStartRange;
+      _timeEnd = _timeEndRange;
+    }
+
     if (_dateStart != null && _dateStart!.isBefore(dateNow)) {
       showErrorModalTimeOfDate(context,
           'La fecha de inicio no puede ser anterior a la fecha actual.');
@@ -1004,7 +1009,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                             context),
                                                                 style:
                                                                     const TextStyle(
-                                                                  fontSize: 14,
+                                                                  fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -1032,7 +1037,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                           .arrow_forward_ios,
                                                                       color: Colors
                                                                           .grey,
-                                                                      size: 24,
+                                                                      size: 18,
                                                                     ),
                                                                   )),
                                                               const SizedBox(
@@ -1046,7 +1051,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                             context),
                                                                 style:
                                                                     const TextStyle(
-                                                                  fontSize: 14,
+                                                                  fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -1074,7 +1079,7 @@ class _AddingVisitState extends ConsumerState<AddingVisit> {
                                                                           .arrow_forward_ios,
                                                                       color: Colors
                                                                           .grey,
-                                                                      size: 24,
+                                                                      size: 18,
                                                                     ),
                                                                   )),
                                                             ],

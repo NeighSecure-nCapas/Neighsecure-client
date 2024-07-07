@@ -46,7 +46,25 @@ class VisitDateCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Fecha y hora: ${pass.startDate} - ${pass.endDate}',
+                'Fecha: ${pass.startDate} - ${pass.endDate}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Hora: ${pass.startTime} - ${pass.endTime}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Dias: ${pass.days.join(', ')}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,

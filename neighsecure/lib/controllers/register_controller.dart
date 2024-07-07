@@ -41,7 +41,7 @@ class RegisterController {
 
     try {
       final response = await client.post(
-        Uri.http(
+        Uri.https(
             dotenv.env['SERVER_URL']!, '/neighSecure/visit/completeRegister'),
         headers: {
           'Authorization': 'Bearer $token',

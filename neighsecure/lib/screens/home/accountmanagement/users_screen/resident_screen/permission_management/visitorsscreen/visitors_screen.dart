@@ -105,7 +105,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                 ),
               ),
               content: isLoading
-                  ? const CircularProgressIndicator() // Mostrar indicador de carga mientras se procesa
+                  ? const LinearProgressIndicator() // Mostrar indicador de carga mientras se procesa
                   : const Text(
                       '¿Estás seguro de que deseas eliminar a este usuario?'),
               actions: <Widget>[
@@ -139,8 +139,8 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                             await _controller.deletePermission(permission.id);
                         if (result) {
                           // Si la operación es exitosa, mostrar mensaje de éxito
-                          Navigator.of(context).pop(); // Cerrar el diálogo
-                          // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
+                          Navigator.of(context).pop();
+                          setState(() {});
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('Usuario eliminado con éxito')),
@@ -186,7 +186,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                 ),
               ),
               content: isLoading
-                  ? const CircularProgressIndicator() // Mostrar indicador de carga mientras se procesa
+                  ? const LinearProgressIndicator() // Mostrar indicador de carga mientras se procesa
                   : const Text(
                       '¿Estás seguro de que deseas aceptar la invitación de este usuario?'),
               actions: <Widget>[
@@ -220,8 +220,8 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                             await _controller.approvePermission(permission.id);
                         if (result) {
                           // Si la operación es exitosa, mostrar mensaje de éxito
-                          Navigator.of(context).pop(); // Cerrar el diálogo
-                          // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
+                          Navigator.of(context).pop();
+                          setState(() {});
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('Invitación aceptada con éxito')),
@@ -267,7 +267,7 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                 ),
               ),
               content: isLoading
-                  ? const CircularProgressIndicator() // Show loading indicator while processing
+                  ? const LinearProgressIndicator() // Show loading indicator while processing
                   : const Text(
                       '¿Estás seguro de que deseas rechazar la invitación de este usuario?'),
               actions: <Widget>[
@@ -301,8 +301,8 @@ class _VisitorsScreenState extends ConsumerState<VisitorsScreen> {
                             await _controller.rejectPermission(permission.id);
                         if (result) {
                           // If operation is successful, show success message
-                          Navigator.of(context).pop(); // Close the dialog
-                          // Show success message in a new dialog or snackbar
+                          Navigator.of(context).pop();
+                          setState(() {});
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content:

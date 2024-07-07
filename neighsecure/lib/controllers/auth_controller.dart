@@ -146,7 +146,7 @@ class AuthController {
     if (accessToken != null) {
       try {
         final response = await client.get(
-          Uri.http(
+          Uri.https(
               dotenv.env['SERVER_URL']!,
               '/neighSecure/auth/google/redirect-mobile',
               {'access_token': accessToken}),
@@ -195,7 +195,7 @@ class AuthController {
     if (token != null) {
       try {
         final response = await client.get(
-          Uri.http(dotenv.env['SERVER_URL']!, '/neighSecure/auth/whoami'),
+          Uri.https(dotenv.env['SERVER_URL']!, '/neighSecure/auth/whoami'),
           headers: {'Authorization': 'Bearer $token'},
         );
 
@@ -248,7 +248,7 @@ class AuthController {
     if (token != null) {
       try {
         final response = await client.get(
-          Uri.http(dotenv.env['SERVER_URL']!, '/neighSecure/auth/whoami'),
+          Uri.https(dotenv.env['SERVER_URL']!, '/neighSecure/auth/whoami'),
           headers: {'Authorization': 'Bearer $token'},
         );
 

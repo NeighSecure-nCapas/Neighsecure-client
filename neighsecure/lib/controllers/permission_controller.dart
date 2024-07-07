@@ -20,7 +20,8 @@ class PermissionController {
 
     try {
       final response = await client.get(
-        Uri.http(dotenv.env['SERVER_URL']!, '/neighSecure/visit/myPermissions'),
+        Uri.https(
+            dotenv.env['SERVER_URL']!, '/neighSecure/visit/myPermissions'),
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -76,7 +77,7 @@ class PermissionController {
 
     try {
       final response = await client.get(
-        Uri.http(dotenv.env['SERVER_URL']!,
+        Uri.https(dotenv.env['SERVER_URL']!,
             '/neighSecure/resident/permissions/home/$homeId'),
         headers: {
           'Authorization': 'Bearer $token',
@@ -133,7 +134,7 @@ class PermissionController {
 
     try {
       final response = await client.get(
-        Uri.http(dotenv.env['SERVER_URL']!,
+        Uri.https(dotenv.env['SERVER_URL']!,
             '/neighSecure/homeboss/permissions/$permissionId'),
         headers: {
           'Authorization': 'Bearer $token',
@@ -198,7 +199,7 @@ class PermissionController {
 
     try {
       final response = await client.post(
-        Uri.http(
+        Uri.https(
             dotenv.env['SERVER_URL']!, '/neighSecure/resident/newPermission'),
         headers: {
           'Authorization': 'Bearer $token',
@@ -255,7 +256,7 @@ class PermissionController {
 
     try {
       final response = await client.patch(
-        Uri.http(dotenv.env['SERVER_URL']!,
+        Uri.https(dotenv.env['SERVER_URL']!,
             '/neighSecure/homeboss/permissions/approve/$permissionId'),
         headers: {
           'Authorization': 'Bearer $token',
@@ -297,7 +298,7 @@ class PermissionController {
 
     try {
       final response = await client.patch(
-        Uri.http(dotenv.env['SERVER_URL']!,
+        Uri.https(dotenv.env['SERVER_URL']!,
             '/neighSecure/homeboss/permissions/reject/$permissionId'),
         headers: {
           'Authorization': 'Bearer $token',
@@ -339,7 +340,7 @@ class PermissionController {
 
     try {
       final response = await client.patch(
-        Uri.http(dotenv.env['SERVER_URL']!,
+        Uri.https(dotenv.env['SERVER_URL']!,
             '/neighSecure/resident/permissions/delete/$permissionId'),
         headers: {
           'Authorization': 'Bearer $token',

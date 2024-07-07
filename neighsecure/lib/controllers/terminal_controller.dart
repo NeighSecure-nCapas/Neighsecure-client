@@ -20,7 +20,7 @@ class TerminalController {
     if (token != null) {
       try {
         final response = await client.get(
-          Uri.http(dotenv.env['SERVER_URL']!, '/neighSecure/guard/terminal'),
+          Uri.https(dotenv.env['SERVER_URL']!, '/neighSecure/guard/terminal'),
           headers: {'Authorization': 'Bearer $token'},
         );
 
@@ -70,7 +70,7 @@ class TerminalController {
         }
 
         final response = await client.post(
-          Uri.http(
+          Uri.https(
               dotenv.env['SERVER_URL']!, '/neighSecure/guard/anonymousEntry'),
           headers: {
             'Authorization': 'Bearer $token',
@@ -135,7 +135,7 @@ class TerminalController {
         }
 
         final response = await client.post(
-          Uri.http(dotenv.env['SERVER_URL']!, '/entry'),
+          Uri.https(dotenv.env['SERVER_URL']!, '/neighSecure/guard/entry'),
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
