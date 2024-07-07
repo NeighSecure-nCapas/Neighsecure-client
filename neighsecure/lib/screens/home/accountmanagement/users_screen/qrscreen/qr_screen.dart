@@ -24,7 +24,7 @@ class QrScreen extends StatefulWidget {
 
 class _QrScreenState extends State<QrScreen> {
   var _qr = '';
-  int _remainingTime = 180;
+  int _remainingTime = 300;
   Timer? _timer;
 
   final UserRepository _repositoryUser = UserRepository();
@@ -69,11 +69,11 @@ class _QrScreenState extends State<QrScreen> {
 
     if (savedAt != null && savedRemainingTime != null) {
       final elapsedTime = (currentTime - savedAt) ~/ 1000;
-      _remainingTime = (savedRemainingTime - elapsedTime).clamp(0, 180);
+      _remainingTime = (savedRemainingTime - elapsedTime).clamp(0, 300);
     } else {
       final qrGenerationTime = prefs.getInt('qrGenerationTime') ?? currentTime;
       final elapsedTime = (currentTime - qrGenerationTime) ~/ 1000;
-      _remainingTime = (180 - elapsedTime).clamp(0, 180);
+      _remainingTime = (300 - elapsedTime).clamp(0, 300);
     }
 
     await prefs.setInt(remainingTimeKey, _remainingTime);
@@ -213,7 +213,7 @@ class _QrScreenState extends State<QrScreen> {
 
     setState(() {
       _qr = randomString;
-      _remainingTime = 180;
+      _remainingTime = 300;
     });
 
     _startTimer();

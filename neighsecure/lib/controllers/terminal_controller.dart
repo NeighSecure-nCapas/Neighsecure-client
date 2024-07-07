@@ -135,7 +135,7 @@ class TerminalController {
         }
 
         final response = await client.post(
-          Uri.https(dotenv.env['SERVER_URL']!, '/entry'),
+          Uri.https(dotenv.env['SERVER_URL']!, '/neighSecure/guard/entry'),
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
