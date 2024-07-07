@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:neighsecure/controllers/key_controller.dart';
 import 'package:neighsecure/repositories/key_repository/key_repository.dart';
 import 'package:neighsecure/repositories/user_repository/user_repository.dart';
@@ -36,6 +37,7 @@ class _QrScreenState extends State<QrScreen> {
   @override
   void initState() {
     super.initState();
+    _changeQr();
     _manageRemainingTime();
   }
 
@@ -142,11 +144,13 @@ class _QrScreenState extends State<QrScreen> {
     return 'Other';
   }
 
-  Future<String> generateString() async {
+  Future<String> _generateString() async {
     mykey.Key? key = await getKeyInfo();
     String? role = await getUserPrimaryRole();
+    String generationDay = '';
+    String generationDate = '';
+    String generationTime = '';
 
-    // Función auxiliar para remover tildes
     String removeAccents(String text) {
       const accents = 'ÁÉÍÓÚáéíóú';
       const withoutAccents = 'AEIOUaeiou';
@@ -156,25 +160,43 @@ class _QrScreenState extends State<QrScreen> {
       return text;
     }
 
-    // Aplicar la función removeAccents a los componentes que puedan tener tildes
-    String generationDayWithoutAccents =
-        removeAccents(key?.generationDay ?? '');
+    generationDay = removeAccents(key?.generationDay ?? '');
 
     if (kDebugMode) {
       print(key?.id);
       print(key?.generationDate);
-      print(generationDayWithoutAccents);
+      print(generationDay);
       print(key?.generationTime);
       print(role);
     }
 
-    if (key?.generationDate == null ||
-        key?.generationTime == null ||
-        generationDayWithoutAccents.isEmpty) {
-      return '${key?.id}/$role';
+    if (generationDay.isEmpty ||
+        key?.generationDate == null ||
+        key?.generationTime == null) {
+      DateTime now = DateTime.now();
+
+      generationDate = DateFormat('dd/MM/yyyy').format(now);
+      if (kDebugMode) {
+        print(generationDate);
+      }
+
+      generationTime = DateFormat('HH:mm').format(now);
+      if (kDebugMode) {
+        print(generationTime);
+      }
+
+      generationDay = DateFormat('EEEE').format(now);
+
+      generationDay = await translateDay(generationDay);
+
+      if (kDebugMode) {
+        print(generationDay);
+      }
+
+      generationDay = removeAccents(generationDay);
     }
 
-    return '${key?.id}/$role/${key?.generationDate}/$generationDayWithoutAccents/${key?.generationTime}';
+    return '${key?.id}/$role/($generationDate)/$generationDay/$generationTime';
   }
 
   void _startTimer() {
@@ -205,19 +227,38 @@ class _QrScreenState extends State<QrScreen> {
 
     _keyController.isLoading.value = true;
 
-    final randomString = await generateString();
+    final randomString = await _generateString();
 
     if (kDebugMode) {
       print(randomString);
     }
 
-    setState(() {
-      _qr = randomString;
-      _remainingTime = 300;
-    });
+    _qr = randomString;
+    _remainingTime = 300;
 
     _startTimer();
     _keyController.isLoading.value = false;
+  }
+
+  Future<String> translateDay(String day) async {
+    switch (day) {
+      case 'Monday':
+        return 'Lunes';
+      case 'Tuesday':
+        return 'Martes';
+      case 'Wednesday':
+        return 'Miercoles';
+      case 'Thursday':
+        return 'Jueves';
+      case 'Friday':
+        return 'Viernes';
+      case 'Saturday':
+        return 'Sabado';
+      case 'Sunday':
+        return 'Domingo';
+      default:
+        return 'Día no reconocido';
+    }
   }
 
   @override

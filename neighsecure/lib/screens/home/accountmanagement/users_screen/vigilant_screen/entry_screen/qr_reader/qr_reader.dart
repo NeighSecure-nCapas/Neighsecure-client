@@ -55,9 +55,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     String generationDay = '';
     String generationTime = '';
 
-    setState(() {
-      this.controller = controller;
-    });
+    this.controller = controller;
 
     try {
       terminalId = await getSelectedTerminalId();
@@ -74,6 +72,8 @@ class _QRViewExampleState extends State<QRViewExample> {
         return;
       }
 
+      isProcessing = true;
+
       setState(() {
         result = scanData;
       });
@@ -86,19 +86,14 @@ class _QRViewExampleState extends State<QRViewExample> {
 
         List<String> parts = qrCode!.split('/');
 
-        if (parts.length == 2) {
-          keyId = parts[0];
-          role = parts[1];
-        } else if (parts.length == 5) {
-          keyId = parts[0];
-          role = parts[1];
-          generationDate = parts[2];
-          generationDay = parts[3];
-          generationTime = parts[4];
-        } else {
-          if (kDebugMode) {
-            print('El formato del QR no es válido.');
-          }
+        keyId = parts[0];
+        role = parts[1];
+        generationDate = parts[2].replaceAll('(', '').replaceAll(')', '');
+        generationDay = parts[3];
+        generationTime = parts[4];
+
+        if (kDebugMode) {
+          print('El formato del QR no es válido.');
         }
 
         if (terminalId != null) {
