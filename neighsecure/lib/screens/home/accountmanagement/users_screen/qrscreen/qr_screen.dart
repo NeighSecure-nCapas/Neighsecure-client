@@ -194,9 +194,11 @@ class _QrScreenState extends State<QrScreen> {
       }
 
       generationDay = removeAccents(generationDay);
+
+      return '${key?.id}/$role/($generationDate)/$generationDay/$generationTime';
     }
 
-    return '${key?.id}/$role/($generationDate)/$generationDay/$generationTime';
+    return '${key?.id}/$role/(${key?.generationDate})/$generationDay/${key?.generationTime}';
   }
 
   void _startTimer() {
