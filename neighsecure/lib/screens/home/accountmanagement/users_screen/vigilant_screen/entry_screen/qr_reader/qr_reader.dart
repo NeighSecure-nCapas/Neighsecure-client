@@ -89,7 +89,7 @@ class _QRViewExampleState extends State<QRViewExample> {
         if (parts.length == 2) {
           keyId = parts[0];
           role = parts[1];
-        } else if (parts.length == 2) {
+        } else if (parts.length == 5) {
           keyId = parts[0];
           role = parts[1];
           generationDate = parts[2];
