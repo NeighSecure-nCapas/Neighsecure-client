@@ -98,7 +98,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
             return AlertDialog(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               title: const Text(
-                'Eliminar usuario',
+                'Eliminar permiso de usuario',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -108,7 +108,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
               content: isLoading
                   ? const CircularProgressIndicator() // Mostrar indicador de carga mientras se procesa
                   : const Text(
-                      '¿Estás seguro de que deseas eliminar a este usuario?'),
+                      '¿Estás seguro de que deseas eliminar este permiso?'),
               actions: <Widget>[
                 if (!isLoading) // Ocultar botón cancelar cuando se está cargando
                   TextButton(
@@ -144,7 +144,7 @@ class _VisitorsDetailsScreenState extends ConsumerState<VisitorsDetailsScreen> {
                           // Mostrar mensaje de éxito en un nuevo diálogo o snackbar
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('Usuario eliminado con éxito')),
+                                content: Text('Permiso eliminado con éxito')),
                           );
                         }
                       } catch (e) {
