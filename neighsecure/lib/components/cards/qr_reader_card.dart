@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+
+class VisitorCard extends StatelessWidget {
+  final bool isTablet;
+
+  const VisitorCard({super.key, required this.isTablet});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: isTablet ? 600 : double.infinity,
+      child: Card(
+        elevation: 0.0,
+        margin: const EdgeInsets.only(bottom: 30),
+        color: Theme.of(context).scaffoldBackgroundColor,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.black, width: 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.badge_outlined,
+                          color: Colors.black,
+                          size: 36,
+                        ),
+                        SizedBox(width: 16),
+                        Text(
+                          'Visitante',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Escanea el código QR del visitante para permitir acceso.',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                ),
+              ),
+              SizedBox(width: 40),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
