@@ -81,6 +81,7 @@ class _VisitorScreenState extends State<VisitorScreen> {
                     alignment: Alignment.topCenter,
                     onPressed: () {
                       setState(() {});
+                      selectPassIndex = null;
                     },
                     icon: const Icon(Icons.refresh, size: 32))
               ],
